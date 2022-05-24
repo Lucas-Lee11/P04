@@ -1,12 +1,4 @@
 # Teacher Tally by Loophole
-## Roster with Roles
-Lucas Lee - PM,
-Andrew Juang - 
-Eliza Knapp - 
-Ella Krechmer -
-
-# Stuy Schedules by Team Loophole
-
 ## Roster
 - PM: Lucas Lee
     - Flask routing
