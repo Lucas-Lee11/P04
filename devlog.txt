@@ -5,3 +5,7 @@ P04 -- PROJECT NAME!?!
 
 elizak -- 2022-03-23 10:30
 - created basic setup
+- setup google login thingy BUT DOESNT WORK
+  - thing to fix: right now, technically it should
+  run and redirect to the google login screen but it doesn't
+  because of one extra argument
