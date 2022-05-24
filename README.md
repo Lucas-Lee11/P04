@@ -51,7 +51,7 @@ We will be making a site with the primary function of allowing students to see i
 
 4. Run the app
 ```
- (env_name) $ python app/__init__.py
+ (env_name) $ python3 loophole.py
 ```
 Access the app by going to http://127.0.0.1:5000/
 
