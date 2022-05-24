@@ -9,3 +9,8 @@ elizak -- 2022-03-23 10:30
   - thing to fix: right now, technically it should
   run and redirect to the google login screen but it doesn't
   because of one extra argument
+
+ellaK -- 2022-03-24 09:25
+- readme info
+- team flag
+- started teacher profile html (sketched out on paper then started coding), ran into some errors along the way so unable to test
