@@ -1,0 +1,5 @@
+.vscode
+__pycache__
+loop
+client_secret.json
+secret.py
