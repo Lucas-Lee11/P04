@@ -25,3 +25,6 @@ christopherL -- 2022-05-25 08:35
 andrewJ -- 2022-05-25 09:24
 - started teacher, student tables
 - set up foreign keys + create_db() methods
+
+elizaK -- 2022-05-24
+- you can only login with stuy emails
