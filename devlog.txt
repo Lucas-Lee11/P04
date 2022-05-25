@@ -15,5 +15,6 @@ ellaK -- 2022-03-24 09:25
 - team flag
 - started teacher profile html (sketched out on paper then started coding), ran into some errors along the way so unable to test
 
-elizak -- 2022-03-24 09:25
+elizak -- 2022-03-24 09:25 // 22:24
 - got the google sign in to work (with help from andrew bc I can't read!)
+- now the oath allows you to use the credentials to get into the protected area
