@@ -36,7 +36,7 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-  authorization_url, state = flow.authorization_url()
+  authorization_url, state = flow.authorization_url(hd="stuy.edu")
   session["state"] = state
   return redirect(authorization_url)
 
@@ -59,6 +59,7 @@ def callback():
 
   session["google_id"] = id_info.get("sub")
   session["name"] = id_info.get("name")
+  print(session["name"])
   return redirect("/protected_area")
 
 @app.route("/logout", methods=['GET', 'POST'])
