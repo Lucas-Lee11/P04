@@ -44,6 +44,7 @@ christopherL -- 2022-05-26 08:14
 - fixed headers
 - fixed db functions
 - added design doc
+- partially fixed bugs with logging in with google oauth
 
 lucasL -- 2022-05-26 09:25
 - added more db functions
