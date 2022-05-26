@@ -31,7 +31,6 @@ flow = Flow.from_client_secrets_file(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid",
     ],
-    redirect_uri="http://127.0.0.1:5000/callback",
 )
 
 
@@ -54,6 +53,7 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    flow.redirect_uri = url_for("callback", _external=True)
     authorization_url, state = flow.authorization_url(hd="stuy.edu")
     print(state)
     session["state"] = state
