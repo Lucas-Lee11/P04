@@ -1,14 +1,14 @@
 # Team Loophole -- Lucas Lee, Andrew Juang, Eliza Knapp, Ella Krechmer, Christopher Liu
 # Softdev
-# P04 -- PROJECT NAME!?!
-# 2022-05-23
+# P04 -- Final Project
+# 2022-06-15w
 
 import sqlite3
 
 DB_FILE = "loophole.db"
 
-class Student:
 
+class Student:
     @staticmethod
     def create_db():
         with sqlite3.connect(DB_FILE) as db:
@@ -29,9 +29,7 @@ class Student:
             c = db.cursor()
             # some kind of validation? also need more info about what OAuth sends back
 
-            c.execute(
-                "INSERT INTO students(email) VALUES (?)", (email)
-            )
+            c.execute("INSERT INTO students(email) VALUES (?)", (email))
 
     @staticmethod
     def get_student_id(email: str) -> str:
@@ -48,7 +46,6 @@ class Student:
 
 
 class Teacher:
-
     @staticmethod
     def create_db():
         with sqlite3.connect(DB_FILE) as db:
@@ -71,15 +68,14 @@ class Teacher:
 
     @staticmethod
     def create_teacher(email: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
             # some kind of validation? also need more info about what OAuth sends back
 
-            c.execute(
-                "INSERT INTO teachers(email) VALUES (?)", (email)
-            )
+            c.execute("INSERT INTO teachers(email) VALUES (?)", (email))
 
 
 class Schedules:
-
     @staticmethod
     def create_db():
         with sqlite3.connect(DB_FILE) as db:
@@ -106,8 +102,8 @@ class Schedules:
             )
             db.commit()
 
-class StarredTeachers:
 
+class StarredTeachers:
     @staticmethod
     def create_db():
         with sqlite3.connect(DB_FILE) as db:
@@ -124,7 +120,6 @@ class StarredTeachers:
                 """
             )
             db.commit()
-
 
 
 Student.create_db()
