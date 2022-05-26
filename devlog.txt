@@ -43,3 +43,4 @@ christopherL -- 2022-05-26 08:14
 - reformated for internal consistency
 - fixed headers
 - fixed db functions
+- added design doc
