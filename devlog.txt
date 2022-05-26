@@ -19,6 +19,10 @@ elizaK -- 2022-05-24 09:25 // 22:24
 - got the google sign in to work (with help from andrew bc I can't read!)
 - now the oath allows you to use the credentials to get into the protected area
 
+lucasL -- 2022-05-24 09:30
+- readme
+- updated design doc
+
 christopherL -- 2022-05-25 08:35
 - started setting up basic db functions
 
@@ -26,5 +30,11 @@ andrewJ -- 2022-05-25 09:24
 - started teacher, student tables
 - set up foreign keys + create_db() methods
 
-elizaK -- 2022-05-24
+elizaK -- 2022-05-25 09:30
 - you can only login with stuy emails
+
+lucasL -- 2022-05-25 09:30
+- updated db schema
+- foriegn key setup for teacher/schedule
+- new starred teacher association table db
+- TODO: fix bugs with logging in w/google oath

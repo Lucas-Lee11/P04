@@ -1,5 +1,6 @@
 from app import app
 from app import secret
+from app import database as db
 # Here are where all of the routes will go
 import os
 import pathlib
@@ -10,6 +11,7 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
+
 
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -37,6 +39,7 @@ def index():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
   authorization_url, state = flow.authorization_url(hd="stuy.edu")
+  print(state)
   session["state"] = state
   return redirect(authorization_url)
 
@@ -45,7 +48,7 @@ def callback():
   flow.fetch_token(authorization_response=request.url)
   if not session["state"] == request.args["state"]:
     render_template("index.html", message="state is wrong- failed")
-  
+
   credentials = flow.credentials
   request_session = requests.session()
   cached_session = cachecontrol.CacheControl(request_session)
@@ -65,9 +68,10 @@ def callback():
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
   session.clear()
+  print("cleared")
   return redirect("/")
 
 @app.route("/protected_area", methods=['GET', 'POST'])
 @login_is_required
 def protected_area():
-  return render_template('protected.html')
+  return render_template('protected.html', name=session["name"], email=session["google_id"])
