@@ -44,3 +44,8 @@ christopherL -- 2022-05-26 08:14
 - fixed headers
 - fixed db functions
 - added design doc
+
+lucasL -- 2022-05-26 09:25
+- added more db functions
+- adding/getting teacher schedules
+- dropping/adding all dbs function
