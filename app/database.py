@@ -10,22 +10,22 @@ DB_FILE = "loophole.db"
 
 class Student:
     @staticmethod
-    def create_db():
+    def create_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
                 """
                 CREATE TABLE IF NOT EXISTS students(
                     student_id          TEXT PRIMARY KEY,
-                    name                TEXT,
-                    email               TEXT
+                    name                TEXT NOT NULL,
+                    email               TEXT NOT NULL
                 )
                 """
             )
             db.commit()
 
     @staticmethod
-    def drop_db():
+    def drop_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute("DROP TABLE IF EXISTS students")
@@ -56,27 +56,28 @@ class Student:
 
 class Teacher:
     @staticmethod
-    def create_db():
+    def create_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
                 """
                 CREATE TABLE IF NOT EXISTS teachers(
                     teacher_id  TEXT PRIMARY KEY,
-                    name        TEXT,
-                    email       TEXT,
+                    name        TEXT NOT NULL,
+                    email       TEXT NOT NULL,
                     pronouns    TEXT,
                     title       TEXT,
                     schedule_id TEXT,
                     FOREIGN KEY(schedule_id) REFERENCES schedules(schedule_id)
-                        ON DELETE CASCADE
+                        ON DELETE SET NULL
+                        ON UPDATE CASCADE
                 )
                 """
             )
             db.commit()
 
     @staticmethod
-    def drop_db():
+    def drop_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute("DROP TABLE IF EXISTS teachers")
@@ -121,7 +122,7 @@ class Teacher:
 
 class Schedules:
     @staticmethod
-    def create_db():
+    def create_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
@@ -140,7 +141,8 @@ class Schedules:
                     period_9     TEXT,
                     period_10    TEXT,
                     FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
-                        ON DELETE SET NULL
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
                 )
                 """
             )
@@ -155,7 +157,7 @@ class Schedules:
             c.execute("INSERT INTO schedules(teacher_id) VALUES (?)", (teacher_id,))
 
     @staticmethod
-    def drop_db():
+    def drop_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute("DROP TABLE IF EXISTS schedules")
@@ -181,7 +183,7 @@ class Schedules:
 
 class StarredTeachers:
     @staticmethod
-    def create_db():
+    def create_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
@@ -190,8 +192,12 @@ class StarredTeachers:
                     star_id    TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
                     teacher_id TEXT,
                     student_id TEXT,
-                    FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id),
+                    FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE,
                     FOREIGN KEY(student_id) REFERENCES students(student_id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
                 )
                 """
             )
@@ -204,10 +210,38 @@ class StarredTeachers:
             c.execute("DROP TABLE IF EXISTS starred_teachers")
             db.commit()
 
+    @staticmethod
+    def star_teacher(student_id: str, teacher_id: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+            c.execute(
+                "INSERT INTO starred_teachers (teacher_id, student_id) VALUES (?, ?)",
+                (teacher_id, student_id))
+            db.commit()
+
+
+
+    @staticmethod
+    def get_student_stars(student_id: str) -> tuple:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            teachers = c.execute(
+                "SELECT teacher_id FROM starred_teachers WHERE student_id = (?)",
+                (student_id,)
+            ).fetchall()
+
+            db.commit()
+
+            if teachers is not None:
+                return tuple(teacher[0] for teacher in teachers)
+            return None
+
+
 
 class Files:
     @staticmethod
-    def create_db():
+    def create_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
@@ -216,13 +250,15 @@ class Files:
                     file_id     TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
                     teacher_id  TEXT,
                     FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
                 )
                 """
             )
             db.commit()
 
     @staticmethod
-    def drop_db():
+    def drop_db() -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute("DROP TABLE IF EXISTS files")
@@ -251,15 +287,22 @@ create_dbs()
 
 # need to fix based on new schemas
 
-# Student.create_student("llee20@stuy.edu")
-# student_id = Student.get_student_id("llee20@stuy.edu")
-# print(student_id)
+Student.create_student("lucas_id", "Lucas Lee", "llee20@stuy.edu")
+student_id = Student.get_student_id("llee20@stuy.edu")
+print(student_id)
 
-# Teacher.create_teacher("dsharaf@stuy.edu")
-# teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
-# print(teacher_id)
+Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
+teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
+print(teacher_id)
 
-# Schedules.create_teacher_schedule(teacher_id)
-# schedule_id = Teacher.get_teacher_schedule_id(teacher_id)
-# schedule = Schedules.get_schedule_periods(schedule_id)
-# print(schedule)
+Schedules.create_teacher_schedule(teacher_id)
+schedule_id = Teacher.get_teacher_schedule_id(teacher_id)
+schedule = Schedules.get_schedule_periods(schedule_id)
+print(schedule)
+
+StarredTeachers.star_teacher(student_id, teacher_id)
+stars = StarredTeachers.get_student_stars(student_id)
+print(stars)
+
+drop_dbs()
+create_dbs()
