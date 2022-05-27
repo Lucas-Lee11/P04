@@ -7,7 +7,7 @@
   </head>
 
   <body>
-    <h1>YAY, {{name}} at {{email}} made it in!</h1>
-    <a href='/logout'><button>Logout</button></a>
+    <h1>YAY, {{ name }} at {{ email }} made it in!</h1>
+    <a href="{{ url_for('logout') }}"><button>Logout</button></a>
   </body>
 </html>

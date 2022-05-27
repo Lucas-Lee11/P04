@@ -59,3 +59,4 @@ lucasL -- 2022-05-26 22:45
 christopherL -- 2022-05-27 08:18
 - fixed log out issue with oauth2 tokens
 - create new student/teacher when logging in with oauth2
+- generated url paths in template
