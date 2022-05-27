@@ -60,3 +60,7 @@ christopherL -- 2022-05-27 08:18
 - fixed log out issue with oauth2 tokens
 - create new student/teacher when logging in with oauth2
 - generated url paths in template
+
+ellaK -- 2022-05-27 09:25
+- created the basic skeleton for the teacher profile (on teacher's end)
+- form submits and goes to a view teacher profile page
