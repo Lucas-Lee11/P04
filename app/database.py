@@ -16,7 +16,8 @@ class Student:
             c.execute(
                 """
                 CREATE TABLE IF NOT EXISTS students(
-                    student_id          TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
+                    student_id          TEXT PRIMARY KEY,
+                    name                TEXT,
                     email               TEXT
                 )
                 """
@@ -31,12 +32,13 @@ class Student:
             db.commit()
 
     @staticmethod
-    def create_student(email: str) -> None:
+    def create_student(student_id: str, name: str, email: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
-            # some kind of validation? also need more info about what OAuth sends back
-
-            c.execute("INSERT INTO students (email) VALUES (?)", (email,))
+            c.execute(
+                "INSERT INTO students (student_id, name, email) VALUES (?, ?, ?)",
+                (student_id, name, email),
+            )
 
     @staticmethod
     def get_student_id(email: str) -> str:
@@ -60,7 +62,7 @@ class Teacher:
             c.execute(
                 """
                 CREATE TABLE IF NOT EXISTS teachers(
-                    teacher_id  TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
+                    teacher_id  TEXT PRIMARY KEY,
                     name        TEXT,
                     email       TEXT,
                     pronouns    TEXT,
@@ -81,12 +83,13 @@ class Teacher:
             db.commit()
 
     @staticmethod
-    def create_teacher(email: str) -> None:
+    def create_teacher(teacher_id: str, name: str, email: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
-            # some kind of validation? also need more info about what OAuth sends back
-
-            c.execute("INSERT INTO teachers(email) VALUES (?)", (email,))
+            c.execute(
+                "INSERT INTO teachers (teacher_id, name, email) VALUES (?, ?, ?)",
+                (teacher_id, name, email),
+            )
 
     @staticmethod
     def get_teacher_id(email: str) -> str:
@@ -107,7 +110,8 @@ class Teacher:
             c = db.cursor()
 
             schedule_id = c.execute(
-                "SELECT schedule_id FROM schedules WHERE teacher_id = (?)", (teacher_id,)
+                "SELECT schedule_id FROM schedules WHERE teacher_id = (?)",
+                (teacher_id,),
             ).fetchone()
 
             if schedule_id is not None:
@@ -167,14 +171,12 @@ class Schedules:
                 SELECT period_1, period_2, period_3, period_4, period_5, period_6, period_7 , period_8, period_9, period_10
                 FROM schedules WHERE schedule_id = (?)
                 """,
-                (schedule_id,)
-
+                (schedule_id,),
             ).fetchone()
 
             if schedule is not None:
                 return schedule
             return None
-
 
 
 class StarredTeachers:
@@ -202,6 +204,7 @@ class StarredTeachers:
             c.execute("DROP TABLE IF EXISTS starred_teachers")
             db.commit()
 
+
 class Files:
     @staticmethod
     def create_db():
@@ -225,12 +228,14 @@ class Files:
             c.execute("DROP TABLE IF EXISTS files")
             db.commit()
 
+
 def create_dbs():
     Student.create_db()
     Teacher.create_db()
     Schedules.create_db()
     StarredTeachers.create_db()
     Files.create_db()
+
 
 def drop_dbs():
     Student.drop_db()
@@ -239,19 +244,22 @@ def drop_dbs():
     StarredTeachers.drop_db()
     Files.drop_db()
 
+
 # Testing
 drop_dbs()
 create_dbs()
 
-Student.create_student("llee20@stuy.edu")
-student_id = Student.get_student_id("llee20@stuy.edu")
-print(student_id)
+# need to fix based on new schemas
 
-Teacher.create_teacher("dsharaf@stuy.edu")
-teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
-print(teacher_id)
+# Student.create_student("llee20@stuy.edu")
+# student_id = Student.get_student_id("llee20@stuy.edu")
+# print(student_id)
 
-Schedules.create_teacher_schedule(teacher_id)
-schedule_id = Teacher.get_teacher_schedule_id(teacher_id)
-schedule = Schedules.get_schedule_periods(schedule_id)
-print(schedule)
+# Teacher.create_teacher("dsharaf@stuy.edu")
+# teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
+# print(teacher_id)
+
+# Schedules.create_teacher_schedule(teacher_id)
+# schedule_id = Teacher.get_teacher_schedule_id(teacher_id)
+# schedule = Schedules.get_schedule_periods(schedule_id)
+# print(schedule)

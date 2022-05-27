@@ -3,21 +3,19 @@
 # P04 -- Final Project
 # 2022-06-15w
 
-from app import app
-from app import secret
-from app import database as db
-
-# Here are where all of the routes will go
 import os
 import pathlib
 
+import google.auth.transport.requests
 import requests
-from flask import Flask, render_template, redirect, request, url_for, session
+from flask import redirect, render_template, request, session, url_for
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
-import google.auth.transport.requests
 
+from app import app
+from app import database as db
+from app import secret
 
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -34,7 +32,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 
-def login_is_required(function):
+def login_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             return render_template(
@@ -55,7 +53,6 @@ def index():
 def login():
     flow.redirect_uri = url_for("callback", _external=True)
     authorization_url, state = flow.authorization_url(hd="stuy.edu")
-    print(state)
     session["state"] = state
     return redirect(authorization_url)
 
@@ -77,19 +74,38 @@ def callback():
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
-    print(session["name"])
+    session["email"] = id_info.get("email")
+    session["token"] = credentials.token
+
+    # check if email is whitelisted as a teacher, otherwise create student
+    if session["email"] == "cliu20@stuy.edu":
+        if not db.Teacher.get_teacher_id(session["email"]):
+            db.Teacher.create_teacher(
+                session["google_id"], session["name"], session["email"]
+            )
+    else:
+        if not db.Student.get_student_id(session["email"]):
+            db.Student.create_student(
+                session["google_id"], session["name"], session["email"]
+            )
+
+    # this should go to either the student or teacher protected page
     return redirect("/protected_area")
 
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
+    requests.post(
+        "https://oauth2.googleapis.com/revoke",
+        params={"token": session["token"]},
+        headers={"content-type": "application/x-www-form-urlencoded"},
+    )
     session.clear()
-    print("cleared")
     return redirect("/")
 
 
 @app.route("/protected_area", methods=["GET", "POST"])
-@login_is_required
+@login_required
 def protected_area():
     return render_template(
         "protected.html", name=session["name"], email=session["google_id"]
