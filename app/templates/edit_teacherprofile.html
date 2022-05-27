@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>TEACHER</title>
+  </head>
+
+  <body>
+    <form action="/view_teacherprofile">
+        Name: 
+        (Prefix)
+        <input list="prefixes" name="prefixes">
+        <datalist id="prefixes">
+            <option value="Mr.">
+            <option value="Ms.">
+            <option value="Mrs.">
+            <option value="Mx.">
+            <option value="Dr.">
+            <option value="None">
+        </datalist>
+        <input type="text" id="Name">
+        <br>
+        Pronouns: <input type="text" name="Pronouns">
+        <br>
+        (Preferred) Email(s): <input type="text" name="Email">
+        <br>
+        Important Files (i.e. syllabi):
+        <br>
+        <input type="file" name="filename" multiple>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Class Taught (If Any)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for n in range(10) %}
+                <tr>
+                    <td>
+                        {{n+1}}
+                    </td>
+                    <td>
+                        <input type="text" name="class">
+                    </td>
+                    <td>
+                        <input list="status" name="status">
+                        <datalist id="status">
+                            <option value="Free for walk-ins">
+                            <option value="Free -- appointment only">
+                            <option value="Teaching, but free both before and after during passing">
+                            <option value="Teaching, but free only before this period during passing">
+                            <option value="Teaching, but free only after this period during passing">
+                            <option value="Never free (teaching)">
+                            <option value="Never free (working/lunch/etc)">
+                        </datalist>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" name="Save" value="Save"></input>
+    </form>
+
+  </body>
+
+</html>

@@ -8,7 +8,9 @@
 
   <body>
     <h1>Hello, you have entered our site</h1>
-    <h2>{{message}}</h2>
-    <a href='/login'><button>Login</button></a>
+    <h2>{{ message }}</h2>
+    <a href="{{ url_for('login') }}"><button>Login</button></a>
+    <br>
+    <a href="/edit_teacherprofile">Edit Teacher Profile</a>
   </body>
 </html>

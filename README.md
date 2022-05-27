@@ -18,6 +18,7 @@
     - Auth/Login
     - AI/Handwriting OCR
     - Teacher directory
+    - Droplet deployment
 - D4: Eliza Knapp
     - HTML/CSS/SASS
     - Database
