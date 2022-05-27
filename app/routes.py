@@ -110,3 +110,7 @@ def protected_area():
     return render_template(
         "protected.html", name=session["name"], email=session["google_id"]
     )
+
+@app.route("/teacherprofile", methods=["GET", "POST"])
+def teacher_profile():
+    return render_template("teacherprofile.html")
