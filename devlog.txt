@@ -61,6 +61,10 @@ christopherL -- 2022-05-27 08:18
 - create new student/teacher when logging in with oauth2
 - generated url paths in template
 
+ellaK -- 2022-05-27 09:25
+- created the basic skeleton for the teacher profile (on teacher's end)
+- form submits and goes to a view teacher profile page
+
 lucasL -- 2022-05-27 09:30
 - added starring functionality
 - modified update/delete behavior on tables
