@@ -6,6 +6,8 @@
 import sqlite3
 from xmlrpc.client import boolean
 
+from flask import g
+
 DB_FILE = "loophole.db"
 
 
@@ -128,6 +130,19 @@ class Teacher:
 
             if schedule_id is not None:
                 return schedule_id[0]
+            return None
+
+    @staticmethod
+    def get_teacher_list() -> list:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            teachers = c.execute(
+                "SELECT name FROM teachers"
+            ).fetchall()
+
+            if teachers is not None:
+                return [t[0] for t in teachers]
             return None
 
 
@@ -267,9 +282,11 @@ create_dbs()
 # student_id = Student.get_student_id("llee20@stuy.edu")
 # print(student_id)
 
-# Teacher.create_teacher("dsharaf@stuy.edu")
+# Teacher.create_teacher("1", "Daisy Sharaf", "dsharaf@stuy.edu")
 # teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
 # print(teacher_id)
+# get_all_teachers_names = Teacher.get_all_teachers_names()
+# print(get_all_teachers_names)
 
 # Schedules.create_teacher_schedule(teacher_id)
 # schedule_id = Teacher.get_teacher_schedule_id(teacher_id)

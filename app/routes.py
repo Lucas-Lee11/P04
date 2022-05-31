@@ -34,7 +34,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "ajuang20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu"]
 # TEACHERS = []
 
 
@@ -169,4 +169,6 @@ def setup_student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_teacher"))
 
-    return "this is where the setup_student html will go"
+    teachers = db.Teacher.get_teacher_list() 
+
+    return render_template("setup_student.html", teacher_list = teachers)
