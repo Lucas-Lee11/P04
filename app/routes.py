@@ -3,6 +3,8 @@
 # P04 -- Final Project
 # 2022-06-15w
 
+
+import functools
 import os
 import pathlib
 
@@ -31,8 +33,13 @@ flow = Flow.from_client_secrets_file(
     ],
 )
 
+# whitelisted teachers here for now
+TEACHERS = ["cliu20@stuy.edu"]
+# TEACHERS = []
+
 
 def login_required(function):
+    @functools.wraps(function)
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             return render_template(
@@ -77,20 +84,45 @@ def callback():
     session["email"] = id_info.get("email")
     session["token"] = credentials.token
 
+    # hi yall so this is my idea of the basic flow for new accounts and stuff
+    # like that--that's what i started with the setup_teacher and setup_student
+    # stuff
+    #
+    # so basically when someone makes a new account it should check to see if
+    # they're a student or a teacher and then send them to new account setup
+    # which for teachers allows you to configure your profile and for students
+    # allows you to star teachers
+    #
+    # all of this should be changable later with the edit_teacher and
+    # edit_student pages but i think new users should be immediately prompted
+    # to set up their accounts
+    #
+    # so for both students and teachers there should be a setup page and an
+    # edit page, and then there should be a general teacher_lookup page that's
+    # accessible by both students and teachers (but only students can star...?)
+    #
+    # btw there's no logout button yet on the setup pages--maybe a navbar and
+    # a base template could be the next step (either by me or someone else) so
+    # every page has the basic page tools like log out
+    #
+    # -- chris
+
     # check if email is whitelisted as a teacher, otherwise create student
-    if session["email"] == "cliu20@stuy.edu":
+    if session["email"] in TEACHERS:
         if not db.Teacher.get_teacher_id(session["email"]):
             db.Teacher.create_teacher(
                 session["google_id"], session["name"], session["email"]
             )
+            return redirect(url_for("setup_teacher"))
     else:
         if not db.Student.get_student_id(session["email"]):
             db.Student.create_student(
                 session["google_id"], session["name"], session["email"]
             )
+            return redirect(url_for("setup_student"))
 
     # this should go to either the student or teacher protected page
-    return redirect("/protected_area")
+    return redirect(url_for("protected_area"))
 
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -101,7 +133,7 @@ def logout():
         headers={"content-type": "application/x-www-form-urlencoded"},
     )
     session.clear()
-    return redirect("/")
+    return redirect(url_for("index"))
 
 
 @app.route("/protected_area", methods=["GET", "POST"])
@@ -111,9 +143,20 @@ def protected_area():
         "protected.html", name=session["name"], email=session["google_id"]
     )
 
+
+@app.route("/setup_teacher", methods=["GET", "POST"])
+@login_required
+def setup_teacher():
+    if not db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("setup_student"))
+
+    return render_template("setup_teacher.html")
+
+
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
 def edit_teacher_profile():
     return render_template("edit_teacherprofile.html")
+
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 def view_teacher_profile():
@@ -130,3 +173,15 @@ def view_teacher_profile():
     print(prefix + name + pronouns + email + filename)
 
     return render_template("view_teacherprofile.html")
+    return render_template("view_teacherprofile.html")
+
+
+@app.route("/setup_student", methods=["GET", "POST"])
+@login_required
+def setup_student():
+    if db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("setup_teacher"))
+
+    teachers = db.Teacher.get_teacher_list() 
+
+    return render_template("setup_student.html", teacher_list = teachers)

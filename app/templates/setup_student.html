@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title>Set Up Student Profile</title>
+	</head>
+	<body>
+		<a href="{{ url_for('logout') }}"><button>Logout</button></a>
+		<h1>
+			Set Up Student Profile
+		</h1>
+		<table>
+			<thead>
+				<tr> Teacher </tr>
+			</thead>
+			<tbody>
+				{% for teacher in teachers %}
+					<tr> {{teacher}} </tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</body>
+</html>
