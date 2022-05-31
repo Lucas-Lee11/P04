@@ -4,6 +4,7 @@
 # 2022-06-15w
 
 import sqlite3
+from xmlrpc.client import boolean
 
 DB_FILE = "loophole.db"
 
@@ -90,6 +91,17 @@ class Teacher:
                 "INSERT INTO teachers (teacher_id, name, email) VALUES (?, ?, ?)",
                 (teacher_id, name, email),
             )
+
+    @staticmethod
+    def verify_teacher(teacher_id: str) -> bool:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+            teacher = c.execute(
+                "SELECT * FROM teachers WHERE teacher_id = (?)", (teacher_id,)
+            ).fetchone()
+            if teacher is not None:
+                return True
+            return False
 
     @staticmethod
     def get_teacher_id(email: str) -> str:
