@@ -6,19 +6,18 @@
   </head>
 
   <body>
-    <form action="/view_teacherprofile">
+    <form action="/view_teacherprofile" method="POST">
         Name: 
         (Prefix)
-        <input list="prefixes" name="prefixes">
-        <datalist id="prefixes">
-            <option value="Mr.">
-            <option value="Ms.">
-            <option value="Mrs.">
-            <option value="Mx.">
-            <option value="Dr.">
-            <option value="None">
-        </datalist>
-        <input type="text" id="Name">
+        <select list="prefixes" name="prefixes">
+            <option value="None">None</option>
+            <option value="Mr.">Mr.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Mx.">Mx.</option>
+            <option value="Dr.">Dr.</option>
+        </select>
+        <input type="text" id="Name" name="name">
         <br>
         Pronouns: <input type="text" name="Pronouns">
         <br>
@@ -43,7 +42,7 @@
                         {{n+1}}
                     </td>
                     <td>
-                        <input type="text" name="class">
+                        <input type="text" name="school_class" + {n}>
                     </td>
                     <td>
                         <input list="status" name="status">

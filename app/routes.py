@@ -117,4 +117,16 @@ def edit_teacher_profile():
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 def view_teacher_profile():
+    prefix = request.form.get('prefixes')
+    name = request.form.get("name")
+    pronouns = request.form.get("Pronouns")
+    email = request.form.get("Email")
+    filename = request.form.get("filename")
+
+    #PROBLEM: NAME OF CLASS ALL THE SAME
+    school_class = request.form.get("school_class")
+    print(school_class)
+
+    print(prefix + name + pronouns + email + filename)
+
     return render_template("view_teacherprofile.html")
