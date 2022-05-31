@@ -69,6 +69,16 @@ lucasL -- 2022-05-27 09:30
 - added starring functionality
 - modified update/delete behavior on tables
 
+christopherL -- 2022-05-31 08:38
+- fixed login_required decorator
+- started profile setup routes
+- added verify_teacher method
+- added some other notes
+
+andrewJ -- 2022-05-31 09:22
+- started setup_student/setup_teacher
+- created teacher db function to fetch list of teachers
+
 lucasL -- 2022-05-31 13:00
 - adding schedule periods
 - unstarring teachers

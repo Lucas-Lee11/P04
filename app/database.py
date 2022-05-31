@@ -4,6 +4,9 @@
 # 2022-06-15w
 
 import sqlite3
+from xmlrpc.client import boolean
+
+from flask import g
 
 DB_FILE = "loophole.db"
 
@@ -93,6 +96,17 @@ class Teacher:
             )
 
     @staticmethod
+    def verify_teacher(teacher_id: str) -> bool:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+            teacher = c.execute(
+                "SELECT * FROM teachers WHERE teacher_id = (?)", (teacher_id,)
+            ).fetchone()
+            if teacher is not None:
+                return True
+            return False
+
+    @staticmethod
     def get_teacher_id(email: str) -> str:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
@@ -117,6 +131,19 @@ class Teacher:
 
             if schedule_id is not None:
                 return schedule_id[0]
+            return None
+
+    @staticmethod
+    def get_teacher_list() -> list:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            teachers = c.execute(
+                "SELECT name FROM teachers"
+            ).fetchall()
+
+            if teachers is not None:
+                return [t[0] for t in teachers]
             return None
 
 

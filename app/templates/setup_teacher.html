@@ -2,22 +2,24 @@
 
 <html>
   <head>
-    <title>TEACHER</title>
+    <title>Set Up TEACHER</title>
   </head>
 
   <body>
-    <form action="/view_teacherprofile" method="POST">
+    <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+    <form action="/view_teacherprofile">
         Name: 
         (Prefix)
-        <select list="prefixes" name="prefixes">
-            <option value="None">None</option>
-            <option value="Mr.">Mr.</option>
-            <option value="Ms.">Ms.</option>
-            <option value="Mrs.">Mrs.</option>
-            <option value="Mx.">Mx.</option>
-            <option value="Dr.">Dr.</option>
-        </select>
-        <input type="text" id="Name" name="name">
+        <input list="prefixes" name="prefixes">
+        <datalist id="prefixes">
+            <option value="Mr.">
+            <option value="Ms.">
+            <option value="Mrs.">
+            <option value="Mx.">
+            <option value="Dr.">
+            <option value="None">
+        </datalist>
+        <input type="text" id="Name">
         <br>
         Pronouns: <input type="text" name="Pronouns">
         <br>
@@ -42,7 +44,7 @@
                         {{n+1}}
                     </td>
                     <td>
-                        <input type="text" name="school_class" + {n}>
+                        <input type="text" name="class">
                     </td>
                     <td>
                         <input list="status" name="status">
