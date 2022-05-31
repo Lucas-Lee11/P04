@@ -16,9 +16,9 @@ class Student:
             c.execute(
                 """
                 CREATE TABLE IF NOT EXISTS students(
-                    student_id          TEXT PRIMARY KEY,
-                    name                TEXT NOT NULL,
-                    email               TEXT NOT NULL
+                    student_id  TEXT PRIMARY KEY,
+                    name        TEXT NOT NULL,
+                    email       TEXT NOT NULL
                 )
                 """
             )
@@ -129,7 +129,7 @@ class Schedules:
                 """
                 CREATE TABLE IF NOT EXISTS schedules(
                     schedule_id  TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
-                    teacher_id   TEXT,
+                    teacher_id   TEXT UNIQUE NOT NULL,
                     period_1     TEXT,
                     period_2     TEXT,
                     period_3     TEXT,
@@ -180,6 +180,18 @@ class Schedules:
                 return schedule
             return None
 
+    @staticmethod
+    def add_schedule_period(schedule_id: str, pd: int, text: str) -> None:
+        if not (1 <= pd <= 10):
+            return
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            c.execute(f"UPDATE schedules SET period_{pd} = (?) WHERE schedule_id = (?)",
+                (text, schedule_id))
+
+            db.commit()
+
 
 class StarredTeachers:
     @staticmethod
@@ -190,8 +202,8 @@ class StarredTeachers:
                 """
                 CREATE TABLE IF NOT EXISTS starred_teachers(
                     star_id    TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
-                    teacher_id TEXT,
-                    student_id TEXT,
+                    teacher_id TEXT NOT NULL,
+                    student_id TEXT NOT NULL,
                     FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE,
@@ -216,6 +228,16 @@ class StarredTeachers:
             c = db.cursor()
             c.execute(
                 "INSERT INTO starred_teachers (teacher_id, student_id) VALUES (?, ?)",
+                (teacher_id, student_id))
+            db.commit()
+
+
+    @staticmethod
+    def unstar_teacher(student_id: str, teacher_id: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+            c.execute(
+                "DELETE FROM starred_teachers WHERE teacher_id = (?) AND student_id = (?)",
                 (teacher_id, student_id))
             db.commit()
 
@@ -248,7 +270,9 @@ class Files:
                 """
                 CREATE TABLE IF NOT EXISTS files(
                     file_id     TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
-                    teacher_id  TEXT,
+                    teacher_id  TEXT NOT NULL,
+                    filename    TEXT NOT NULL,
+                    file        BLOB NOT NULL,
                     FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
@@ -263,6 +287,37 @@ class Files:
             c = db.cursor()
             c.execute("DROP TABLE IF EXISTS files")
             db.commit()
+
+    @staticmethod
+    def add_teacher_file(teacher_id: str, filepath: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            with open(filepath, 'rb') as file:
+                blobdata = file.read()
+
+                c.execute("INSERT INTO files(teacher_id, filename, file) VALUES (?, ?, ?)",
+                    (teacher_id, filepath, blobdata))
+                db.commit()
+
+    @staticmethod
+    def get_teacher_files(teacher_id: str) -> list:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            files = c.execute(
+                "SELECT filename, file FROM files WHERE teacher_id = (?)",
+                (teacher_id,)
+            ).fetchall()
+
+
+            for filename, file in files:
+                with open(filename, 'wb') as f:
+                    f.write(file)
+
+            if files is not None:
+                return [filename for filename, file in files]
+            return None
 
 
 def create_dbs():
@@ -297,12 +352,19 @@ print(teacher_id)
 
 Schedules.create_teacher_schedule(teacher_id)
 schedule_id = Teacher.get_teacher_schedule_id(teacher_id)
+Schedules.add_schedule_period(schedule_id, 1, "rm 840")
 schedule = Schedules.get_schedule_periods(schedule_id)
 print(schedule)
 
 StarredTeachers.star_teacher(student_id, teacher_id)
 stars = StarredTeachers.get_student_stars(student_id)
 print(stars)
+StarredTeachers.unstar_teacher(student_id, teacher_id)
+stars = StarredTeachers.get_student_stars(student_id)
+print(stars)
+
+Files.add_teacher_file(teacher_id, './README.md')
+Files.get_teacher_files(teacher_id)
 
 drop_dbs()
 create_dbs()

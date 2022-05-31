@@ -68,3 +68,8 @@ ellaK -- 2022-05-27 09:25
 lucasL -- 2022-05-27 09:30
 - added starring functionality
 - modified update/delete behavior on tables
+
+lucasL -- 2022-05-31 13:00
+- adding schedule periods
+- unstarring teachers
+- uploading/getting files
