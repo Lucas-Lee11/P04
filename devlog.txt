@@ -85,4 +85,8 @@ lucasL -- 2022-05-31 13:00
 - uploading/getting files
 
 christopherL -- 2022-05-31 11:42
-- add if __name__ == "__main__" to make deployment work
+- added if __name__ == "__main__" to make deployment work
+
+christopherL -- 2022-06-01 08:38
+- added deployment instructions
+- started contributing section in README
