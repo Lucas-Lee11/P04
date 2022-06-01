@@ -138,9 +138,7 @@ class Teacher:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            teachers = c.execute(
-                "SELECT name FROM teachers"
-            ).fetchall()
+            teachers = c.execute("SELECT name FROM teachers").fetchall()
 
             if teachers is not None:
                 return [t[0] for t in teachers]
@@ -214,8 +212,10 @@ class Schedules:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            c.execute(f"UPDATE schedules SET period_{pd} = (?) WHERE schedule_id = (?)",
-                (text, schedule_id))
+            c.execute(
+                f"UPDATE schedules SET period_{pd} = (?) WHERE schedule_id = (?)",
+                (text, schedule_id),
+            )
 
             db.commit()
 
@@ -255,9 +255,9 @@ class StarredTeachers:
             c = db.cursor()
             c.execute(
                 "INSERT INTO starred_teachers (teacher_id, student_id) VALUES (?, ?)",
-                (teacher_id, student_id))
+                (teacher_id, student_id),
+            )
             db.commit()
-
 
     @staticmethod
     def unstar_teacher(student_id: str, teacher_id: str) -> None:
@@ -265,10 +265,9 @@ class StarredTeachers:
             c = db.cursor()
             c.execute(
                 "DELETE FROM starred_teachers WHERE teacher_id = (?) AND student_id = (?)",
-                (teacher_id, student_id))
+                (teacher_id, student_id),
+            )
             db.commit()
-
-
 
     @staticmethod
     def get_student_stars(student_id: str) -> tuple:
@@ -277,7 +276,7 @@ class StarredTeachers:
 
             teachers = c.execute(
                 "SELECT teacher_id FROM starred_teachers WHERE student_id = (?)",
-                (student_id,)
+                (student_id,),
             ).fetchall()
 
             db.commit()
@@ -285,7 +284,6 @@ class StarredTeachers:
             if teachers is not None:
                 return tuple(teacher[0] for teacher in teachers)
             return None
-
 
 
 class Files:
@@ -320,11 +318,13 @@ class Files:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            with open(filepath, 'rb') as file:
+            with open(filepath, "rb") as file:
                 blobdata = file.read()
 
-                c.execute("INSERT INTO files(teacher_id, filename, file) VALUES (?, ?, ?)",
-                    (teacher_id, filepath, blobdata))
+                c.execute(
+                    "INSERT INTO files(teacher_id, filename, file) VALUES (?, ?, ?)",
+                    (teacher_id, filepath, blobdata),
+                )
                 db.commit()
 
     @staticmethod
@@ -333,13 +333,11 @@ class Files:
             c = db.cursor()
 
             files = c.execute(
-                "SELECT filename, file FROM files WHERE teacher_id = (?)",
-                (teacher_id,)
+                "SELECT filename, file FROM files WHERE teacher_id = (?)", (teacher_id,)
             ).fetchall()
 
-
             for filename, file in files:
-                with open(filename, 'wb') as f:
+                with open(filename, "wb") as f:
                     f.write(file)
 
             if files is not None:
@@ -390,7 +388,7 @@ StarredTeachers.unstar_teacher(student_id, teacher_id)
 stars = StarredTeachers.get_student_stars(student_id)
 print(stars)
 
-Files.add_teacher_file(teacher_id, './README.md')
+# Files.add_teacher_file(teacher_id, "./README.md")
 Files.get_teacher_files(teacher_id)
 
 drop_dbs()
