@@ -166,7 +166,7 @@ def view_teacher_profile():
     filename = request.form.get("filename")
 
     #PROBLEM: NAME OF CLASS ALL THE SAME
-    school_class = request.form.get("school_class")
+    school_class = request.form.get("0")
     print(school_class)
 
     return render_template("view_teacherprofile.html")
