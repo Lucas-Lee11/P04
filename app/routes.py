@@ -170,9 +170,6 @@ def view_teacher_profile():
     school_class = request.form.get("school_class")
     print(school_class)
 
-    print(prefix + name + pronouns + email + filename)
-
-    return render_template("view_teacherprofile.html")
     return render_template("view_teacherprofile.html")
 
 
