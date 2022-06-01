@@ -5,5 +5,40 @@
     <title>TEACHER</title>
   </head>
 
-  You submitted your info!
+  <body>
+      Name: {{prefix}} {{name}}
+      <br>
+      Pronouns: {{pronouns}}
+      <br>
+      (Preferred) Email(s): {{email}}
+      <br>
+      Important Files (i.e. syllabi):
+      <br>
+
+      <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Class Taught (If Any)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for n in range(10) %}
+            <tr>
+                <td>
+                    {{n+1}}
+                </td>
+                <td>
+                    {{class}}
+                </td>
+                <td>
+                    {{status}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+  </body>
 </html>

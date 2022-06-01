@@ -9,15 +9,14 @@
     <form action="/view_teacherprofile">
         Name: 
         (Prefix)
-        <input list="prefixes" name="prefixes">
-        <datalist id="prefixes">
-            <option value="Mr.">
-            <option value="Ms.">
-            <option value="Mrs.">
-            <option value="Mx.">
-            <option value="Dr.">
-            <option value="None">
-        </datalist>
+        <select name="prefixes">
+            <option value="None">None</option>
+            <option value="Mr.">Mr.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Mx.">Mx.</option>
+            <option value="Dr.">Dr.</option>
+        </select>
         <input type="text" id="Name">
         <br>
         Pronouns: <input type="text" name="Pronouns">
@@ -26,7 +25,7 @@
         <br>
         Important Files (i.e. syllabi):
         <br>
-        <input type="file" name="filename" multiple>
+        <input type="file" name="filename" multiple enctype="multipart/form-data">
 
         <table>
             <thead>
@@ -46,16 +45,15 @@
                         <input type="text" name="class">
                     </td>
                     <td>
-                        <input list="status" name="status">
-                        <datalist id="status">
-                            <option value="Free for walk-ins">
-                            <option value="Free -- appointment only">
-                            <option value="Teaching, but free both before and after during passing">
-                            <option value="Teaching, but free only before this period during passing">
-                            <option value="Teaching, but free only after this period during passing">
-                            <option value="Never free (teaching)">
-                            <option value="Never free (working/lunch/etc)">
-                        </datalist>
+                        <select name="status">
+                            <option>Never free (teaching)</option>
+                            <option>Never free (working/lunch/etc)</option>
+                            <option>Free for walk-ins</option>
+                            <option>Free -- appointment only</option>
+                            <option>Teaching, but free both before and after during passing</option>
+                            <option>Teaching, but free only before this period during passing</option>
+                            <option>Teaching, but free only after this period during passing</option>
+                        </select>
                     </td>
                 </tr>
                 {% endfor %}
