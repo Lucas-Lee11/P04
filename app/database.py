@@ -4,6 +4,7 @@
 # 2022-06-15w
 
 import sqlite3
+import os
 from xmlrpc.client import boolean
 
 from flask import g
@@ -314,16 +315,16 @@ class Files:
             db.commit()
 
     @staticmethod
-    def add_teacher_file(teacher_id: str, filepath: str) -> None:
+    def add_teacher_file(teacher_id: str, filename: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            with open(filepath, "rb") as file:
+            with open(os.path.join("./app/uploads", filename), "rb") as file:
                 blobdata = file.read()
 
                 c.execute(
                     "INSERT INTO files(teacher_id, filename, file) VALUES (?, ?, ?)",
-                    (teacher_id, filepath, blobdata),
+                    (teacher_id, filename, blobdata),
                 )
                 db.commit()
 
@@ -335,9 +336,13 @@ class Files:
             files = c.execute(
                 "SELECT filename, file FROM files WHERE teacher_id = (?)", (teacher_id,)
             ).fetchall()
+            download_folder = "./app/static"
+
+            if not os.path.exists(download_folder):
+                os.makedirs(download_folder)
 
             for filename, file in files:
-                with open(filename, "wb") as f:
+                with open(os.path.join(download_folder, filename), "wb") as f:
                     f.write(file)
 
             if files is not None:

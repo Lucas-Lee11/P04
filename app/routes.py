@@ -14,6 +14,7 @@ from flask import redirect, render_template, request, session, url_for
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
+from werkzeug.utils import secure_filename
 
 from app import app
 from app import database as db
@@ -36,7 +37,6 @@ flow = Flow.from_client_secrets_file(
 # whitelisted teachers here for now
 TEACHERS = ["cliu20@stuy.edu"]
 # TEACHERS = []
-
 
 def login_required(function):
     @functools.wraps(function)
@@ -182,6 +182,38 @@ def setup_student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_teacher"))
 
-    teachers = db.Teacher.get_teacher_list() 
+    teachers = db.Teacher.get_teacher_list()
 
     return render_template("setup_student.html", teacher_list = teachers)
+
+@app.route("/upload_file_test", methods=["GET", "POST"])
+def file_test():
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash('No file part')
+            return redirect(url_for("index"))
+
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+
+        if file.filename == "":
+            flash('No selected file')
+            return redirect(url_for("index"))
+
+        filename = secure_filename(file.filename)
+        upload_folder = "./app/uploads"
+        path = os.path.join(upload_folder, filename)
+
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
+
+        file.save(path)
+
+        db.Files.add_teacher_file("3", filename)
+        fs = db.Files.get_teacher_files("3")
+        print(fs)
+
+        return redirect(url_for("index"))
+
+    return render_template("upload_files.html")
