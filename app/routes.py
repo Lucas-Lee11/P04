@@ -149,9 +149,7 @@ def protected_area():
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    var = session["name"]
-    print(var)
-    return render_template("setup_teacher.html", var=var, email=session["email"])
+    return render_template("setup_teacher.html", name=session["name"], email=session["email"])
 
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
