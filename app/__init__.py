@@ -16,4 +16,5 @@ app.secret_key = urandom(32)
 
 app.debug = True
 
-app.run()
+if __name__ == "__main__":
+    app.run()

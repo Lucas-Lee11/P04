@@ -65,8 +65,28 @@ ellaK -- 2022-05-27 09:25
 - created the basic skeleton for the teacher profile (on teacher's end)
 - form submits and goes to a view teacher profile page
 
+lucasL -- 2022-05-27 09:30
+- added starring functionality
+- modified update/delete behavior on tables
+
 christopherL -- 2022-05-31 08:38
 - fixed login_required decorator
 - started profile setup routes
 - added verify_teacher method
 - added some other notes
+
+andrewJ -- 2022-05-31 09:22
+- started setup_student/setup_teacher
+- created teacher db function to fetch list of teachers
+
+lucasL -- 2022-05-31 13:00
+- adding schedule periods
+- unstarring teachers
+- uploading/getting files
+
+christopherL -- 2022-05-31 11:42
+- added if __name__ == "__main__" to make deployment work
+
+christopherL -- 2022-06-01 08:38
+- added deployment instructions
+- started contributing section in README

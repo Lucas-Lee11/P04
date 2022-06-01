@@ -150,7 +150,7 @@ def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
 
-    return "this is where the setup_teacher html will go"
+    return render_template("setup_teacher.html")
 
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
@@ -160,6 +160,19 @@ def edit_teacher_profile():
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 def view_teacher_profile():
+    prefix = request.form.get('prefixes')
+    name = request.form.get("name")
+    pronouns = request.form.get("Pronouns")
+    email = request.form.get("Email")
+    filename = request.form.get("filename")
+
+    #PROBLEM: NAME OF CLASS ALL THE SAME
+    school_class = request.form.get("school_class")
+    print(school_class)
+
+    print(prefix + name + pronouns + email + filename)
+
+    return render_template("view_teacherprofile.html")
     return render_template("view_teacherprofile.html")
 
 
@@ -169,4 +182,6 @@ def setup_student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_teacher"))
 
-    return "this is where the setup_student html will go"
+    teachers = db.Teacher.get_teacher_list() 
+
+    return render_template("setup_student.html", teacher_list = teachers)
