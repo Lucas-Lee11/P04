@@ -13,7 +13,6 @@ from app import routes
 # Secret key 32 bytes (lowkey this is useless dwai)
 app.secret_key = urandom(32)
 
-
 app.debug = True
 
 # if __name__ == "__main__":

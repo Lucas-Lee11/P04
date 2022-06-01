@@ -8,14 +8,14 @@
 			Set Up Student Profile
 		</h1>
 		<table>
-			<thead>
-				<tr> Teacher </tr>
-			</thead>
-			<tbody>
-				{% for teacher in teachers %}
-					<tr> {{teacher}} </tr>
-				{% endfor %}
-			</tbody>
+			<tr> 
+				<th>Teacher</th>
+			</tr>
+			{% for teacher in teacher_list %}
+			<tr>
+				<td> {{teacher}} </td>
+			</tr>
+			{% endfor %}
 		</table>
 
 	</body>
