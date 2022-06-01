@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-
+<!-- THIS IS WHERE TEACHERS CAN EDIT THEIR OWN PROFILE -->
 <html>
   <head>
     <title>TEACHER</title>
   </head>
 
   <body>
+    <!-- form to input information -->
     <form action="/view_teacherprofile" method="POST">
         Name: 
         (Prefix)
+        <!-- teacher selects the prefix they use -->
         <select list="prefixes" name="prefixes">
             <option value="None">None</option>
             <option value="Mr.">Mr.</option>
@@ -17,16 +19,26 @@
             <option value="Mx.">Mx.</option>
             <option value="Dr.">Dr.</option>
         </select>
+        <!-- teacher inputs their name -->
         <input type="text" id="Name" name="name">
         <br>
+        <!-- teacher inputs their pronouns -->
         Pronouns: <input type="text" name="Pronouns">
         <br>
-        (Preferred) Email(s): <input type="text" name="Email">
+        <!-- this is the teacher's stuy email that will be auto-filled -->
+        Email: <input type ="text" value="{{googstuy}}" name="stuyEmail">
         <br>
+        <!-- if a teacher prefers to be contacted via another email, they can put that email there -->
+        (Other Preferred) Email(s): <input type="text" name="otherEmail">
+        <br>
+
+        <!-- teachers can upload files like syllabi -->
         Important Files (i.e. syllabi):
         <br>
         <input type="file" name="filename" multiple>
 
+
+        <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
         <table>
             <thead>
                 <tr>
@@ -45,16 +57,15 @@
                         <input type="text" name="school_class" + {n}>
                     </td>
                     <td>
-                        <input list="status" name="status">
-                        <datalist id="status">
-                            <option value="Free for walk-ins">
-                            <option value="Free -- appointment only">
-                            <option value="Teaching, but free both before and after during passing">
-                            <option value="Teaching, but free only before this period during passing">
-                            <option value="Teaching, but free only after this period during passing">
-                            <option value="Never free (teaching)">
-                            <option value="Never free (working/lunch/etc)">
-                        </datalist>
+                        <select name="status">
+                            <option>Never free (teaching)</option>
+                            <option>Never free (working/lunch/etc)</option>
+                            <option>Free for walk-ins</option>
+                            <option>Free -- appointment only</option>
+                            <option>Teaching, but free both before and after during passing</option>
+                            <option>Teaching, but free only before this period during passing</option>
+                            <option>Teaching, but free only after this period during passing</option>
+                        </select>
                     </td>
                 </tr>
                 {% endfor %}

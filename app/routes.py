@@ -35,7 +35,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
 # TEACHERS = []
 
 def login_required(function):
@@ -149,8 +149,7 @@ def protected_area():
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-
-    return render_template("setup_teacher.html")
+    return render_template("setup_teacher.html", name=session["name"], email=session["email"])
 
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
@@ -167,12 +166,9 @@ def view_teacher_profile():
     filename = request.form.get("filename")
 
     #PROBLEM: NAME OF CLASS ALL THE SAME
-    school_class = request.form.get("school_class")
+    school_class = request.form.get("0")
     print(school_class)
 
-    print(prefix + name + pronouns + email + filename)
-
-    return render_template("view_teacherprofile.html")
     return render_template("view_teacherprofile.html")
 
 

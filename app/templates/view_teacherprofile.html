@@ -1,9 +1,45 @@
 <!DOCTYPE html>
-
+<!-- THIS IS WHERE TEACHERS CAN SEE THEIR OWN PROFILE -->
 <html>
   <head>
     <title>TEACHER</title>
   </head>
+    <!-- This displays everything that is filled in on the teacher profile edit page -->
+  <body>
+      Name: {{prefix}} {{name}}
+      <br>
+      Pronouns: {{pronouns}}
+      <br>
+      (Preferred) Email(s): {{email}}
+      <br>
+      Important Files (i.e. syllabi):
+      <br>
 
-  You submitted your info!
+      <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Class Taught (If Any)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for n in range(10) %}
+            <tr>
+                <td>
+                    {{n+1}}
+                </td>
+                <td>
+                    {{class}}
+                </td>
+                <td>
+                    {{status}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/edit_teacherprofile">Edit Your Profile</a>
+  </body>
 </html>
