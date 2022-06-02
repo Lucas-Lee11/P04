@@ -97,3 +97,7 @@ lucasL -- 2022-06-01 10:30
 
 christopherL -- 2022-06-02 08:38
 - added base template and navbar
+
+lucasL -- 2022-06-02 19:45
+- more file hosting tests
+- fixed a bug with the require_login fucntion wrapper

@@ -10,11 +10,10 @@ import pathlib
 
 import google.auth.transport.requests
 import requests
-from flask import redirect, render_template, request, session, url_for, flash
+from flask import redirect, render_template, request, session, url_for, flash, send_file
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
-from werkzeug.utils import secure_filename
 
 from app import app
 from app import database as db
@@ -36,7 +35,7 @@ flow = Flow.from_client_secrets_file(
 
 # whitelisted teachers here for now
 # TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
-TEACHERS = []
+TEACHERS = ["llee20@stuy.edu"]
 
 
 def login_required(function):
@@ -47,7 +46,7 @@ def login_required(function):
                 "index.html", message="not google authenticated- failed"
             )
         else:
-            return function()
+            return function(*args, **kwargs)
 
     return wrapper
 
@@ -179,7 +178,7 @@ def view_teacher_profile():
 @login_required
 def setup_student():
     if db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("setup_teacher"))
+        return redirect(url_for("index"))
 
     teachers = db.Teacher.get_teacher_list()
 
@@ -187,7 +186,11 @@ def setup_student():
 
 
 @app.route("/upload_file_test", methods=["GET", "POST"])
-def file_test():
+@login_required
+def file_upload_test():
+    if not db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("index"))
+
     if request.method == "POST":
         if "file" not in request.files:
             flash("No file part")
@@ -201,19 +204,29 @@ def file_test():
             flash("No selected file")
             return redirect(url_for("index"))
 
-        filename = secure_filename(file.filename)
-        upload_folder = "./app/uploads"
-        path = os.path.join(upload_folder, filename)
 
-        if not os.path.exists(upload_folder):
-            os.makedirs(upload_folder)
-
-        file.save(path)
-
-        db.Files.add_teacher_file("3", filename)
-        fs = db.Files.get_teacher_files("3")
-        print(fs)
+        db.Files.add_teacher_file(session["google_id"], file)
 
         return redirect(url_for("index"))
 
     return render_template("upload_files.html")
+
+@app.route("/view_files_test", methods=["GET", "POST"])
+@login_required
+def file_view_test():
+    if not db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("index"))
+
+    files = db.Files.get_teacher_files(session["google_id"])
+    print(files)
+
+    return render_template("view_files.html", files=files)
+
+@app.route("/file/<path:filename>", methods=["GET", "POST"])
+@login_required
+def download_file(filename):
+
+    # if not db.Teacher.verify_teacher(session["google_id"]):
+    #     return redirect(url_for("index"))
+    return send_file(f"./static/{filename}")
+    # return render_template("index.html")
