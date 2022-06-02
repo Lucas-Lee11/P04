@@ -4,21 +4,26 @@
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
   <h1>Set Up Student Profile</h1>
-  <table>
-    <tr> 
-      <th>Star</th>
-      <th>Teacher</th>
-      <th>Classes Taught</th>
-      <th>More Information</th>
-    </tr>
-    {% for teacher in teacher_list %}
-    <tr>
-      <td>{{star}}</td>
-      <td> {{teacher}} </td>
-      <td>{{classes}}</td>
-      <td></td> <!-- this will link to the teacher's profile -->
-    </tr>
-    {% endfor %}
-  </table>
+  <form action="/setup_student" method="POST">
+    <table>
+      <tr> 
+        <th>Star</th>
+        <th>Teacher</th>
+        <th>Classes Taught</th>
+        <th>More Information</th>
+      </tr>
+      {% for teacher in teacher_list %}
+      <tr>
+        <td>
+          <input type="checkbox" name="starred" value={{teacher}}>
+        </td>
+        <td>{{teacher}}</td>
+        <td>{{classes}}</td>
+        <td></td> <!-- this will link to the teacher's profile -->
+      </tr>
+      {% endfor %}
+    </table>
+    <input type="submit" value="Submit">
+  </form>
 </div>
 {% endblock %}

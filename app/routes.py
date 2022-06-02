@@ -178,7 +178,11 @@ def setup_student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_teacher"))
 
+    if request.method == "POST":
+        print(request.form.getlist('starred'))
+
     teachers = db.Teacher.get_teacher_list()
+    # teachers = ["daisy sharf", "dw", "topher myklolyk"]
 
     return render_template("setup_student.html", teacher_list=teachers)
 
