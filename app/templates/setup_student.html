@@ -1,28 +1,24 @@
-<html>
-	<head>
-		<title>Set Up Student Profile</title>
-	</head>
-	<body>
-		<a href="{{ url_for('logout') }}"><button>Logout</button></a>
-		<h1>
-			Set Up Student Profile
-		</h1>
-		<table>
-			<tr> 
-				<th>Star</th>
-				<th>Teacher</th>
-				<th>Classes Taught</th>
-				<th>More Information</th>
-			</tr>
-			{% for teacher in teacher_list %}
-			<tr>
-				<td>{{star}}</td>
-				<td> {{teacher}} </td>
-				<td>{{classes}}</td>
-				<td></td> <!-- this will link to the teacher's profile -->
-			</tr>
-			{% endfor %}
-		</table>
+{% extends "base.html" %}
+{% block title %}Setup Student Profile{% endblock %}
 
-	</body>
-</html>
+{% block content %}
+<div class="container-xxl my-4 bd-layout">
+  <h1>Set Up Student Profile</h1>
+  <table>
+    <tr> 
+      <th>Star</th>
+      <th>Teacher</th>
+      <th>Classes Taught</th>
+      <th>More Information</th>
+    </tr>
+    {% for teacher in teacher_list %}
+    <tr>
+      <td>{{star}}</td>
+      <td> {{teacher}} </td>
+      <td>{{classes}}</td>
+      <td></td> <!-- this will link to the teacher's profile -->
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

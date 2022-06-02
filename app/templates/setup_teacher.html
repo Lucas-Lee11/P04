@@ -1,68 +1,63 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Setup Teacher Profile{% endblock %}
 
-<html>
-  <head>
-    <title>Set Up TEACHER</title>
-  </head>
+{% block content %}
+<div class="container-xxl my-4 bd-layout">
+  <h1>Set Up Teacher Profile</h1>
+  <form action="/view_teacherprofile">
+  Name: 
+  (Prefix)
+  <select list="prefixes" name="prefixes">
+    <option value="None">None</option>
+    <option value="Mr.">Mr.</option>
+    <option value="Ms.">Ms.</option>
+    <option value="Mrs.">Mrs.</option>
+    <option value="Mx.">Mx.</option>
+    <option value="Dr.">Dr.</option>
+  </select>
+  <input type="text" id="Name" value="{{name}}">
+  <br>
+  Pronouns: <input type="text" name="Pronouns">
+  <br>
+  (Preferred) Email(s): <input type="text" name="Email" value="{{email}}">
+  <br>
+  Important Files (i.e. syllabi):
+  <br>
+  <input type="file" name="filename" multiple>
 
-  <body>
-    <a href="{{ url_for('logout') }}"><button>Logout</button></a>
-    <form action="/view_teacherprofile">
-        Name: 
-        (Prefix)
-        <select list="prefixes" name="prefixes">
-            <option value="None">None</option>
-            <option value="Mr.">Mr.</option>
-            <option value="Ms.">Ms.</option>
-            <option value="Mrs.">Mrs.</option>
-            <option value="Mx.">Mx.</option>
-            <option value="Dr.">Dr.</option>
-        </select>
-        <input type="text" id="Name" value="{{name}}">
-        <br>
-        Pronouns: <input type="text" name="Pronouns">
-        <br>
-        (Preferred) Email(s): <input type="text" name="Email" value="{{email}}">
-        <br>
-        Important Files (i.e. syllabi):
-        <br>
-        <input type="file" name="filename" multiple>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Class Taught (If Any)</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for n in range(10) %}
-                <tr>
-                    <td>
-                        {{n+1}}
-                    </td>
-                    <td>
-                        <input type="text" name="{{n}}">
-                    </td>
-                    <td>
-                        <select name="status">
-                            <option>Never free (teaching)</option>
-                            <option>Never free (working/lunch/etc)</option>
-                            <option>Free for walk-ins</option>
-                            <option>Free -- appointment only</option>
-                            <option>Teaching, but free both before and after during passing</option>
-                            <option>Teaching, but free only before this period during passing</option>
-                            <option>Teaching, but free only after this period during passing</option>
-                        </select>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <input type="submit" name="Save" value="Save"></input>
-    </form>
-
-  </body>
-
-</html>
+  <table>
+    <thead>
+      <tr>
+        <th>Period</th>
+        <th>Class Taught (If Any)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for n in range(10) %}
+      <tr>
+        <td>
+          {{n+1}}
+        </td>
+        <td>
+          <input type="text" name="{{n}}">
+        </td>
+        <td>
+          <select name="status">
+            <option>Never free (teaching)</option>
+            <option>Never free (working/lunch/etc)</option>
+            <option>Free for walk-ins</option>
+            <option>Free -- appointment only</option>
+            <option>Teaching, but free both before and after during passing</option>
+            <option>Teaching, but free only before this period during passing</option>
+            <option>Teaching, but free only after this period during passing</option>
+          </select>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input type="submit" name="Save" value="Save"></input>
+</form>
+</div>
+{% endblock %}

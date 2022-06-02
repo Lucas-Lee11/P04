@@ -10,7 +10,7 @@ import pathlib
 
 import google.auth.transport.requests
 import requests
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, session, url_for, flash
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
@@ -35,8 +35,9 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
-# TEACHERS = []
+# TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
+TEACHERS = []
+
 
 def login_required(function):
     @functools.wraps(function)
@@ -149,7 +150,9 @@ def protected_area():
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    return render_template("setup_teacher.html", name=session["name"], email=session["email"])
+    return render_template(
+        "setup_teacher.html", name=session["name"], email=session["email"]
+    )
 
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
@@ -159,13 +162,13 @@ def edit_teacher_profile():
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 def view_teacher_profile():
-    prefix = request.form.get('prefixes')
+    prefix = request.form.get("prefixes")
     name = request.form.get("name")
     pronouns = request.form.get("Pronouns")
     email = request.form.get("Email")
     filename = request.form.get("filename")
 
-    #PROBLEM: NAME OF CLASS ALL THE SAME
+    # PROBLEM: NAME OF CLASS ALL THE SAME
     school_class = request.form.get("0")
     print(school_class)
 
@@ -180,21 +183,22 @@ def setup_student():
 
     teachers = db.Teacher.get_teacher_list()
 
-    return render_template("setup_student.html", teacher_list = teachers)
+    return render_template("setup_student.html", teacher_list=teachers)
+
 
 @app.route("/upload_file_test", methods=["GET", "POST"])
 def file_test():
     if request.method == "POST":
         if "file" not in request.files:
-            flash('No file part')
+            flash("No file part")
             return redirect(url_for("index"))
 
-        file = request.files['file']
+        file = request.files["file"]
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
 
         if file.filename == "":
-            flash('No selected file')
+            flash("No selected file")
             return redirect(url_for("index"))
 
         filename = secure_filename(file.filename)

@@ -1,15 +1,8 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
 
-<html>
-  <head>
-    <title>Index Page</title>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-  </head>
-
-  <body>
-    <h1>Hello, you have entered our site</h1>
-    <h2>{{ message }}</h2>
-    <a href="{{ url_for('login') }}"><button>Login</button></a>
-    <br>
-  </body>
-</html>
+{% block content %}
+<div class="container-xxl my-4 bd-layout">
+  <h1>Hello, you have entered our site</h1>
+</div>
+{% endblock %}

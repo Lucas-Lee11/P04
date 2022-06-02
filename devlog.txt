@@ -94,3 +94,6 @@ christopherL -- 2022-06-01 08:38
 lucasL -- 2022-06-01 10:30
 - added basic file upload testing
 - route to upload a file, add to db and retrieve from db
+
+christopherL -- 2022-06-02 08:38
+- added base template and navbar
