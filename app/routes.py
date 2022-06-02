@@ -35,7 +35,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu"]
 
 
 def login_required(function):
@@ -85,7 +85,7 @@ def callback():
     session["token"] = credentials.token
 
     # hi yall so this is my idea of the basic flow for new accounts and stuff
-    # like that--that's what i started with the setup_teacher and setup_student
+    # like that--that's what i started with the setup_teacher and student
     # stuff
     #
     # so basically when someone makes a new account it should check to see if
@@ -114,15 +114,18 @@ def callback():
                 session["google_id"], session["name"], session["email"]
             )
             return redirect(url_for("setup_teacher"))
+        return redirect(url_for("teacher"))
     else:
+        # QUESTION (for chris from eliza): why does it matter if the student is
+        # new to the site or not? the functionality is exactly the same
         if not db.Student.get_student_id(session["email"]):
             db.Student.create_student(
                 session["google_id"], session["name"], session["email"]
             )
-            return redirect(url_for("setup_student"))
+            return redirect(url_for("student"))
+        return redirect(url_for("student"))
 
     # this should go to either the student or teacher protected page
-    return redirect(url_for("protected_area"))
 
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -136,14 +139,6 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/protected_area", methods=["GET", "POST"])
-@login_required
-def protected_area():
-    return render_template(
-        "protected.html", name=session["name"], email=session["google_id"]
-    )
-
-
 @app.route("/setup_teacher", methods=["GET", "POST"])
 @login_required
 def setup_teacher():
@@ -153,13 +148,23 @@ def setup_teacher():
         "setup_teacher.html", name=session["name"], email=session["email"]
     )
 
+# this is the page that a teacher who has already set up their account will land on
+@app.route("/teacher", methods=["GET", "POST"])
+@login_required
+def teacher():
+    if not db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("setup_student"))
+    return render_template("teacher_landing.html", name = session["name"])
+
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
+@login_required
 def edit_teacher_profile():
     return render_template("edit_teacherprofile.html")
 
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
+@login_required # QUESTION- do you need to be logged in to see the teacher profile
 def view_teacher_profile():
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
@@ -171,16 +176,20 @@ def view_teacher_profile():
 
     return render_template("view_teacherprofile.html")
 
-
-@app.route("/setup_student", methods=["GET", "POST"])
+# hello- when you log in, that should just always take you to setup student
+# there isn't really any setup, so I've renamed to just student so that it's 
+# equivalent to the teacher route -Eliza
+@app.route("/student", methods=["GET", "POST"])
 @login_required
-def setup_student():
+def student():
     if db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("setup_teacher"))
+        # if it somehow gets here, just return the normal teacher
+        # thing so we don't need to pass in form data
+        return redirect(url_for("teacher"))
 
     teachers = db.Teacher.get_teacher_list()
 
-    return render_template("setup_student.html", teacher_list=teachers)
+    return render_template("student.html", teacher_list=teachers)
 
 
 @app.route("/upload_file_test", methods=["GET", "POST"])
