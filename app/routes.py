@@ -191,7 +191,11 @@ def student():
         # thing so we don't need to pass in form data
         return redirect(url_for("teacher"))
 
+    if request.method == "POST":
+        print(request.form.getlist('starred'))
+
     teachers = db.Teacher.get_teacher_list()
+    # teachers = ["daisy sharf", "dw", "topher myklolyk"]
 
     return render_template("student.html", teacher_list=teachers)
 

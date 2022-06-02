@@ -126,6 +126,9 @@ between teachers and students display
 because it is always the same to avoid confusion
 - merged edit teacher and setup teacher to work in the same way
 
+andrewJ -- 2022-06-02 9:55
+- starring teachers form submission works now (need to do DB stuff later) 
+
 elizaK -- 2022-06-02 10:15
 - changed the way the base file conditionally renders teacher vs student information
 by passing the approved list of teachers to base
