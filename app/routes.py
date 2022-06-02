@@ -35,8 +35,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-# TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
-TEACHERS = []
+TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
 
 
 def login_required(function):
@@ -168,9 +167,7 @@ def view_teacher_profile():
     email = request.form.get("Email")
     filename = request.form.get("filename")
 
-    # PROBLEM: NAME OF CLASS ALL THE SAME
-    school_class = request.form.get("0")
-    print(school_class)
+
 
     return render_template("view_teacherprofile.html")
 
