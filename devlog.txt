@@ -125,3 +125,6 @@ between teachers and students display
 - created the one student function to be displayed
 because it is always the same to avoid confusion
 - merged edit teacher and setup teacher to work in the same way
+
+andrewJ -- 2022-06-02 9:55
+- starring teachers form submission works now (need to do DB stuff later) 
