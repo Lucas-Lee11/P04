@@ -91,6 +91,9 @@ christopherL -- 2022-06-01 08:38
 - added deployment instructions
 - started contributing section in README
 
+ellaK -- 2022-06-01 09:26
+- editing teacher and student html profiles and base pages
+
 lucasL -- 2022-06-01 10:30
 - added basic file upload testing
 - route to upload a file, add to db and retrieve from db
