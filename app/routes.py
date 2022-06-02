@@ -3,7 +3,6 @@
 # P04 -- Final Project
 # 2022-06-15w
 
-
 import functools
 import os
 import pathlib
@@ -35,7 +34,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
 
 
 def login_required(function):
@@ -144,8 +143,10 @@ def logout():
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
+    
+    teachers = db.Teacher.get_teacher_list()
     return render_template(
-        "setup_teacher.html", name=session["name"], email=session["email"]
+        "setup_teacher.html", name=session["name"], email=session["email"], teacher_list = teachers
     )
 
 # this is the page that a teacher who has already set up their account will land on
@@ -154,27 +155,30 @@ def setup_teacher():
 def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    return render_template("teacher_landing.html", name = session["name"])
+    
+    teachers = db.Teacher.get_teacher_list()
+
+    return render_template("teacher_landing.html", name = session["name"], teacher_list = teachers)
 
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
 @login_required
-def edit_teacher_profile():
+def edit_teacherprofile():
     return render_template("edit_teacherprofile.html")
 
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 @login_required # QUESTION- do you need to be logged in to see the teacher profile
-def view_teacher_profile():
+def view_teacherprofile():
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
     pronouns = request.form.get("Pronouns")
     email = request.form.get("Email")
     filename = request.form.get("filename")
 
+    teachers = db.Teacher.get_teacher_list()
 
-
-    return render_template("view_teacherprofile.html")
+    return render_template("view_teacherprofile.html", teacher_list = teachers)
 
 # hello- when you log in, that should just always take you to setup student
 # there isn't really any setup, so I've renamed to just student so that it's 

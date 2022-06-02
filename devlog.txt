@@ -125,3 +125,8 @@ between teachers and students display
 - created the one student function to be displayed
 because it is always the same to avoid confusion
 - merged edit teacher and setup teacher to work in the same way
+
+elizaK -- 2022-06-02 10:15
+- changed the way the base file conditionally renders teacher vs student information
+by passing the approved list of teachers to base
+- view teacher profile is now a part of the accessible file structure

@@ -16,11 +16,8 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      {% if "google_id" not in teacher_list %}
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <!-- FOR STUDENTS -->
-          
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">          
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Starred Teachers
@@ -35,16 +32,18 @@
               {% endif %}
             </ul>
           </li>
-        {% else %}
-        </ul>
-        <div class="px-3 py-2">
-          <div class="navbar-nav container d-flex flex-wrap justify-content-center">
-            <!-- FOR TEACHERS -->
+
+          {% if session["name"] in teacher_list %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('edit_teacher_profile') }}">Edit Profile</a>
+              <a class="nav-link" href="{{ url_for('edit_teacherprofile') }}">Edit Profile</a>
             </li>
-        {% endif %}
-            <!-- IF LOGGED IN -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('view_teacherprofile') }}">View Profile</a>
+            </li>  
+          {% endif %} 
+         
+ 
+              <!-- IF LOGGED IN -->
             {% if "google_id" in session %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
