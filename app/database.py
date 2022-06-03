@@ -12,7 +12,7 @@ import shutil
 from flask import g
 
 DB_FILE = "loophole.db"
-
+UPLOAD_FOLDER = "./app/uploads"
 
 class Student:
     @staticmethod
@@ -300,7 +300,6 @@ class Files:
                     file_id     TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
                     teacher_id  TEXT NOT NULL,
                     filename    TEXT NOT NULL,
-                    file        BLOB NOT NULL,
                     FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
@@ -320,47 +319,33 @@ class Files:
     def add_teacher_file(teacher_id: str, file) -> None:
 
         filename = secure_filename(file.filename)
-        upload_folder = "./app/uploads"
-        path = os.path.join(upload_folder, filename)
+        path = os.path.join(UPLOAD_FOLDER, filename)
 
-        if not os.path.exists(upload_folder):
-            os.makedirs(upload_folder)
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
 
         file.save(path)
 
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            with open(os.path.join(upload_folder, filename), "rb") as file:
-                blobdata = file.read()
-
-                c.execute(
-                    "INSERT INTO files(teacher_id, filename, file) VALUES (?, ?, ?)",
-                    (teacher_id, filename, blobdata),
-                )
-                db.commit()
-
-        shutil.rmtree(upload_folder)
+            c.execute(
+                "INSERT INTO files(teacher_id, filename) VALUES (?, ?)",
+                (teacher_id, filename),
+            )
+            db.commit()
 
     @staticmethod
-    def get_teacher_files(teacher_id: str) -> list:
+    def get_teacher_files(teacher_id: str) -> tuple:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
             files = c.execute(
-                "SELECT filename, file FROM files WHERE teacher_id = (?)", (teacher_id,)
+                "SELECT filename e FROM files WHERE teacher_id = (?)", (teacher_id,)
             ).fetchall()
-            download_folder = "./app/static"
-
-            if not os.path.exists(download_folder):
-                os.makedirs(download_folder)
-
-            for filename, file in files:
-                with open(os.path.join(download_folder, filename), "wb") as f:
-                    f.write(file)
 
             if files is not None:
-                return [filename for filename, file in files]
+                return tuple(file[0] for file in files)
             return None
 
 

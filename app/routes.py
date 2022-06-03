@@ -20,6 +20,7 @@ from app import secret
 
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+UPLOAD_FOLDER = "./app/uploads"
 
 GOOGLE_CLIENT_ID = secret.setup()
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
@@ -33,16 +34,15 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu", "llee20@stuy.edu"]
 
 
 def login_required(function):
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
-            return render_template(
-                "index.html", message="not google authenticated- failed"
-            )
+            flash("Not Google Authenticated")
+            return redirect(url_for("index"))
         else:
             return function(*args, **kwargs)
 
@@ -128,12 +128,17 @@ def callback():
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
-    requests.post(
-        "https://oauth2.googleapis.com/revoke",
-        params={"token": session["token"]},
-        headers={"content-type": "application/x-www-form-urlencoded"},
-    )
+
+    if "token" in session:
+        requests.post(
+            "https://oauth2.googleapis.com/revoke",
+            params={"token": session["token"]},
+            headers={"content-type": "application/x-www-form-urlencoded"},
+        )
+
     session.clear()
+
+    flash("Logged Out")
     return redirect(url_for("index"))
 
 
@@ -142,7 +147,7 @@ def logout():
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    
+
     teachers = db.Teacher.get_teacher_list()
     return render_template(
         "setup_teacher.html", name=session["name"], email=session["email"], teacher_list = teachers
@@ -154,7 +159,7 @@ def setup_teacher():
 def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    
+
     teachers = db.Teacher.get_teacher_list()
 
     return render_template("teacher_landing.html", name = session["name"], teacher_list = teachers)
@@ -180,7 +185,7 @@ def view_teacherprofile():
     return render_template("view_teacherprofile.html", teacher_list = teachers)
 
 # hello- when you log in, that should just always take you to setup student
-# there isn't really any setup, so I've renamed to just student so that it's 
+# there isn't really any setup, so I've renamed to just student so that it's
 # equivalent to the teacher route -Eliza
 @app.route("/student", methods=["GET", "POST"])
 @login_required
@@ -210,16 +215,18 @@ def file_upload_test():
             flash("No file part")
             return redirect(url_for("index"))
 
-        file = request.files["file"]
+        files = request.files.getlist("file")
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
 
-        if file.filename == "":
-            flash("No selected file")
-            return redirect(url_for("index"))
+        for file in files:
+
+            if file.filename == "":
+                flash("No selected file")
+                return redirect(url_for("index"))
 
 
-        db.Files.add_teacher_file(session["google_id"], file)
+            db.Files.add_teacher_file(session["google_id"], file)
 
         return redirect(url_for("index"))
 
@@ -240,7 +247,8 @@ def file_view_test():
 @login_required
 def download_file(filename):
 
-    # if not db.Teacher.verify_teacher(session["google_id"]):
-    #     return redirect(url_for("index"))
-    return send_file(f"./static/{filename}")
-    # return render_template("index.html")
+    if not os.path.exists(os.path.join(UPLOAD_FOLDER, filename)):
+        flash("Invalid File")
+        return redirect(url_for("index"))
+
+    return send_file(f"./uploads/{filename}")
