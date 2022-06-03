@@ -116,11 +116,11 @@ def callback():
     else:
         # QUESTION (for chris from eliza): why does it matter if the student is
         # new to the site or not? the functionality is exactly the same
+        # RESPONSE from chris: yeah i dont think it matters
         if not db.Student.get_student_id(session["email"]):
             db.Student.create_student(
                 session["google_id"], session["name"], session["email"]
             )
-            return redirect(url_for("student"))
         return redirect(url_for("student"))
 
     # this should go to either the student or teacher protected page
@@ -142,11 +142,15 @@ def logout():
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    
+
     teachers = db.Teacher.get_teacher_list()
     return render_template(
-        "setup_teacher.html", name=session["name"], email=session["email"], teacher_list = teachers
+        "setup_teacher.html",
+        name=session["name"],
+        email=session["email"],
+        teacher_list=teachers,
     )
+
 
 # this is the page that a teacher who has already set up their account will land on
 @app.route("/teacher", methods=["GET", "POST"])
@@ -154,10 +158,12 @@ def setup_teacher():
 def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("setup_student"))
-    
+
     teachers = db.Teacher.get_teacher_list()
 
-    return render_template("teacher_landing.html", name = session["name"], teacher_list = teachers)
+    return render_template(
+        "teacher_landing.html", name=session["name"], teacher_list=teachers
+    )
 
 
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
@@ -167,20 +173,21 @@ def edit_teacherprofile():
 
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
-@login_required # QUESTION- do you need to be logged in to see the teacher profile
+@login_required  # QUESTION- do you need to be logged in to see the teacher profile
 def view_teacherprofile():
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
-    pronouns = request.form.get("Pronouns")
-    email = request.form.get("Email")
+    pronouns = request.form.get("pronouns")
+    email = request.form.get("email")
     filename = request.form.get("filename")
 
     teachers = db.Teacher.get_teacher_list()
 
-    return render_template("view_teacherprofile.html", teacher_list = teachers)
+    return render_template("view_teacherprofile.html", teacher_list=teachers)
+
 
 # hello- when you log in, that should just always take you to setup student
-# there isn't really any setup, so I've renamed to just student so that it's 
+# there isn't really any setup, so I've renamed to just student so that it's
 # equivalent to the teacher route -Eliza
 @app.route("/student", methods=["GET", "POST"])
 @login_required
@@ -191,7 +198,7 @@ def student():
         return redirect(url_for("teacher"))
 
     if request.method == "POST":
-        print(request.form.getlist('starred'))
+        print(request.form.getlist("starred"))
 
     teachers = db.Teacher.get_teacher_list()
     # teachers = ["daisy sharf", "dw", "topher myklolyk"]
@@ -218,12 +225,12 @@ def file_upload_test():
             flash("No selected file")
             return redirect(url_for("index"))
 
-
         db.Files.add_teacher_file(session["google_id"], file)
 
         return redirect(url_for("index"))
 
     return render_template("upload_files.html")
+
 
 @app.route("/view_files_test", methods=["GET", "POST"])
 @login_required
@@ -235,6 +242,7 @@ def file_view_test():
     print(files)
 
     return render_template("view_files.html", files=files)
+
 
 @app.route("/file/<path:filename>", methods=["GET", "POST"])
 @login_required

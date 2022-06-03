@@ -4,42 +4,30 @@
 {% block title %}View Your Profile{% endblock %}
 
 {% block content %}
-<div>
-    <h1>View Your Profile</h1>
-      Name: {{prefix}} {{name}}
-      <br>
-      Pronouns: {{pronouns}}
-      <br>
-      (Preferred) Email(s): {{email}}
-      <br>
-      Important Files (i.e. syllabi):
-      <br>
+<div class="container-xxl my-4 bd-layout">
+  <h1>View Your Profile</h1>
+  <p>Name: {{prefix}} {{name}}</p>
+  <p>Pronouns: {{pronouns}}</p>
+  <p>(Preferred) Email(s): {{email}}</p>
+  <p>Important Files (i.e. syllabi):</p>
 
-      <table>
-        <thead>
-            <tr>
-                <th>Period</th>
-                <th>Class Taught (If Any)</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for n in range(10) %}
-            <tr>
-                <td>
-                    {{n+1}}
-                </td>
-                <td>
-                    {{class}}
-                </td>
-                <td>
-                    {{status}}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <br>
-    <a href="/edit_teacherprofile">Edit Your Profile</a>
-    {% endblock %}
-
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Period</th>
+        <th>Class Taught (If Any)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in range(1, 11) %}
+      <tr>
+        <td>{{ i }}</td>
+        <td>{{ class }}</td>
+        <td>{{ status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

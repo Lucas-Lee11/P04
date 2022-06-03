@@ -41,19 +41,20 @@
               <a class="nav-link" href="{{ url_for('view_teacherprofile') }}">View Profile</a>
             </li>  
           {% endif %} 
-         
- 
-              <!-- IF LOGGED IN -->
-            {% if "google_id" in session %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-            </li>
-            {% endif %}
-          </div>
+        </ul>
+      </div>
+      <div class="px-3 py-2">
+        <div class="navbar-nav container d-flex flex-wrap justify-content-center">
+          <!-- IF LOGGED IN -->
+          {% if "google_id" in session %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          </li>
+          {% endif %}
         </div>
       </div>
     </div>

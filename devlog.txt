@@ -137,3 +137,9 @@ by passing the approved list of teachers to base
 lucasL -- 2022-06-02 19:45
 - more file hosting tests
 - fixed a bug with the require_login fucntion wrapper
+
+christopherL -- 2022-06-03 08:37
+- made teacher profile template more concise
+- fixed navbar
+- added bootstrap styling
+- TODO: an import from CSV option for teacher profiles (I guess for their schedule)
