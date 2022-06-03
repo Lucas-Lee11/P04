@@ -6,13 +6,13 @@
 import functools
 import os
 import pathlib
-
-import google.auth.transport.requests
 import requests
+
 from flask import redirect, render_template, request, session, url_for, flash, send_file
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
-from pip._vendor import cachecontrol
 
 from app import app
 from app import database as db
@@ -33,7 +33,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu", "ekrechmer20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu", "ekrechmer20@stuy.edu"]
 
 
 def login_required(function):
@@ -180,6 +180,8 @@ def view_teacherprofile():
     pronouns = request.form.get("pronouns")
     email = request.form.get("email")
     filename = request.form.get("filename")
+    print(prefix)
+    print(name)
 
     teachers = db.Teacher.get_teacher_list()
 
