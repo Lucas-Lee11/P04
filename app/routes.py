@@ -169,7 +169,8 @@ def teacher():
 @app.route("/edit_teacherprofile", methods=["GET", "POST"])
 @login_required
 def edit_teacherprofile():
-    return render_template("edit_teacherprofile.html")
+    teachers = db.Teacher.get_teacher_list()
+    return render_template("edit_teacherprofile.html", teacher_list=teachers)
 
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
@@ -188,6 +189,22 @@ def view_teacherprofile():
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
     print(classes)
+
+    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
+        db.Schedules.create_teacher_schedule(session["google_id"])
+    
+    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
+    i = 1
+    for group in classes:
+        db.Schedules.add_schedule_period(
+            schedule_id, i, group[1]
+        )
+        i += 1
+
+    # QUESTION!!!! do we really need the "class taught"
+
+    test = db.Schedules.get_schedule_periods(schedule_id)
+    print(test)
 
     teachers = db.Teacher.get_teacher_list()
 
@@ -209,6 +226,7 @@ def student():
         print(request.form.getlist("starred"))
 
     teachers = db.Teacher.get_teacher_list()
+    
     # teachers = ["daisy sharf", "dw", "topher myklolyk"]
 
     return render_template("student.html", teacher_list=teachers)

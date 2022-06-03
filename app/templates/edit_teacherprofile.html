@@ -5,42 +5,42 @@
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
   <h1>Edit Teacher Profile</h1>
-  <form action="/view_teacherprofile">
+  <form action="/view_teacherprofile", method="POST">
     <div class="row">
-      <div class="col-3">
-        <label for="prefixes">(Prefix)</label>
-        <select list="prefixes" name="prefixes" class="form-control form-select">
-          <option value="None">None</option>
-          <option value="Mr.">Mr.</option>
-          <option value="Ms.">Ms.</option>
-          <option value="Mrs.">Mrs.</option>
-          <option value="Mx.">Mx.</option>
-          <option value="Dr.">Dr.</option>
-        </select>
+        <div class="col-3">
+          <label for="prefixes">(Prefix)</label>
+          <select list="prefixes" name="prefixes" class="form-control form-select">
+            <option value="None">None</option>
+            <option value="Mr.">Mr.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Mx.">Mx.</option>
+            <option value="Dr.">Dr.</option>
+          </select>
+        </div>
+        <div class="col-9">
+          <label for="name">Name</label>
+          <input type="text" id="name" value="{{name}}" class="form-control">
+        </div>
       </div>
-      <div class="col-9">
-        <label for="name">Name</label>
-        <input type="text" id="name" value="{{name}}" class="form-control">
+      <div class="row my-3">
+        <div class="col-3">
+          <label for="pronouns">Pronouns</label>
+          <input type="text" name="pronouns" class="form-control">
+        </div>
+        <div class="col-9">
+          <label for="email">Email</label>
+          <input type="text" name="email" value="{{email}}" class="form-control">
+        </div>
       </div>
-    </div>
-    <div class="row my-3">
-      <div class="col-3">
-        <label for="pronouns">Pronouns</label>
-        <input type="text" name="pronouns" class="form-control">
+      <div class="form-group my-3">
+        <label for="files">Important Files (i.e., syllabi)</label>
+        <input class="form-control" type="file" name="filename" multiple>
       </div>
-      <div class="col-9">
-        <label for="email">Email</label>
-        <input type="text" name="email" value="{{email}}" class="form-control">
-      </div>
-    </div>
-    <div class="form-group my-3">
-      <label for="files">Important Files (i.e., syllabi)</label>
-      <input class="form-control" type="file" name="filename" multiple>
-    </div>
 
-    <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
-    <table class="table">
-      <thead>
+   <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
+   <table name = "table">
+    <thead>
         <tr>
           <th>Period</th>
           <th>Class Taught (If Any)</th>
@@ -48,25 +48,211 @@
         </tr>
       </thead>
       <tbody>
-        {% for i in range(1, 11) %}
-        <tr>
-          <td>{{ i }}</td>
-          <td><input type="text" name="class{{ i }}" class="form-control"></td>
-          <td>
-            <select name="status" class="form-control form-select">
-              <option>Never free (teaching)</option>
-              <option>Never free (working/lunch/etc)</option>
-              <option>Free for walk-ins</option>
-              <option>Free -- appointment only</option>
-              <option>Teaching, but free both before and after during passing</option>
-              <option>Teaching, but free only before this period during passing</option>
-              <option>Teaching, but free only after this period during passing</option>
-            </select>
-          </td>
-        </tr>
-        {% endfor %}
+
+          <tr>
+              <td>
+                  1
+              </td>
+              <td>
+                  <input type="text" name="class1">
+              </td>
+              <td>
+                  <select name="status1" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  2
+              </td>
+              <td>
+                  <input type="text" name="class2">
+              </td>
+              <td>
+                  <select name="status2" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  3
+              </td>
+              <td>
+                  <input type="text" name="class3">
+              </td>
+              <td>
+                  <select name="status3" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  4
+              </td>
+              <td>
+                  <input type="text" name="class4">
+              </td>
+              <td>
+                  <select name="status4" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  5
+              </td>
+              <td>
+                  <input type="text" name="class5">
+              </td>
+              <td>
+                  <select name="status5" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  6
+              </td>
+              <td>
+                  <input type="text" name="class6">
+              </td>
+              <td>
+                  <select name="status6" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  7
+              </td>
+              <td>
+                  <input type="text" name="class7">
+              </td>
+              <td>
+                  <select name="status7" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  8
+              </td>
+              <td>
+                  <input type="text" name="class8">
+              </td>
+              <td>
+                  <select name="status8" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  9
+              </td>
+              <td>
+                  <input type="text" name="class9">
+              </td>
+              <td>
+                  <select name="status9" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  10
+              </td>
+              <td>
+                  <input type="text" name="class10">
+              </td>
+              <td>
+                  <select name="status10" class="form-control form-select">
+                      <option>Never free (teaching)</option>
+                      <option>Never free (working/lunch/etc)</option>
+                      <option>Free for walk-ins</option>
+                      <option>Free -- appointment only</option>
+                      <option>Teaching, but free both before and after during passing</option>
+                      <option>Teaching, but free only before this period during passing</option>
+                      <option>Teaching, but free only after this period during passing</option>
+                  </select>
+              </td>
+          </tr>
+
+
       </tbody>
     </table>
+</div>
     <button type="submit" class="btn btn-primary">Save</button>
   </form>
 </div>
