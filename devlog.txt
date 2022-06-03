@@ -122,7 +122,7 @@ ellaK -- 2022-06-02 09:26
 - changed conditions for index to reflect teacher and student login
 - started working on reorganizing index code to be clearer
 
-elizaK -- 2022-06-02 9:25
+elizaK -- 2022-06-02 09:25
 - removed the protected area
 - fixed the navbar bug so now only the necessary information
 between teachers and students display
@@ -130,7 +130,7 @@ between teachers and students display
 because it is always the same to avoid confusion
 - merged edit teacher and setup teacher to work in the same way
 
-andrewJ -- 2022-06-02 9:55
+andrewJ -- 2022-06-02 09:55
 - starring teachers form submission works now (need to do DB stuff later) 
 
 elizaK -- 2022-06-02 10:15
@@ -147,3 +147,7 @@ christopherL -- 2022-06-03 08:37
 - fixed navbar
 - added bootstrap styling
 - TODO: an import from CSV option for teacher profiles (I guess for their schedule)
+
+elizaK -- 2022-06-03 9:25
+- fixed the base template's errors
+- began pushing the info to the database

@@ -175,20 +175,20 @@ def edit_teacherprofile():
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 @login_required  # QUESTION- do you need to be logged in to see the teacher profile
 def view_teacherprofile():
-    print(request.form)
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
-    print(name)
     pronouns = request.form.get("Pronouns")
     email = request.form.get("Email")
-    print(email)
     filename = request.form.get("filename")
-    class_table = request.form.get("table")
-    print(class_table)
+
     classes = []
     for i in range(10):
-        classes.append(request.form.get("class" + str(i + 1)))
+        data = []
+        data.append(request.form.get("class" + str(i + 1)))
+        data.append(request.form.get("status" + str(i + 1)))
+        classes.append(data)
     print(classes)
+
     teachers = db.Teacher.get_teacher_list()
 
     return render_template("view_teacherprofile.html", teacher_list=teachers)
