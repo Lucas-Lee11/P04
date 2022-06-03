@@ -6,6 +6,8 @@
 import sqlite3
 import os
 from xmlrpc.client import boolean
+from werkzeug.utils import secure_filename
+import shutil
 
 from flask import g
 
@@ -315,11 +317,21 @@ class Files:
             db.commit()
 
     @staticmethod
-    def add_teacher_file(teacher_id: str, filename: str) -> None:
+    def add_teacher_file(teacher_id: str, file) -> None:
+
+        filename = secure_filename(file.filename)
+        upload_folder = "./app/uploads"
+        path = os.path.join(upload_folder, filename)
+
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
+
+        file.save(path)
+
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            with open(os.path.join("./app/uploads", filename), "rb") as file:
+            with open(os.path.join(upload_folder, filename), "rb") as file:
                 blobdata = file.read()
 
                 c.execute(
@@ -327,6 +339,8 @@ class Files:
                     (teacher_id, filename, blobdata),
                 )
                 db.commit()
+
+        shutil.rmtree(upload_folder)
 
     @staticmethod
     def get_teacher_files(teacher_id: str) -> list:

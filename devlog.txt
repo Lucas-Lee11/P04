@@ -51,6 +51,9 @@ lucasL -- 2022-05-26 09:25
 - adding/getting teacher schedules
 - dropping/adding all dbs function
 
+elizaK -- 2022-05-26 09:25
+- organized the order and flow of the login function
+
 lucasL -- 2022-05-26 22:45
 - updated design doc
 - new ship date
@@ -64,6 +67,10 @@ christopherL -- 2022-05-27 08:18
 ellaK -- 2022-05-27 09:25
 - created the basic skeleton for the teacher profile (on teacher's end)
 - form submits and goes to a view teacher profile page
+
+elizaK -- 2022-05-27 09:25
+- created a pdf of the api_kb of google oauth
+- how to page of google oauth
 
 lucasL -- 2022-05-27 09:30
 - added starring functionality
@@ -79,6 +86,10 @@ andrewJ -- 2022-05-31 09:22
 - started setup_student/setup_teacher
 - created teacher db function to fetch list of teachers
 
+elizaK -- 2022-05-31 09:25
+- pulled the data from editing teacher form
+- moved form (a version of it) behind the secure login
+
 lucasL -- 2022-05-31 13:00
 - adding schedule periods
 - unstarring teachers
@@ -90,6 +101,12 @@ christopherL -- 2022-05-31 11:42
 christopherL -- 2022-06-01 08:38
 - added deployment instructions
 - started contributing section in README
+
+elizaK -- 2022-06-1 09:25
+- the form now prefills your content based on the 
+google login information 
+- the edit_teacher profile form now has elements named
+based on the period
 
 ellaK -- 2022-06-01 09:26
 - editing teacher and student html profiles and base pages
@@ -104,3 +121,29 @@ christopherL -- 2022-06-02 08:38
 ellaK -- 2022-06-02 09:26
 - changed conditions for index to reflect teacher and student login
 - started working on reorganizing index code to be clearer
+
+elizaK -- 2022-06-02 9:25
+- removed the protected area
+- fixed the navbar bug so now only the necessary information
+between teachers and students display
+- created the one student function to be displayed
+because it is always the same to avoid confusion
+- merged edit teacher and setup teacher to work in the same way
+
+andrewJ -- 2022-06-02 9:55
+- starring teachers form submission works now (need to do DB stuff later) 
+
+elizaK -- 2022-06-02 10:15
+- changed the way the base file conditionally renders teacher vs student information
+by passing the approved list of teachers to base
+- view teacher profile is now a part of the accessible file structure
+
+lucasL -- 2022-06-02 19:45
+- more file hosting tests
+- fixed a bug with the require_login fucntion wrapper
+
+christopherL -- 2022-06-03 08:37
+- made teacher profile template more concise
+- fixed navbar
+- added bootstrap styling
+- TODO: an import from CSV option for teacher profiles (I guess for their schedule)
