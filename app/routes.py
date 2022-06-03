@@ -35,7 +35,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu", "eknapp20@stuy.edu", "ekrechmer20@stuy.edu"]
 
 
 def login_required(function):

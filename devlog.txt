@@ -100,3 +100,7 @@ lucasL -- 2022-06-01 10:30
 
 christopherL -- 2022-06-02 08:38
 - added base template and navbar
+
+ellaK -- 2022-06-02 09:26
+- changed conditions for index to reflect teacher and student login
+- started working on reorganizing index code to be clearer

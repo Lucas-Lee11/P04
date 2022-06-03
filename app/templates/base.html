@@ -16,11 +16,20 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      {% if "google_id" not in teacher_list %}
+
+      <!-- CHECKS FOR LOGIN
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
+
+      </div> -->
+
+
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!-- FOR STUDENTS -->
-          
+          {% if "google_id" not in teacher_list %}
+          {% if "google_id" in session %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Starred Teachers
@@ -35,8 +44,9 @@
               {% endif %}
             </ul>
           </li>
-        {% else %}
+          {% endif %}
         </ul>
+        {% else %}
         <div class="px-3 py-2">
           <div class="navbar-nav container d-flex flex-wrap justify-content-center">
             <!-- FOR TEACHERS -->
