@@ -34,7 +34,7 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "ekrechmer20@stuy.edu", "eknapp20@stuy.edu"]
+TEACHERS = ["cliu20@stuy.edu", "ekrechmer20@stuy.edu", "eknapp20@stuy.edu", "llee20@stuy.edu"]
 
 
 def login_required(function):
@@ -195,20 +195,19 @@ def view_teacherprofile():
         classes.append(data)
     print(classes)
 
-    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
-        db.Schedules.create_teacher_schedule(session["google_id"])
-    
-    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
+
+
+    teacher_id = session["google_id"]
     i = 1
     for group in classes:
-        db.Schedules.add_schedule_period(
-            schedule_id, i, group[1]
+        db.Teacher.add_schedule_period(
+            teacher_id, i, group[1]
         )
         i += 1
 
     # QUESTION!!!! do we really need the "class taught"
 
-    test = db.Schedules.get_schedule_periods(schedule_id)
+    test = db.Teacher.get_schedule_periods(teacher_id)
     print(test)
 
     teachers = db.Teacher.get_teacher_list()
@@ -231,7 +230,7 @@ def student():
         print(request.form.getlist("starred"))
 
     teachers = db.Teacher.get_teacher_list()
-    
+
     # teachers = ["daisy sharf", "dw", "topher myklolyk"]
 
     return render_template("student.html", teacher_list=teachers)
