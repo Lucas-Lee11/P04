@@ -165,3 +165,6 @@ lucasL -- 2022-06-03 15:30
 lucasL -- 2022-06-03 21:30
 - merged teacher and schedule dbs
 - no bugs found yet, but maybe there will be
+
+christopherL -- 2022-06-06 08:06
+- fixed base.html navbar

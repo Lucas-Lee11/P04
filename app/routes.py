@@ -34,7 +34,12 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "ekrechmer20@stuy.edu", "eknapp20@stuy.edu", "llee20@stuy.edu"]
+TEACHERS = [
+    "cliu20@stuy.edu",
+    "ekrechmer20@stuy.edu",
+    "eknapp20@stuy.edu",
+    "llee20@stuy.edu",
+]
 
 
 def login_required(function):
@@ -51,6 +56,7 @@ def login_required(function):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # this should redirect to /teacher and /student for logged in users
     return render_template("index.html")
 
 
@@ -82,29 +88,6 @@ def callback():
     session["email"] = id_info.get("email")
     session["token"] = credentials.token
 
-    # hi yall so this is my idea of the basic flow for new accounts and stuff
-    # like that--that's what i started with the setup_teacher and student
-    # stuff
-    #
-    # so basically when someone makes a new account it should check to see if
-    # they're a student or a teacher and then send them to new account setup
-    # which for teachers allows you to configure your profile and for students
-    # allows you to star teachers
-    #
-    # all of this should be changable later with the edit_teacher and
-    # edit_student pages but i think new users should be immediately prompted
-    # to set up their accounts
-    #
-    # so for both students and teachers there should be a setup page and an
-    # edit page, and then there should be a general teacher_lookup page that's
-    # accessible by both students and teachers (but only students can star...?)
-    #
-    # btw there's no logout button yet on the setup pages--maybe a navbar and
-    # a base template could be the next step (either by me or someone else) so
-    # every page has the basic page tools like log out
-    #
-    # -- chris
-
     # check if email is whitelisted as a teacher, otherwise create student
     if session["email"] in TEACHERS:
         if not db.Teacher.get_teacher_id(session["email"]):
@@ -114,16 +97,11 @@ def callback():
             return redirect(url_for("setup_teacher"))
         return redirect(url_for("teacher"))
     else:
-        # QUESTION (for chris from eliza): why does it matter if the student is
-        # new to the site or not? the functionality is exactly the same
-        # RESPONSE from chris: yeah i dont think it matters
         if not db.Student.get_student_id(session["email"]):
             db.Student.create_student(
                 session["google_id"], session["name"], session["email"]
             )
         return redirect(url_for("student"))
-
-    # this should go to either the student or teacher protected page
 
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -179,7 +157,6 @@ def edit_teacherprofile():
 
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
-@login_required  # QUESTION- do you need to be logged in to see the teacher profile
 def view_teacherprofile():
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
@@ -195,15 +172,9 @@ def view_teacherprofile():
         classes.append(data)
     print(classes)
 
-
-
     teacher_id = session["google_id"]
-    i = 1
-    for group in classes:
-        db.Teacher.add_schedule_period(
-            teacher_id, i, group[1]
-        )
-        i += 1
+    for i, group in enumerate(classes):
+        db.Teacher.add_schedule_period(teacher_id, i + 1, group[1])
 
     # QUESTION!!!! do we really need the "class taught"
 
@@ -218,6 +189,7 @@ def view_teacherprofile():
 # hello- when you log in, that should just always take you to setup student
 # there isn't really any setup, so I've renamed to just student so that it's
 # equivalent to the teacher route -Eliza
+# yes that sounds good -Chris
 @app.route("/student", methods=["GET", "POST"])
 @login_required
 def student():
@@ -256,7 +228,6 @@ def file_upload_test():
             if file.filename == "":
                 flash("No selected file")
                 return redirect(url_for("index"))
-
 
             db.Files.add_teacher_file(session["google_id"], file)
 
