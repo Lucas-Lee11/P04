@@ -154,12 +154,7 @@ def teacher():
 def edit_teacherprofile():
     teachers = db.Teacher.get_teacher_list()
     
-    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
-        db.Schedules.create_teacher_schedule(session["google_id"])
-    
-    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
-
-    schedule_info = db.Schedules.get_schedule_periods(schedule_id)
+    schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
     schedule = []
     for period in schedule_info:
@@ -199,7 +194,7 @@ def update_teacherprofile():
     for i, group in enumerate(classes):
         db.Teacher.add_schedule_period(teacher_id, i + 1, group[1])
 
-    schedule_info = db.Schedules.get_schedule_periods(schedule_id)
+    schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
     schedule = []
     for period in schedule_info:
@@ -215,12 +210,7 @@ def update_teacherprofile():
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 @login_required 
 def view_teacherprofile():
-    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
-        db.Schedules.create_teacher_schedule(session["google_id"])
-    
-    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
-
-    schedule_info = db.Schedules.get_schedule_periods(schedule_id)
+    schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
     schedule = []
     for period in schedule_info:
