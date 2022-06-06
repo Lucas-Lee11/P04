@@ -244,10 +244,10 @@ def student():
             db.StarredTeachers.star_teacher(session["google_id"], star)
 
     teachers = db.Teacher.get_teacher_list()
+    print(teachers)
     starred_teachers = db.StarredTeachers.get_student_stars(session["google_id"])
 
     teachers = ["daisy sharf", "dw", "topher myklolyk"]
-    # starred_teachers = ["dw"]
 
 
     return render_template("student.html", teacher_list=teachers, starred_teachers = starred_teachers)
