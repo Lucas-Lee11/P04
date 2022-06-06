@@ -189,10 +189,11 @@ def update_teacherprofile():
         data.append(request.form.get("class" + str(i + 1)))
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
+    print(classes)
 
     teacher_id = session["google_id"]
     for i, group in enumerate(classes):
-        db.Teacher.add_schedule_period(teacher_id, i + 1, group[1])
+        db.Teacher.add_schedule_period(teacher_id, i + 1, group[0] + ":" + group[1])
 
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
