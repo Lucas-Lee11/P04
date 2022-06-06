@@ -211,18 +211,24 @@ def update_teacherprofile():
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
 @login_required 
 def view_teacherprofile():
-    schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
-    print(schedule_info)
     schedule = []
-    for period in schedule_info:
-        if not period:
-            pass
-        else:
-            schedule.append(period.split(":"))
+    for x in range(10):
+        schedule.append(["",""])
+    print(schedule)
+    schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
+    if None not in schedule_info:
+        print(schedule_info)
+        schedule = []
+        for period in schedule_info:
+            if not period:
+                pass
+            else:
+                schedule.append(period.split(":"))
+        print(schedule)
     teachers = db.Teacher.get_teacher_list()
 
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
-    return render_template("view_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
+    return render_template("view_teacherprofile.html", schedule=schedule, teacher_list=teachers, name=session["name"], email=session["email"])
 
 
 # hello- when you log in, that should just always take you to setup student
