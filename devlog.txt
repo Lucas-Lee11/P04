@@ -179,3 +179,7 @@ elizaK -- 2022-06-06 09:25
 andrewJ -- 2022-06-06 09:38
 - students can star teachers and it shows up on their page
 - implemented title/pronouns database add+get methods
+
+lucasL -- 2022-06-13:00
+- restructured the files to use file_id as the route
+- folders of uploads organized by teacher
