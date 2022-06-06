@@ -239,12 +239,18 @@ def student():
 
     if request.method == "POST":
         print(request.form.getlist("starred"))
+        starred = request.form.getlist("starred")
+        for star in starred:
+            db.StarredTeachers.star_teacher(session["google_id"], star)
 
     teachers = db.Teacher.get_teacher_list()
+    starred_teachers = db.StarredTeachers.get_student_stars(session["google_id"])
 
-    # teachers = ["daisy sharf", "dw", "topher myklolyk"]
+    teachers = ["daisy sharf", "dw", "topher myklolyk"]
+    # starred_teachers = ["dw"]
 
-    return render_template("student.html", teacher_list=teachers)
+
+    return render_template("student.html", teacher_list=teachers, starred_teachers = starred_teachers)
 
 
 @app.route("/upload_file_test", methods=["GET", "POST"])
