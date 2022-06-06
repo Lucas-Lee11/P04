@@ -20,6 +20,7 @@ from app import secret
 
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+UPLOAD_FOLDER = "./app/uploads"
 
 GOOGLE_CLIENT_ID = secret.setup()
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
@@ -33,16 +34,20 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted teachers here for now
-TEACHERS = ["cliu20@stuy.edu", "ekrechmer20@stuy.edu", "eknapp20@stuy.edu"]
+TEACHERS = [
+    "cliu20@stuy.edu",
+    "ekrechmer20@stuy.edu",
+    "eknapp20@stuy.edu",
+    "llee20@stuy.edu",
+]
 
 
 def login_required(function):
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
-            return render_template(
-                "index.html", message="not google authenticated- failed"
-            )
+            flash("Not Google Authenticated")
+            return redirect(url_for("index"))
         else:
             return function(*args, **kwargs)
 
@@ -51,6 +56,7 @@ def login_required(function):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # this should redirect to /teacher and /student for logged in users
     return render_template("index.html")
 
 
@@ -82,29 +88,6 @@ def callback():
     session["email"] = id_info.get("email")
     session["token"] = credentials.token
 
-    # hi yall so this is my idea of the basic flow for new accounts and stuff
-    # like that--that's what i started with the setup_teacher and student
-    # stuff
-    #
-    # so basically when someone makes a new account it should check to see if
-    # they're a student or a teacher and then send them to new account setup
-    # which for teachers allows you to configure your profile and for students
-    # allows you to star teachers
-    #
-    # all of this should be changable later with the edit_teacher and
-    # edit_student pages but i think new users should be immediately prompted
-    # to set up their accounts
-    #
-    # so for both students and teachers there should be a setup page and an
-    # edit page, and then there should be a general teacher_lookup page that's
-    # accessible by both students and teachers (but only students can star...?)
-    #
-    # btw there's no logout button yet on the setup pages--maybe a navbar and
-    # a base template could be the next step (either by me or someone else) so
-    # every page has the basic page tools like log out
-    #
-    # -- chris
-
     # check if email is whitelisted as a teacher, otherwise create student
     if session["email"] in TEACHERS:
         if not db.Teacher.get_teacher_id(session["email"]):
@@ -114,26 +97,26 @@ def callback():
             return redirect(url_for("setup_teacher"))
         return redirect(url_for("teacher"))
     else:
-        # QUESTION (for chris from eliza): why does it matter if the student is
-        # new to the site or not? the functionality is exactly the same
-        # RESPONSE from chris: yeah i dont think it matters
         if not db.Student.get_student_id(session["email"]):
             db.Student.create_student(
                 session["google_id"], session["name"], session["email"]
             )
         return redirect(url_for("student"))
 
-    # this should go to either the student or teacher protected page
-
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
-    requests.post(
-        "https://oauth2.googleapis.com/revoke",
-        params={"token": session["token"]},
-        headers={"content-type": "application/x-www-form-urlencoded"},
-    )
+
+    if "token" in session:
+        requests.post(
+            "https://oauth2.googleapis.com/revoke",
+            params={"token": session["token"]},
+            headers={"content-type": "application/x-www-form-urlencoded"},
+        )
+
     session.clear()
+
+    flash("Logged Out")
     return redirect(url_for("index"))
 
 
@@ -212,16 +195,9 @@ def update_teacherprofile():
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
 
-    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
-        db.Schedules.create_teacher_schedule(session["google_id"])
-    
-    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
-    i = 1
-    for group in classes:
-        db.Schedules.add_schedule_period(
-            schedule_id, i, group[0] + ":" + group[1]
-        )
-        i += 1
+    teacher_id = session["google_id"]
+    for i, group in enumerate(classes):
+        db.Teacher.add_schedule_period(teacher_id, i + 1, group[1])
 
     schedule_info = db.Schedules.get_schedule_periods(schedule_id)
     print(schedule_info)
@@ -261,6 +237,7 @@ def view_teacherprofile():
 # hello- when you log in, that should just always take you to setup student
 # there isn't really any setup, so I've renamed to just student so that it's
 # equivalent to the teacher route -Eliza
+# yes that sounds good -Chris
 @app.route("/student", methods=["GET", "POST"])
 @login_required
 def student():
@@ -273,7 +250,7 @@ def student():
         print(request.form.getlist("starred"))
 
     teachers = db.Teacher.get_teacher_list()
-    
+
     # teachers = ["daisy sharf", "dw", "topher myklolyk"]
 
     return render_template("student.html", teacher_list=teachers)
@@ -290,15 +267,17 @@ def file_upload_test():
             flash("No file part")
             return redirect(url_for("index"))
 
-        file = request.files["file"]
+        files = request.files.getlist("file")
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
 
-        if file.filename == "":
-            flash("No selected file")
-            return redirect(url_for("index"))
+        for file in files:
 
-        db.Files.add_teacher_file(session["google_id"], file)
+            if file.filename == "":
+                flash("No selected file")
+                return redirect(url_for("index"))
+
+            db.Files.add_teacher_file(session["google_id"], file)
 
         return redirect(url_for("index"))
 
@@ -321,7 +300,8 @@ def file_view_test():
 @login_required
 def download_file(filename):
 
-    # if not db.Teacher.verify_teacher(session["google_id"]):
-    #     return redirect(url_for("index"))
-    return send_file(f"./static/{filename}")
-    # return render_template("index.html")
+    if not os.path.exists(os.path.join(UPLOAD_FOLDER, filename)):
+        flash("Invalid File")
+        return redirect(url_for("index"))
+
+    return send_file(f"./uploads/{filename}")

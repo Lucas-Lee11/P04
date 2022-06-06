@@ -103,8 +103,8 @@ christopherL -- 2022-06-01 08:38
 - started contributing section in README
 
 elizaK -- 2022-06-1 09:25
-- the form now prefills your content based on the 
-google login information 
+- the form now prefills your content based on the
+google login information
 - the edit_teacher profile form now has elements named
 based on the period
 
@@ -131,7 +131,7 @@ because it is always the same to avoid confusion
 - merged edit teacher and setup teacher to work in the same way
 
 andrewJ -- 2022-06-02 09:55
-- starring teachers form submission works now (need to do DB stuff later) 
+- starring teachers form submission works now (need to do DB stuff later)
 
 elizaK -- 2022-06-02 10:15
 - changed the way the base file conditionally renders teacher vs student information
@@ -158,3 +158,15 @@ elizaK -- 2022-06-03 10:15
 - Info from form is pushed to the database and retrieved to send to view profile
 - passes values into view profile
 - TODO: take values and autofill current into view profile AND edit profile
+
+lucasL -- 2022-06-03 15:30
+- functionality for multiple files
+- check for token before trying to clear
+- database stores files in upload folder instead of in db blob
+
+lucasL -- 2022-06-03 21:30
+- merged teacher and schedule dbs
+- no bugs found yet, but maybe there will be
+
+christopherL -- 2022-06-06 08:06
+- fixed base.html navbar
