@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
   <h1>Edit Teacher Profile</h1>
-  <form action="/view_teacherprofile">
+  <form action="/view_teacherprofile" method="POST">
     <div class="row">
       <div class="col-3">
         <label for="prefixes">(Prefix)</label>
@@ -53,7 +53,7 @@
           <td>{{ i }}</td>
           <td><input type="text" name="class{{ i }}" class="form-control"></td>
           <td>
-            <select name="status" class="form-control form-select">
+            <select name="status{{ i }}" class="form-control form-select">
               <option>Never free (teaching)</option>
               <option>Never free (working/lunch/etc)</option>
               <option>Free for walk-ins</option>
