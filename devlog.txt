@@ -170,3 +170,12 @@ lucasL -- 2022-06-03 21:30
 
 christopherL -- 2022-06-06 08:06
 - fixed base.html navbar
+
+elizaK -- 2022-06-06 09:25
+- merged the new database structure
+- fixed base error
+- fixed view blank profile error
+
+andrewJ -- 2022-06-06 09:38
+- students can star teachers and it shows up on their page
+- implemented title/pronouns database add+get methods

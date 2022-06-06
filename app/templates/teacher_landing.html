@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Welcome to your profile{% endblock %}
 
+{% block links %}
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('edit_teacherprofile') }}">Edit Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('view_teacherprofile') }}">View Profile</a>
+      </li>
+  </ul>
+</div>
+
+{% endblock %}
+
 {% block content %}
+
 <div class="container-xxl my-4 bd-layout">
   <h1>Welcome back, {{name}}!</h1>
 </div>

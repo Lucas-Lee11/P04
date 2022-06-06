@@ -2,6 +2,18 @@
 
 {% block title %}Edit Teacher Profile{% endblock %}
 
+{% block links %}
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('view_teacherprofile') }}">View Profile</a>
+      </li>
+  </ul>
+</div>
+
+{% endblock %}
+
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
   <h1>Edit Teacher Profile</h1>

@@ -158,6 +158,34 @@ class Teacher:
             return None
 
     @staticmethod
+    def get_teacher_pronouns(teacher_id: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            pronouns = c.execute(
+                "SELECT pronouns FROM teachers WHERE teacher_id = (?)",
+                (teacher_id,),
+            ).fetchone()
+
+            if pronouns is not None:
+                return pronouns[0]
+            return None
+    
+    @staticmethod
+    def get_teacher_title(teacher_id: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            title = c.execute(
+                "SELECT title FROM teachers WHERE teacher_id = (?)",
+                (teacher_id,),
+            ).fetchone()
+
+            if title is not None:
+                return title[0]
+            return None
+
+    @staticmethod
     def add_schedule_period(teacher_id: str, pd: int, text: str) -> None:
         if not (1 <= pd <= 10):
             return
@@ -171,6 +199,29 @@ class Teacher:
 
             db.commit()
 
+    @staticmethod
+    def add_teacher_pronouns(teacher_id: str, pronouns: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            c.execute(
+                "UPDATE teachers SET pronouns = (?) WHERE teacher_id = (?)",
+                (pronouns, teacher_id),
+            )
+
+            db.commit()
+
+    @staticmethod
+    def add_teacher_title(teacher_id: str, title: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            c.execute(
+                "UPDATE teachers SET title = (?) WHERE teacher_id = (?)",
+                (title, teacher_id),
+            )
+
+            db.commit()
 
 class StarredTeachers:
     @staticmethod
@@ -354,6 +405,12 @@ teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
 Teacher.add_schedule_period(teacher_id, 1, "rm 840")
 schedule = Teacher.get_schedule_periods(teacher_id)
 print(schedule)
+Teacher.add_teacher_pronouns(teacher_id, "she/her")
+pronouns = Teacher.get_teacher_pronouns(teacher_id)
+Teacher.add_teacher_title(teacher_id, "Mr.")
+title = Teacher.get_teacher_title(teacher_id)
+print(pronouns, title)
+
 
 StarredTeachers.star_teacher(student_id, teacher_id)
 stars = StarredTeachers.get_student_stars(student_id)
