@@ -158,4 +158,5 @@ ehthumbs.db
 
 # Databases #
 *.db
+app/uploads
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

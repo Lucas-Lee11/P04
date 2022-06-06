@@ -259,6 +259,9 @@ class Files:
 
     @staticmethod
     def drop_db() -> None:
+        if os.path.exists(UPLOAD_FOLDER):
+            shutil.rmtree(UPLOAD_FOLDER)
+
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute("DROP TABLE IF EXISTS files")
@@ -266,35 +269,59 @@ class Files:
 
     @staticmethod
     def add_teacher_file(teacher_id: str, file) -> None:
-
         filename = secure_filename(file.filename)
-        path = os.path.join(UPLOAD_FOLDER, filename)
-
-        if not os.path.exists(UPLOAD_FOLDER):
-            os.makedirs(UPLOAD_FOLDER)
-
-        file.save(path)
 
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
+            id = c.execute(
+                "INSERT INTO files(teacher_id, filename) VALUES (?, ?) RETURNING file_id",
+                (teacher_id, filename),
+            ).fetchone()[0]
+
+            path = os.path.join(UPLOAD_FOLDER, teacher_id, filename)
+
+            if not os.path.exists(os.path.join(UPLOAD_FOLDER, teacher_id)):
+                os.makedirs( os.path.join(UPLOAD_FOLDER, teacher_id))
+
+            file.save(path)
+
+            db.commit()
+
+    @staticmethod
+    def get_teacher_files(teacher_id: str) -> list:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            files = c.execute(
+                "SELECT file_id, filename FROM files WHERE teacher_id = (?)", (teacher_id,)
+            ).fetchall()
+
+            if files is not None:
+                return files
+            return None
+
+    @staticmethod
+    def remove_teacher_file(teacher_id:str, filename: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
             c.execute(
-                "INSERT INTO files(teacher_id, filename) VALUES (?, ?)",
+                "DELETE FROM files WHERE teacher_id = (?) AND filename = (?)",
                 (teacher_id, filename),
             )
             db.commit()
 
     @staticmethod
-    def get_teacher_files(teacher_id: str) -> tuple:
+    def get_file_info(file_id: str) -> tuple:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            files = c.execute(
-                "SELECT filename e FROM files WHERE teacher_id = (?)", (teacher_id,)
-            ).fetchall()
+            id, filename = c.execute(
+                "SELECT teacher_id, filename FROM files WHERE file_id = (?)", (file_id,)
+            ).fetchone()
 
-            if files is not None:
-                return tuple(file[0] for file in files)
+            if filename is not None:
+                return id, filename
             return None
 
 

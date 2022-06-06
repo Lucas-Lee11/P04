@@ -153,7 +153,7 @@ def teacher():
 @login_required
 def edit_teacherprofile():
     teachers = db.Teacher.get_teacher_list()
-    
+
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
     schedule = []
@@ -178,7 +178,7 @@ def update_teacherprofile():
     filename = request.form.get("filename")
     # TODO: CREATE A DB METHOD that takes into account
     # all of the following info to push to the database
-    # TODO: CREATE A DB METHOD that gets all of this 
+    # TODO: CREATE A DB METHOD that gets all of this
     # information from where it resides in the db
 
     # for now, i will use the info we have already
@@ -209,7 +209,7 @@ def update_teacherprofile():
     return render_template("view_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
 
 @app.route("/view_teacherprofile", methods=["GET", "POST"])
-@login_required 
+@login_required
 def view_teacherprofile():
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
@@ -287,12 +287,13 @@ def file_view_test():
     return render_template("view_files.html", files=files)
 
 
-@app.route("/file/<path:filename>", methods=["GET", "POST"])
+@app.route("/file/<file_id>", methods=["GET", "POST"])
 @login_required
-def download_file(filename):
+def download_file(file_id):
+    teacher_id, filename = db.Files.get_file_info(file_id)
 
-    if not os.path.exists(os.path.join(UPLOAD_FOLDER, filename)):
+    if not os.path.exists(os.path.join(UPLOAD_FOLDER, teacher_id, filename)):
         flash("Invalid File")
         return redirect(url_for("index"))
 
-    return send_file(f"./uploads/{filename}")
+    return send_file(f"./uploads/{teacher_id}/{filename}")
