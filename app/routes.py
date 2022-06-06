@@ -170,17 +170,40 @@ def teacher():
 @login_required
 def edit_teacherprofile():
     teachers = db.Teacher.get_teacher_list()
-    return render_template("edit_teacherprofile.html", teacher_list=teachers)
+    
+    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
+        db.Schedules.create_teacher_schedule(session["google_id"])
+    
+    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
+
+    schedule_info = db.Schedules.get_schedule_periods(schedule_id)
+    print(schedule_info)
+    schedule = []
+    for period in schedule_info:
+        if not period:
+            pass
+        else:
+            schedule.append(period.split(":"))
+    teachers = db.Teacher.get_teacher_list()
+
+    # for now, name and email are temporary
+    return render_template("edit_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
 
 
-@app.route("/view_teacherprofile", methods=["GET", "POST"])
+@app.route("/update_teacherprofile", methods=["GET", "POST"])
 @login_required  # QUESTION- do you need to be logged in to see the teacher profile
-def view_teacherprofile():
+def update_teacherprofile():
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
     pronouns = request.form.get("Pronouns")
     email = request.form.get("Email")
     filename = request.form.get("filename")
+    # TODO: CREATE A DB METHOD that takes into account
+    # all of the following info to push to the database
+    # TODO: CREATE A DB METHOD that gets all of this 
+    # information from where it resides in the db
+
+    # for now, i will use the info we have already
 
     classes = []
     for i in range(10):
@@ -188,7 +211,6 @@ def view_teacherprofile():
         data.append(request.form.get("class" + str(i + 1)))
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
-    print(classes)
 
     if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
         db.Schedules.create_teacher_schedule(session["google_id"])
@@ -197,18 +219,43 @@ def view_teacherprofile():
     i = 1
     for group in classes:
         db.Schedules.add_schedule_period(
-            schedule_id, i, group[1]
+            schedule_id, i, group[0] + ":" + group[1]
         )
         i += 1
 
-    # QUESTION!!!! do we really need the "class taught"
-
-    test = db.Schedules.get_schedule_periods(schedule_id)
-    print(test)
-
+    schedule_info = db.Schedules.get_schedule_periods(schedule_id)
+    print(schedule_info)
+    schedule = []
+    for period in schedule_info:
+        if not period:
+            pass
+        else:
+            schedule.append(period.split(":"))
     teachers = db.Teacher.get_teacher_list()
 
-    return render_template("view_teacherprofile.html", teacher_list=teachers)
+    # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
+    return render_template("view_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
+
+@app.route("/view_teacherprofile", methods=["GET", "POST"])
+@login_required 
+def view_teacherprofile():
+    if not db.Teacher.get_teacher_schedule_id(session["google_id"]):
+        db.Schedules.create_teacher_schedule(session["google_id"])
+    
+    schedule_id = db.Teacher.get_teacher_schedule_id(session["google_id"])
+
+    schedule_info = db.Schedules.get_schedule_periods(schedule_id)
+    print(schedule_info)
+    schedule = []
+    for period in schedule_info:
+        if not period:
+            pass
+        else:
+            schedule.append(period.split(":"))
+    teachers = db.Teacher.get_teacher_list()
+
+    # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
+    return render_template("view_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
 
 
 # hello- when you log in, that should just always take you to setup student

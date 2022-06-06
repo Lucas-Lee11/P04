@@ -156,3 +156,5 @@ elizaK -- 2022-06-03 10:15
 - add back the bootstrap styling that was making it not work before
 - fix navbar rendering
 - Info from form is pushed to the database and retrieved to send to view profile
+- passes values into view profile
+- TODO: take values and autofill current into view profile AND edit profile
