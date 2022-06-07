@@ -58,13 +58,13 @@
           <td><input type="text" name="class{{ i }}" value="{{ schedule[i-1][0] if schedule[i-1] }}"" class="form-control"></td>
           <td>
             <select name="status{{ i }}" value="{{ schedule[i-1][1] if schedule[i-1] }}" class="form-control form-select">
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Never free (teaching)" }}>Never free (teaching)</option>
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Never free (working/lunch/etc)" }}>Never free (working/lunch/etc)</option>
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Free for walk-ins" }}>Free for walk-ins</option>
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Free -- appointment only" }}>Free -- appointment only</option>
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Teaching, but free both before and after during passing" }}>Teaching, but free both before and after during passing</option>
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Teaching, but free only before this period during passing" }}>Teaching, but free only before this period during passing</option>
-              <option {{ "selected" if schedule[i-1] is not None and schedule[i-1][1] == "Teaching, but free only after this period during passing" }}>Teaching, but free only after this period during passing</option>
+              <option>Never free (teaching)</option>
+              <option>Never free (working/lunch/etc)</option>
+              <option>Free for walk-ins</option>
+              <option>Free -- appointment only</option>
+              <option>Teaching, but free both before and after during passing</option>
+              <option>Teaching, but free only before this period during passing</option>
+              <option>Teaching, but free only after this period during passing</option>
             </select>
           </td>
         </tr>
