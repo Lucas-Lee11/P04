@@ -321,6 +321,7 @@ def student():
 @login_required
 def search():
     teacher_searched = request.form.get("teacher")
+    info = []
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_id = db.Teacher.get_teacher_id_name(teacher_searched)
@@ -331,12 +332,17 @@ def search():
 @app.route("/view_teacher/<name>", methods=["GET", "POST"])
 @login_required
 def view_teacher(name):
+    # todo: somewhere here do the link checking
+
     email_searched = request.form.get("email")
 
     prefix = ""
     name = ""
     pronouns = ""
     email = ""
+    schedule = []
+    for x in range(10):
+        schedule.append("")
 
     if db.Teacher.get_teacher_id(email_searched):
         teacher_id = db.Teacher.get_teacher_id(email_searched)
@@ -355,10 +361,8 @@ def view_teacher(name):
     
     teachers = db.Teacher.get_teacher_list()
     
-
-
-    # see how this has to be used
-    return render_template("view_teacherprofile.html", teacher_list = teachers, name = name, prefix = prefix, email = email, pronouns = pronouns, schedule = schedule)
+    return render_template("view_teacherprofile.html", teacher_list = teachers, name = name, 
+    prefix = prefix, email = email, pronouns = pronouns, schedule = schedule)
 
 
 

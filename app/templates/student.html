@@ -18,7 +18,7 @@
           <input type="hidden" name="remove_star" value={{teacher_id}}>
         </form>
       </td>
-      <td><a href={{'/view_teacher/%s' % teacher_name}}>{{teacher_name}}</a></td> <!-- this will link to the teacher's profile -->
+      <td><a href="/view_teacher/{{teacher[1]}}">{{teacher_name}}</a></td> <!-- this will link to the teacher's profile -->
       <td>{{classes_taught}}</td>
       <td></td> <!-- this will link to the teacher's profile -->
     </tr>
@@ -45,7 +45,7 @@
         <td>
           <input type="checkbox" name="starred_id" value={{teacher[0]}}>
         </td>
-        <td><a href={{'/view_teacher/%s' % teacher[1]}}>{{teacher[1]}}</a></td> <!-- this will link to the teacher's profile -->
+        <td><a href="/view_teacher/{{teacher[1]}}">{{teacher[1]}}</a></td> <!-- this will link to the teacher's profile -->
         <td>{{teacher[3], teacher[4], teacher[5], teacher[6], teacher[7], teacher[8], teacher[9], teacher[10], teacher[11], teacher[12]}}</td> <!--needs to be formatted-->
       </tr>
       {% endfor %}

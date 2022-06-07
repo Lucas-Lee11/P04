@@ -20,7 +20,9 @@
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
   <h1>Your Profile</h1>
+  {% if session["name"] in teacher_list %}
   <p><a href="{{ url_for('edit_teacherprofile') }}">Edit Profile</a></p>
+  {% endif %}
   {% if prefix == "None" %}
     <p>Name: {{ name }}</p>
   {% else %}

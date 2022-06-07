@@ -211,7 +211,7 @@ christopherL -- 2022-06-06 23:32
 - clean up templates
 - clean up routing
 
-elizaK -- 2022-06-06 23:50
+elizaK -- 2022-06-06 23:55
 - edit profile autofills
 - created db function to check if name is
 to one of the teacher names to get an id in database.py
@@ -219,5 +219,10 @@ to one of the teacher names to get an id in database.py
 view their profiles
 - when you search for a teacher, you see 4 basic pieces of info and 
 then from there you can click to see their full schedule 
+- fixed clicking on link error for all the teachers- you can now
+click the page and get redirected
 - todo: is name nearish that we check anyway?
 - todo: navbar– should always be able to go back to the main student page
+- todo (for me in class): 
+    figure out how to NOT get an error when you click on the starred teacher links
+    bug where you can't actually search a second time
