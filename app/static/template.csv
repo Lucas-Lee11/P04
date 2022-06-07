@@ -1,0 +1,11 @@
+room_number,status
+101,Never free (teaching)
+202,Never free (teaching)
+303,Never free (teaching)
+404,Free for walk-ins
+505,Free -- appointment only
+606,Never free (working/lunch/etc)
+707,"Teaching, but free both before and after during passing"
+808,"Teaching, but free only before this period during passing"
+909,"Teaching, but free only after this period during passing"
+11th Floor Pool,Free -- appointment only

@@ -3,6 +3,7 @@
 # P04 -- Final Project
 # 2022-06-15w
 
+import csv
 import functools
 import os
 import pathlib
@@ -36,7 +37,8 @@ flow = Flow.from_client_secrets_file(
 # whitelisted teachers here for now
 TEACHERS = [
     "cliu20@stuy.edu",
-    "ekrechmer20@stuy.edu",
+    # "ekrechmer20@stuy.edu",
+    "llee20@stuy.edu",
 ]
 
 
@@ -161,7 +163,6 @@ def edit_teacherprofile():
     name, email, pronouns, title = info
 
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
-    print("SCHEDULE INFO", schedule_info)
     schedule = []
     for period in schedule_info:
         if not period:
@@ -199,6 +200,7 @@ def update_teacherprofile():
     db.Teacher.add_teacher_email(session["google_id"], email)
     db.Teacher.add_teacher_pronouns(session["google_id"], pronouns)
 
+    print("FILES", request.files)
     if "file" in request.files:
         files = request.files.getlist("file")
         for file in files:
@@ -211,6 +213,17 @@ def update_teacherprofile():
         data.append(request.form.get("class" + str(i + 1)))
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
+
+    if "schedule_upload" in request.files:
+        classes = []
+        schedule_upload = request.files["schedule_upload"]
+        schedule_data = schedule_upload.read().decode("utf-8").splitlines()
+        reader = csv.reader(schedule_data[1:])
+        for row in reader:
+            if not row[1]:
+                row[1] = "Never free (teaching)" if row[0] else "Free for walk-ins"
+            classes.append(row)
+
     print(classes)
 
     teacher_id = session["google_id"]
@@ -237,18 +250,14 @@ def view_teacherprofile():
     schedule = []
     for i in range(10):
         schedule.append(["", ""])
-    print("CALL 1")
-    print(schedule)
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     if None not in schedule_info:
-        print(schedule_info)
         schedule = []
         for period in schedule_info:
             if not period:
                 pass
             else:
                 schedule.append(period.split(":"))
-        print(schedule)
 
     files = db.Files.get_teacher_files(session["google_id"])
 
@@ -314,8 +323,6 @@ def student():
     )
 
 
-
-
 @app.route("/search", methods=["GET", "POST"])
 @login_required
 def search():
@@ -367,7 +374,17 @@ def view_teacher(hex):
         is_teacher=is_teacher,
     )
 
+    teachers = db.Teacher.get_teacher_list()
 
+    return render_template(
+        "view_teacherprofile.html",
+        teacher_list=teachers,
+        name=name,
+        prefix=prefix,
+        email=email,
+        pronouns=pronouns,
+        schedule=schedule,
+    )
 
 
 @app.route("/file/<file_id>", methods=["GET", "POST"])

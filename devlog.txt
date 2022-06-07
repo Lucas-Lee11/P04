@@ -227,6 +227,13 @@ click the page and get redirected
     figure out how to NOT get an error when you click on the starred teacher links
     bug where you can't actually search a second time
 
+christopherL -- 2022-06-07 08:41
+- csv upload
+- initial landing page update
+
+ellaK -- 2022-06-07 09:26
+- styling for student page (starred teachers, table, search bar)
+
 lucasL -- 20220-06-07 09:30
 - view teacher route
 - teacher hex id
