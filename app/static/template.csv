@@ -1,0 +1,11 @@
+period,room_number,status
+1,101,Never free (teaching)
+2,202,Never free (teaching)
+3,303,Never free (teaching)
+4,404,Free for walk-ins
+5,505,Free -- appointment only
+6,606,Never free (working/lunch/etc)
+7,707,"Teaching, but free both before and after during passing"
+8,808,"Teaching, but free only before this period during passing"
+9,909,"Teaching, but free only after this period during passing"
+10,11th Floor Pool,Free -- appointment only
