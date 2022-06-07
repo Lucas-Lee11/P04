@@ -173,9 +173,9 @@ class Teacher:
             ).fetchone()
 
             if info is not None:
-                return info
+                return tuple("" if data is None else data for data in info)
             return None
-    
+
     @staticmethod
     def get_teacher_name(teacher_id: str) -> str:
         with sqlite3.connect(DB_FILE) as db:
@@ -317,7 +317,7 @@ class StarredTeachers:
             if teachers is not None:
                 return tuple(teacher[0] for teacher in teachers)
             return None
-    
+
     @staticmethod
     def starred_relationship_exists(student_id: str, teacher_id: str) -> bool:
         with sqlite3.connect(DB_FILE) as db:

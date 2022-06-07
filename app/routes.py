@@ -59,9 +59,11 @@ def teacher_required(function):
         if "google_id" not in session:
             flash("Not Google Authenticated")
             return redirect(url_for("index"))
-        if not db.Teacher.get_teacher_id(session["email"]):
+
+        if not db.Teacher.verify_teacher(session["google_id"]):
             flash("Not a Teacher Account")
             return redirect(url_for("student"))
+
         else:
             return function(*args, **kwargs)
 
@@ -205,9 +207,8 @@ def update_teacherprofile():
 
         files = request.files.getlist("file")
         for file in files:
-            if file.filename == "":
-                continue
-            db.Files.add_teacher_file(session["google_id"], file)
+            if file.filename != "":
+                db.Files.add_teacher_file(session["google_id"], file)
 
 
     classes = []
@@ -237,10 +238,7 @@ def update_teacherprofile():
 @app.route("/teacher/view", methods=["GET", "POST"])
 @login_required
 def view_teacherprofile():
-    info = db.Teacher.get_teacher_info(session["google_id"])
-    info = tuple("" if data is None else data for data in info)
-    name, email, pronouns, title = info
-
+    name, email, pronouns, title = db.Teacher.get_teacher_info(session["google_id"])
 
     schedule = []
     for x in range(10):
