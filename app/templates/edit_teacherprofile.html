@@ -2,32 +2,20 @@
 
 {% block title %}Edit Teacher Profile{% endblock %}
 
-{% block links %}
-
-<div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('view_teacherprofile') }}">View Profile</a>
-        </li>
-    </ul>
-</div>
-
-{% endblock %}
-
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
-    <h1>Edit Teacher Profile</h1>
-    <form action={{url_for("edit_teacherprofile")}} method="POST" enctype="multipart/form-data">
+    <h1>Edit Profile</h1>
+    <form action="{{ url_for('edit_teacherprofile') }}" method="POST" enctype="multipart/form-data">
         <div class="row">
             <div class="col-3">
                 <label for="prefixes">(Prefix)</label>
                 <select list="prefixes" name="prefixes" class="form-control form-select">
-                    <option {{"selected" if title == "None"}} value="None">None</option>
-                    <option {{"selected" if title == "Mr."}} value="Mr.">Mr.</option>
-                    <option {{"selected" if title == "Ms."}} value="Ms.">Ms.</option>
-                    <option {{"selected" if title == "Mrs."}} value="Mrs.">Mrs.</option>
-                    <option {{"selected" if title == "Mx."}} value="Mx.">Mx.</option>
-                    <option {{"selected" if title == "Dr."}} value="Dr.">Dr.</option>
+                    <option {{ "selected" if title == "None" }} value="None">None</option>
+                    <option {{ "selected" if title == "Mr." }} value="Mr.">Mr.</option>
+                    <option {{ "selected" if title == "Ms." }} value="Ms.">Ms.</option>
+                    <option {{ "selected" if title == "Mrs." }} value="Mrs.">Mrs.</option>
+                    <option {{ "selected" if title == "Mx." }} value="Mx.">Mx.</option>
+                    <option {{ "selected" if title == "Dr." }} value="Dr.">Dr.</option>
                 </select>
             </div>
             <div class="col-9">
@@ -51,7 +39,7 @@
         </div>
 
         {% for id, filename in files %}
-        <a href={{url_for("download_file", file_id=id)}}>{{filename}}</a>
+        <a href="{{ url_for('download_file', file_id=id) }}">{{filename}}</a>
         {% endfor %}
 
         <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
@@ -67,9 +55,9 @@
                 {% for i in range(1, 11) %}
                 <tr>
                     <td>{{ i }}</td>
-                    <td><input type="text" name="class{{ i }}" value="{{schedule[i-1][0]}}"" class="form-control"></td>
+                    <td><input type="text" name="class{{ i }}" value="{{ schedule[i-1][0] if schedule[i-1] }}"" class="form-control"></td>
                     <td>
-                        <select name="status{{ i }}" value="{{schedule[i-1][1]}}" class="form-control form-select">
+                        <select name="status{{ i }}" value="{{ schedule[i-1][1] if schedule[i-1] }}" class="form-control form-select">
                             <option>Never free (teaching)</option>
                             <option>Never free (working/lunch/etc)</option>
                             <option>Free for walk-ins</option>

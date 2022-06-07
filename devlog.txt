@@ -207,3 +207,8 @@ lucasL -- 2022-06-06 22:45
 
 elizaK -- 2022-06-06 23:01
 - edit profile autofills
+
+christopherL -- 2022-06-06 23:32
+- fix teacher verification for navbar
+- clean up templates
+- clean up routing
