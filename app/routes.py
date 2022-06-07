@@ -113,7 +113,7 @@ def callback():
             db.Teacher.create_teacher(
                 session["google_id"], session["name"], session["email"]
             )
-            return redirect(url_for("setup_teacher"))
+            return redirect(url_for("edit_teacherprofile"))
         return redirect(url_for("teacher"))
     else:
         if not db.Student.get_student_id(session["email"]):
@@ -137,21 +137,6 @@ def logout():
 
     flash("Logged Out")
     return redirect(url_for("index"))
-
-
-@app.route("/teacher/setup", methods=["GET", "POST"])
-@login_required
-def setup_teacher():
-    if not db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("setup_student"))
-
-    teachers = db.Teacher.get_teacher_list()
-    return render_template(
-        "setup_teacher.html",
-        name=session["name"],
-        email=session["email"],
-        teacher_list=teachers,
-    )
 
 
 # this is the page that a teacher who has already set up their account will land on
@@ -181,57 +166,64 @@ def edit_teacherprofile():
             pass
         else:
             schedule.append(period.split(":"))
+
     teachers = db.Teacher.get_teacher_list()
+    files = db.Files.get_teacher_files(session["google_id"])
 
     # for now, name and email are temporary
-    return render_template("edit_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
+    return render_template(
+        "edit_teacherprofile.html",
+        teacher_list=teachers,
+        schedule=schedule,
+        name=session["name"],
+        email=session["email"],
+        files=files)
 
 
 @app.route("/teacher/edit", methods=["POST"])
-@login_required  # QUESTION- do you need to be logged in to see the teacher profile
+@login_required
 def update_teacherprofile():
-    if request.method == "POST":
-        prefix = request.form.get("prefixes")
-        name = request.form.get("name")
-        pronouns = request.form.get("Pronouns")
-        email = request.form.get("Email")
-        # TODO: CREATE A DB METHOD that takes into account
-        # all of the following info to push to the database
-        # TODO: CREATE A DB METHOD that gets all of this
-        # information from where it resides in the db
+    prefix = request.form.get("prefixes")
+    name = request.form.get("name")
+    pronouns = request.form.get("Pronouns")
+    email = request.form.get("Email")
+    # TODO: CREATE A DB METHOD that takes into account
+    # all of the following info to push to the database
+    # TODO: CREATE A DB METHOD that gets all of this
+    # information from where it resides in the db
 
-        # for now, i will use the info we have already
-        if "file" in request.files:
+    # for now, i will use the info we have already
+    if "file" in request.files:
 
-            files = request.files.getlist("file")
-            for file in files:
-                if file.filename == "":
-                    continue
+        files = request.files.getlist("file")
+        for file in files:
+            if file.filename == "":
+                continue
 
-                db.Files.add_teacher_file(session["google_id"], file)
+            db.Files.add_teacher_file(session["google_id"], file)
 
 
-        classes = []
-        for i in range(10):
-            data = []
-            data.append(request.form.get("class" + str(i + 1)))
-            data.append(request.form.get("status" + str(i + 1)))
-            classes.append(data)
-        print(classes)
+    classes = []
+    for i in range(10):
+        data = []
+        data.append(request.form.get("class" + str(i + 1)))
+        data.append(request.form.get("status" + str(i + 1)))
+        classes.append(data)
+    print(classes)
 
-        teacher_id = session["google_id"]
-        for i, group in enumerate(classes):
-            db.Teacher.add_schedule_period(teacher_id, i + 1, group[0] + ":" + group[1])
+    teacher_id = session["google_id"]
+    for i, group in enumerate(classes):
+        db.Teacher.add_schedule_period(teacher_id, i + 1, group[0] + ":" + group[1])
 
-        schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
-        print(schedule_info)
-        schedule = []
-        for period in schedule_info:
-            if not period:
-                pass
-            else:
-                schedule.append(period.split(":"))
-        teachers = db.Teacher.get_teacher_list()
+    schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
+    print(schedule_info)
+    schedule = []
+    for period in schedule_info:
+        if not period:
+            pass
+        else:
+            schedule.append(period.split(":"))
+    teachers = db.Teacher.get_teacher_list()
 
 
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
@@ -265,8 +257,7 @@ def view_teacherprofile():
         teacher_list=teachers,
         name=session["name"],
         email=session["email"],
-        files=files
-        )
+        files=files)
 
 
 # hello- when you log in, that should just always take you to setup student
@@ -306,43 +297,3 @@ def download_file(file_id):
         return redirect(url_for("index"))
 
     return send_file(f"./uploads/{teacher_id}/{filename}")
-
-
-# @app.route("/upload_file_test", methods=["GET", "POST"])
-# @login_required
-# def file_upload_test():
-#     if not db.Teacher.verify_teacher(session["google_id"]):
-#         return redirect(url_for("index"))
-#
-#     if request.method == "POST":
-#         if "file" not in request.files:
-#             flash("No file part")
-#             return redirect(url_for("index"))
-#
-#         files = request.files.getlist("file")
-#         # If the user does not select a file, the browser submits an
-#         # empty file without a filename.
-#
-#         for file in files:
-#
-#             if file.filename == "":
-#                 flash("No selected file")
-#                 return redirect(url_for("index"))
-#
-#             db.Files.add_teacher_file(session["google_id"], file)
-#
-#         return redirect(url_for("index"))
-#
-#     return render_template("upload_files.html")
-
-
-# @app.route("/view_files_test", methods=["GET", "POST"])
-# @login_required
-# def file_view_test():
-#     if not db.Teacher.verify_teacher(session["google_id"]):
-#         return redirect(url_for("index"))
-#
-#     files = db.Files.get_teacher_files(session["google_id"])
-#     print(files)
-#
-#     return render_template("view_files.html", files=files)
