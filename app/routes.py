@@ -218,11 +218,9 @@ def update_teacherprofile():
         classes = []
         schedule_upload = request.files["schedule_upload"]
         schedule_data = schedule_upload.read().decode("utf-8").splitlines()
-        print(schedule_data)
         reader = csv.reader(schedule_data[1:])
         for row in reader:
-            data = row[1:]
-            classes.append(data)
+            classes.append(row)
 
     print(classes)
 
