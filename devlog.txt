@@ -196,7 +196,7 @@ lucasL -- 2022-06-06 20:45
 - added more add methods for teachers
 - consolidated routes
 
-andrewJ -- 2022-0606 21:56
+andrewJ -- 2022-06-06 21:56
 - Finished starring
   - can add/remove teachers
 - TODO: search functionality and view teachers page
@@ -204,3 +204,6 @@ andrewJ -- 2022-0606 21:56
 lucasL -- 2022-06-06 22:45
 - properly store teacher info
 - display teacher info
+
+elizaK -- 2022-06-06 23:01
+- edit profile autofills
