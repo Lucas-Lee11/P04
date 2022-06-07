@@ -229,6 +229,7 @@ click the page and get redirected
 
 christopherL -- 2022-06-07 08:41
 - csv upload
+- initial landing page update
 
 ellaK -- 2022-06-07 09:26
 - styling for student page (starred teachers, table, search bar)

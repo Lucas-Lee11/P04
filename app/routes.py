@@ -220,6 +220,8 @@ def update_teacherprofile():
         schedule_data = schedule_upload.read().decode("utf-8").splitlines()
         reader = csv.reader(schedule_data[1:])
         for row in reader:
+            if not row[1]:
+                row[1] = "Never free (teaching)" if row[0] else "Free for walk-ins"
             classes.append(row)
 
     print(classes)
