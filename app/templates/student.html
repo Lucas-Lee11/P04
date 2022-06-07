@@ -6,11 +6,18 @@
   <h1>Starred Teachers</h1>
   <table>
     <tr> 
+      <th>Remove</th>
       <th>Teacher</th>
       <th>Classes Taught</th>
     </tr>
     {% for teacher_id, teacher_name, classes_taught in starred_teachers %}
     <tr>
+      <td>
+        <form action="/student" method="POST">
+          <input type="submit" value="x">
+          <input type="hidden" name="remove_star" value={{teacher_id}}>
+        </form>
+      </td>
       <td><a href={{'/view_teacher/%s' % teacher_name}}>{{teacher_name}}</a></td> <!-- this will link to the teacher's profile -->
       <td>{{classes_taught}}</td>
       <td></td> <!-- this will link to the teacher's profile -->
@@ -20,6 +27,7 @@
 
 
   <h1>Find Teachers To Star</h1>
+  <input type="text" placeholder="Search.."><button type="submit">Search</button>
   <form action="/student" method="POST">
     <table>
       <tr> 
@@ -33,7 +41,7 @@
           <input type="checkbox" name="starred_id" value={{teacher[0]}}>
         </td>
         <td><a href={{'/view_teacher/%s' % teacher[1]}}>{{teacher[1]}}</a></td> <!-- this will link to the teacher's profile -->
-        <td>{{teacher[3], teacher[4], teacher[5], teacher[6], teacher[7], teacher[8], teacher[9], teacher[10], teacher[11], teacher[12]}}</td>
+        <td>{{teacher[3], teacher[4], teacher[5], teacher[6], teacher[7], teacher[8], teacher[9], teacher[10], teacher[11], teacher[12]}}</td> <!--needs to be formatted-->
       </tr>
       {% endfor %}
     </table>

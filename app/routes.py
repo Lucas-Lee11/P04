@@ -266,6 +266,14 @@ def student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("teacher"))
 
+    ####### FOR TESTING PURPOSES #######
+    db.Teacher.create_db()
+    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
+    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
+    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
+    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
+    ####################################
+
     # Fetches all teachers and their information (might want to limit how many teachers we get once we implement search functionality)
     all_teachers = db.Teacher.get_teacher_list() 
 
@@ -276,14 +284,8 @@ def student():
             if not db.StarredTeachers.starred_relationship_exists(session["google_id"], teacher_id):
                 db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
 
-
-    ####### FOR TESTING PURPOSES #######
-    db.Teacher.create_db()
-    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
-    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
-    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
-    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
-    ####################################
+        removed_id = request.form.get("remove_star")
+        db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
 
     # Fetches a students starred teachers
     starred_teachers_id = db.StarredTeachers.get_student_stars(session["google_id"])
