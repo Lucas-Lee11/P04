@@ -61,7 +61,7 @@ def teacher_required(function):
             return redirect(url_for("index"))
         if not db.Teacher.get_teacher_id(session["email"]):
             flash("Not a Teacher Account")
-            return redirect(url_for("setup_student"))
+            return redirect(url_for("student"))
         else:
             return function(*args, **kwargs)
 
@@ -260,10 +260,6 @@ def view_teacherprofile():
         files=files)
 
 
-# hello- when you log in, that should just always take you to setup student
-# there isn't really any setup, so I've renamed to just student so that it's
-# equivalent to the teacher route -Eliza
-# yes that sounds good -Chris
 @app.route("/student", methods=["GET", "POST"])
 @login_required
 def student():
@@ -273,19 +269,34 @@ def student():
         return redirect(url_for("teacher"))
 
     if request.method == "POST":
-        print(request.form.getlist("starred"))
-        starred = request.form.getlist("starred")
-        for star in starred:
-            db.StarredTeachers.star_teacher(session["google_id"], star)
+        starred_id = request.form.getlist("starred_id")
+        for teacher_id in starred_id:
+            if not db.StarredTeachers.starred_relationship_exists(session["google_id"], teacher_id):
+                db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
 
-    teachers = db.Teacher.get_teacher_list()
-    print(teachers)
+    ####### FOR TESTING PURPOSES #######
+    db.Teacher.create_db()
+    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
+    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
+    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
+    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
+    ####################################
+
+    
+    all_teachers = db.Teacher.get_teacher_list()
     starred_teachers = db.StarredTeachers.get_student_stars(session["google_id"])
+    print(starred_teachers)
+    
+    teacher_names = []
+    classes_taught = []
+    for teacher_id in starred_teachers:
+            teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
+            classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
 
-    teachers = ["daisy sharf", "dw", "topher myklolyk"]
 
+    return render_template("student.html", teacher_list=all_teachers, 
+                                           starred_teachers = zip(starred_teachers, teacher_names, classes_taught))
 
-    return render_template("student.html", teacher_list=teachers, starred_teachers = starred_teachers)
 
 @app.route("/file/<file_id>", methods=["GET", "POST"])
 @login_required

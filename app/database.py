@@ -100,7 +100,7 @@ class Teacher:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
-                "INSERT INTO teachers (teacher_id, name, email) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO teachers (teacher_id, name, email) VALUES (?, ?, ?)",
                 (teacher_id, name, email),
             )
 
@@ -133,10 +133,15 @@ class Teacher:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            teachers = c.execute("SELECT name FROM teachers").fetchall()
+            teachers = c.execute(
+                """
+                SELECT teacher_id, name, email, period_1, period_2, period_3, period_4, period_5, period_6, period_7 , period_8, period_9, period_10
+                FROM teachers
+                """
+            ).fetchall()
 
             if teachers is not None:
-                return [t[0] for t in teachers]
+                return teachers
             return None
 
 
@@ -169,6 +174,20 @@ class Teacher:
 
             if info is not None:
                 return info
+            return None
+    
+    @staticmethod
+    def get_teacher_name(teacher_id: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            name = c.execute(
+                "SELECT name FROM teachers WHERE teacher_id = (?)",
+                (teacher_id,),
+            ).fetchone()
+
+            if name is not None:
+                return name[0]
             return None
 
     @staticmethod
@@ -268,7 +287,7 @@ class StarredTeachers:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
-                "INSERT INTO starred_teachers (teacher_id, student_id) VALUES (?, ?)",
+                "INSERT OR IGNORE INTO starred_teachers (teacher_id, student_id) VALUES (?, ?)",
                 (teacher_id, student_id),
             )
             db.commit()
@@ -298,6 +317,21 @@ class StarredTeachers:
             if teachers is not None:
                 return tuple(teacher[0] for teacher in teachers)
             return None
+    
+    @staticmethod
+    def starred_relationship_exists(student_id: str, teacher_id: str) -> bool:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            starred = c.execute(
+                "SELECT * FROM starred_teachers WHERE teacher_id = (?) AND student_id = (?)",
+                (teacher_id, student_id),
+            ).fetchone()
+
+            if starred is not None:
+                return True
+            return False
+
 
 
 class Files:
