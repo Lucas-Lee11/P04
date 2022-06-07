@@ -25,13 +25,10 @@
                   Starred Teachers
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  {% if starred %}
-                    {% for teacher in starred %}
-                    <li><a class="dropdown-item" href="">{{ teacher }}</a></li>
-                    {% endfor %}
-                  {% else %}
-                    <li class="dropdown-item disabled">No starred teachers yet!</li>
-                  {% endif %}
+                  <li class="dropdown-item">{{teacher_name}}</li>
+                  {% for teacher_id, teacher_name, classes_taught in starred_teachers %}
+                    <li><a class="dropdown-item" href="">{{ teacher_name }}</a></li>
+                  {% endfor %}
                 </ul>
               </li>
             {% endif %}

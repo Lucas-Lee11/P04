@@ -316,6 +316,8 @@ def student():
         teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
         classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
 
+    print(teacher_names)
+
     return render_template(
         "student.html",
         teacher_list=all_teachers,
