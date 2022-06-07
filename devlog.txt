@@ -205,7 +205,13 @@ lucasL -- 2022-06-06 22:45
 - properly store teacher info
 - display teacher info
 
-elizaK -- 2022-06-06 23:01
+
+christopherL -- 2022-06-06 23:32
+- fix teacher verification for navbar
+- clean up templates
+- clean up routing
+
+elizaK -- 2022-06-06 23:50
 - edit profile autofills
 - created db function to check if name is
 to one of the teacher names to get an id in database.py

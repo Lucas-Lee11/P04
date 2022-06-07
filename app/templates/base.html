@@ -21,39 +21,32 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">   
             {% if "google_id" in session %}
               <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Starred Teachers
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                {% if starred %}
-                  {% for teacher in starred %}
-                  <li><a class="dropdown-item" href="">{{ teacher }}</a></li>
-                  {% endfor %}
-                {% else %}
-                  <li class="dropdown-item disabled">No starred teachers yet!</li>
-                {% endif %}
-              </ul>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Starred Teachers
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {% if starred %}
+                    {% for teacher in starred %}
+                    <li><a class="dropdown-item" href="">{{ teacher }}</a></li>
+                    {% endfor %}
+                  {% else %}
+                    <li class="dropdown-item disabled">No starred teachers yet!</li>
+                  {% endif %}
+                </ul>
               </li>
-            {% endif %}   
-
-  
-            {% if session["name"] in teacher_list %}
-              {% block links %}{% endblock %}
-            {% endif %} 
+            {% endif %}
           </ul>
         </div>
         <div class="px-3 py-2">
           <div class="navbar-nav container d-flex flex-wrap justify-content-center">
             <!-- IF LOGGED IN -->
+            {% if is_teacher %}
+              <a class="nav-link" href="{{ url_for('view_teacherprofile') }}">Profile</a>
+            {% endif %}
             {% if "google_id" in session %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-              </li>
-            
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-              </li>
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
             {% endif %}
           </div>
         </div>

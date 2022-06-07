@@ -52,15 +52,18 @@ def login_required(function):
 
     return wrapper
 
+
 def teacher_required(function):
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             flash("Not Google Authenticated")
             return redirect(url_for("index"))
-        if not db.Teacher.get_teacher_id(session["email"]):
+
+        if not db.Teacher.verify_teacher(session["google_id"]):
             flash("Not a Teacher Account")
             return redirect(url_for("student"))
+
         else:
             return function(*args, **kwargs)
 
@@ -69,7 +72,12 @@ def teacher_required(function):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    # this should redirect to /teacher and /student for logged in users
+    if "google_id" in session:
+        if db.Teacher.verify_teacher(session["google_id"]):
+            return redirect(url_for("teacher"))
+        else:
+            return redirect(url_for("student"))
+
     return render_template("index.html")
 
 
@@ -94,12 +102,13 @@ def callback():
 
     try:
         id_info = id_token.verify_oauth2_token(
-            id_token=credentials._id_token, request=token_request, audience=GOOGLE_CLIENT_ID
+            id_token=credentials._id_token,
+            request=token_request,
+            audience=GOOGLE_CLIENT_ID,
         )
     except Exception as e:
         flash("Login Error")
         return redirect(url_for("index"))
-
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
@@ -124,14 +133,12 @@ def callback():
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
-
     if "token" in session:
         requests.post(
             "https://oauth2.googleapis.com/revoke",
             params={"token": session["token"]},
             headers={"content-type": "application/x-www-form-urlencoded"},
         )
-
     session.clear()
 
     flash("Logged Out")
@@ -142,27 +149,20 @@ def logout():
 @app.route("/teacher", methods=["GET", "POST"])
 @teacher_required
 def teacher():
-    if not db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("setup_student"))
-
-    teachers = db.Teacher.get_teacher_list()
-
     return render_template(
-        "teacher_landing.html", name=session["name"], teacher_list=teachers
+        "teacher_landing.html", name=session["name"], is_teacher=True
     )
 
 
 @app.route("/teacher/edit", methods=["GET"])
-@login_required
+@teacher_required
 def edit_teacherprofile():
-    teachers = db.Teacher.get_teacher_list()
-
     info = db.Teacher.get_teacher_info(session["google_id"])
     info = tuple("" if data is None else data for data in info)
     name, email, pronouns, title = info
 
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
-    print(schedule_info)
+    print("SCHEDULE INFO", schedule_info)
     schedule = []
     for period in schedule_info:
         if not period:
@@ -171,19 +171,19 @@ def edit_teacherprofile():
             schedule.append(period.split(":"))
     print(schedule)
 
-    teachers = db.Teacher.get_teacher_list()
     files = db.Files.get_teacher_files(session["google_id"])
 
     # for now, name and email are temporary
     return render_template(
         "edit_teacherprofile.html",
-        teacher_list=teachers,
         schedule=schedule,
         name=session["name"],
         email=session["email"],
         pronouns=pronouns,
         title=title,
-        files=files)
+        files=files,
+        is_teacher=True,
+    )
 
 
 @app.route("/teacher/edit", methods=["POST"])
@@ -201,13 +201,10 @@ def update_teacherprofile():
     db.Teacher.add_teacher_pronouns(session["google_id"], pronouns)
 
     if "file" in request.files:
-
         files = request.files.getlist("file")
         for file in files:
-            if file.filename == "":
-                continue
-            db.Files.add_teacher_file(session["google_id"], file)
-
+            if file.filename != "":
+                db.Files.add_teacher_file(session["google_id"], file)
 
     classes = []
     for i in range(10):
@@ -229,21 +226,19 @@ def update_teacherprofile():
             pass
         else:
             schedule.append(period.split(":"))
-    teachers = db.Teacher.get_teacher_list()
 
     return redirect(url_for("view_teacherprofile"))
+
 
 @app.route("/teacher/view", methods=["GET", "POST"])
 @login_required
 def view_teacherprofile():
-    info = db.Teacher.get_teacher_info(session["google_id"])
-    info = tuple("" if data is None else data for data in info)
-    name, email, pronouns, title = info
-
+    name, email, pronouns, title = db.Teacher.get_teacher_info(session["google_id"])
 
     schedule = []
-    for x in range(10):
-        schedule.append(["",""])
+    for i in range(10):
+        schedule.append(["", ""])
+    print("CALL 1")
     print(schedule)
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     if None not in schedule_info:
@@ -256,21 +251,21 @@ def view_teacherprofile():
                 schedule.append(period.split(":"))
         print(schedule)
 
-    teachers = db.Teacher.get_teacher_list()
     files = db.Files.get_teacher_files(session["google_id"])
 
-
+    is_teacher = db.Teacher.verify_teacher(session["google_id"])
 
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return render_template(
         "view_teacherprofile.html",
         schedule=schedule,
-        teacher_list=teachers,
         name=name,
         email=email,
         prefix=title,
         pronouns=pronouns,
-        files=files)
+        files=files,
+        is_teacher=is_teacher,
+    )
 
 
 @app.route("/student", methods=["GET", "POST"])
@@ -294,7 +289,9 @@ def student():
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         for teacher_id in starred_id:
-            if not db.StarredTeachers.starred_relationship_exists(session["google_id"], teacher_id):
+            if not db.StarredTeachers.starred_relationship_exists(
+                session["google_id"], teacher_id
+            ):
                 db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
 
         removed_id = request.form.get("remove_star")
@@ -311,8 +308,11 @@ def student():
         teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
         classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
 
-    return render_template("student.html", teacher_list=all_teachers,
-                                           starred_teachers = zip(starred_teachers_id, teacher_names, classes_taught))
+    return render_template(
+        "student.html",
+        teacher_list=all_teachers,
+        starred_teachers=zip(starred_teachers_id, teacher_names, classes_taught),
+    )
 
 
 

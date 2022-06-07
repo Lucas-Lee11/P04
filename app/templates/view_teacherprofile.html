@@ -19,33 +19,38 @@
 
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
-    <h1>View Your Profile</h1>
-    <p>Name: {{prefix}} {{name}}</p>
-    <p>Pronouns: {{pronouns}}</p>
-    <p>(Preferred) Email(s): {{email}}</p>
-    <p>Important Files (i.e. syllabi):</p>
+  <h1>Your Profile</h1>
+  <p><a href="{{ url_for('edit_teacherprofile') }}">Edit Profile</a></p>
+  {% if prefix == "None" %}
+    <p>Name: {{ name }}</p>
+  {% else %}
+    <p>Name: {{ prefix }} {{ name }}</p>
+  {% endif %}
+  <p>Pronouns: {{ pronouns }}</p>
+  <p>(Preferred) Email(s): {{ email }}</p>
+  <p>Important Files (i.e. syllabi):</p>
 
-    {% for id, filename in files %}
-    <a href={{url_for("download_file", file_id=id)}}>{{filename}}</a>
-    {% endfor %}
+  {% for id, filename in files %}
+  <a href="{{url_for('download_file', file_id=id)}}">{{filename}}</a>
+  {% endfor %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Period</th>
-                <th>Room Number</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for i in range(1, 11) %}
-            <tr>
-                <td>{{ i }}</td>
-                <td>{{ schedule[i - 1][0] }}</td>
-                <td>{{ schedule[i - 1][1] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Period</th>
+        <th>Room Number</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in range(1, 11) %}
+      <tr>
+        <td>{{ i }}</td>
+        <td>{{ schedule[i - 1][0] }}</td>
+        <td>{{ schedule[i - 1][1] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}
