@@ -170,6 +170,7 @@ def edit_teacherprofile():
             pass
         else:
             schedule.append(period.split(":"))
+    print(schedule)
 
     teachers = db.Teacher.get_teacher_list()
     files = db.Files.get_teacher_files(session["google_id"])
