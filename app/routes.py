@@ -37,7 +37,6 @@ flow = Flow.from_client_secrets_file(
 TEACHERS = [
     "cliu20@stuy.edu",
     "ekrechmer20@stuy.edu",
-    "eknapp20@stuy.edu",
     "llee20@stuy.edu",
 ]
 
@@ -314,6 +313,54 @@ def student():
 
     return render_template("student.html", teacher_list=all_teachers,
                                            starred_teachers = zip(starred_teachers_id, teacher_names, classes_taught))
+
+
+
+
+@app.route("/search", methods=["GET", "POST"])
+@login_required
+def search():
+    teacher_searched = request.form.get("teacher")
+    # the following assumes there will be one hit exactly
+    if db.Teacher.get_teacher_id_name(teacher_searched):
+        teacher_id = db.Teacher.get_teacher_id_name(teacher_searched)
+        info = db.Teacher.get_teacher_info(teacher_id)
+        print(info)
+    return render_template("student_searchresults.html", info=info)
+
+@app.route("/view_teacher/<name>", methods=["GET", "POST"])
+@login_required
+def view_teacher(name):
+    email_searched = request.form.get("email")
+
+    prefix = ""
+    name = ""
+    pronouns = ""
+    email = ""
+
+    if db.Teacher.get_teacher_id(email_searched):
+        teacher_id = db.Teacher.get_teacher_id(email_searched)
+        info = db.Teacher.get_teacher_info(teacher_id)
+        schedule = db.Teacher.get_schedule_periods(teacher_id)
+        print(info)
+        if info[0]:
+            name = info[0]
+        if info[1]:
+            email = info[1]
+        if info[2]:
+            pronouns = info[2]
+        if info[3]:
+            prefix = info[3]
+        print(schedule)
+    
+    teachers = db.Teacher.get_teacher_list()
+    
+
+
+    # see how this has to be used
+    return render_template("view_teacherprofile.html", teacher_list = teachers, name = name, prefix = prefix, email = email, pronouns = pronouns, schedule = schedule)
+
+
 
 
 @app.route("/file/<file_id>", methods=["GET", "POST"])

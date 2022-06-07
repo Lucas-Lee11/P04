@@ -5,6 +5,7 @@
 
 {% block links %}
 
+{% if session["name"] in teacher_list %}
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -12,6 +13,7 @@
         </li>
     </ul>
 </div>
+{% endif %}
 
 {% endblock %}
 

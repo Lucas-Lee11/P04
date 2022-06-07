@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Setup Student Profile{% endblock %}
+{% block title %} Student Profile{% endblock %}
 
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
@@ -27,7 +27,12 @@
 
 
   <h1>Find Teachers To Star</h1>
-  <input type="text" placeholder="Search.."><button type="submit">Search</button>
+
+  <form action="/search" method="POST">
+    <input type="text" name="teacher" placeholder="Search...">
+    <input type="submit" value="Search">
+  </form>
+
   <form action="/student" method="POST">
     <table>
       <tr> 

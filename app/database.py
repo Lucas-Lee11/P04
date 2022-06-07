@@ -129,6 +129,19 @@ class Teacher:
             return None
 
     @staticmethod
+    def get_teacher_id_name(name: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            teacher_id = c.execute(
+                "SELECT teacher_id FROM teachers WHERE name = (?)", (name,)
+            ).fetchone()
+
+            if teacher_id is not None:
+                return teacher_id[0]
+            return None
+
+    @staticmethod
     def get_teacher_list() -> list:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()

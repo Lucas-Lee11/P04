@@ -207,3 +207,11 @@ lucasL -- 2022-06-06 22:45
 
 elizaK -- 2022-06-06 23:01
 - edit profile autofills
+- created db function to check if name is
+to one of the teacher names to get an id in database.py
+- implemented searching functionality for teachers to 
+view their profiles
+- when you search for a teacher, you see 4 basic pieces of info and 
+then from there you can click to see their full schedule 
+- todo: is name nearish that we check anyway?
+- todo: navbar– should always be able to go back to the main student page
