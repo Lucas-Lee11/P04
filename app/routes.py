@@ -264,15 +264,18 @@ def view_teacherprofile():
 @login_required
 def student():
     if db.Teacher.verify_teacher(session["google_id"]):
-        # if it somehow gets here, just return the normal teacher
-        # thing so we don't need to pass in form data
         return redirect(url_for("teacher"))
 
+    # Fetches all teachers and their information (might want to limit how many teachers we get once we implement search functionality)
+    all_teachers = db.Teacher.get_teacher_list() 
+
+    # Stars teacher from checkbox form submission
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         for teacher_id in starred_id:
             if not db.StarredTeachers.starred_relationship_exists(session["google_id"], teacher_id):
                 db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
+
 
     ####### FOR TESTING PURPOSES #######
     db.Teacher.create_db()
@@ -282,20 +285,19 @@ def student():
     db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
     ####################################
 
+    # Fetches a students starred teachers
+    starred_teachers_id = db.StarredTeachers.get_student_stars(session["google_id"])
+    print(starred_teachers_id)
     
-    all_teachers = db.Teacher.get_teacher_list()
-    starred_teachers = db.StarredTeachers.get_student_stars(session["google_id"])
-    print(starred_teachers)
-    
+    # Fetches the relevant teacher information of a student's starred teachers
     teacher_names = []
     classes_taught = []
-    for teacher_id in starred_teachers:
-            teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
-            classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
-
+    for teacher_id in starred_teachers_id:
+        teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
+        classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
 
     return render_template("student.html", teacher_list=all_teachers, 
-                                           starred_teachers = zip(starred_teachers, teacher_names, classes_taught))
+                                           starred_teachers = zip(starred_teachers_id, teacher_names, classes_taught))
 
 
 @app.route("/file/<file_id>", methods=["GET", "POST"])
