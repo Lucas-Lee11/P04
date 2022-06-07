@@ -93,9 +93,14 @@ def callback():
     cached_session = cachecontrol.CacheControl(request_session)
     token_request = google.auth.transport.requests.Request(session=cached_session)
 
-    id_info = id_token.verify_oauth2_token(
-        id_token=credentials._id_token, request=token_request, audience=GOOGLE_CLIENT_ID
-    )
+    try:
+        id_info = id_token.verify_oauth2_token(
+            id_token=credentials._id_token, request=token_request, audience=GOOGLE_CLIENT_ID
+        )
+    except Exception as e:
+        flash("Login Error")
+        return redirect(url_for("index"))
+
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
@@ -134,7 +139,7 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/setup_teacher", methods=["GET", "POST"])
+@app.route("/teacher/setup", methods=["GET", "POST"])
 @login_required
 def setup_teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
@@ -163,7 +168,7 @@ def teacher():
     )
 
 
-@app.route("/edit_teacherprofile", methods=["GET", "POST"])
+@app.route("/teacher/edit", methods=["GET"])
 @login_required
 def edit_teacherprofile():
     teachers = db.Teacher.get_teacher_list()
@@ -182,7 +187,7 @@ def edit_teacherprofile():
     return render_template("edit_teacherprofile.html", teacher_list=teachers, schedule=schedule, name=session["name"], email=session["email"])
 
 
-@app.route("/update_teacherprofile", methods=["GET", "POST"])
+@app.route("/teacher/edit", methods=["POST"])
 @login_required  # QUESTION- do you need to be logged in to see the teacher profile
 def update_teacherprofile():
     if request.method == "POST":
@@ -196,15 +201,12 @@ def update_teacherprofile():
         # information from where it resides in the db
 
         # for now, i will use the info we have already
-        print(request.files.keys())
         if "file" in request.files:
-            print("Adding Files")
-            files = request.files.getlist("file")
 
+            files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
-                    flash("No selected file")
-                    return redirect(url_for("index"))
+                    continue
 
                 db.Files.add_teacher_file(session["google_id"], file)
 
@@ -232,11 +234,10 @@ def update_teacherprofile():
         teachers = db.Teacher.get_teacher_list()
 
 
-
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return redirect(url_for("view_teacherprofile"))
 
-@app.route("/view_teacherprofile", methods=["GET", "POST"])
+@app.route("/teacher/view", methods=["GET", "POST"])
 @login_required
 def view_teacherprofile():
     schedule = []
@@ -253,10 +254,19 @@ def view_teacherprofile():
             else:
                 schedule.append(period.split(":"))
         print(schedule)
+
     teachers = db.Teacher.get_teacher_list()
+    files = db.Files.get_teacher_files(session["google_id"])
 
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
-    return render_template("view_teacherprofile.html", schedule=schedule, teacher_list=teachers, name=session["name"], email=session["email"])
+    return render_template(
+        "view_teacherprofile.html",
+        schedule=schedule,
+        teacher_list=teachers,
+        name=session["name"],
+        email=session["email"],
+        files=files
+        )
 
 
 # hello- when you log in, that should just always take you to setup student
@@ -285,6 +295,17 @@ def student():
 
 
     return render_template("student.html", teacher_list=teachers, starred_teachers = starred_teachers)
+
+@app.route("/file/<file_id>", methods=["GET", "POST"])
+@login_required
+def download_file(file_id):
+    teacher_id, filename = db.Files.get_file_info(file_id)
+
+    if not os.path.exists(os.path.join(UPLOAD_FOLDER, teacher_id, filename)):
+        flash("Invalid File")
+        return redirect(url_for("index"))
+
+    return send_file(f"./uploads/{teacher_id}/{filename}")
 
 
 # @app.route("/upload_file_test", methods=["GET", "POST"])
@@ -315,25 +336,13 @@ def student():
 #     return render_template("upload_files.html")
 
 
-@app.route("/view_files_test", methods=["GET", "POST"])
-@login_required
-def file_view_test():
-    if not db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("index"))
-
-    files = db.Files.get_teacher_files(session["google_id"])
-    print(files)
-
-    return render_template("view_files.html", files=files)
-
-
-@app.route("/file/<file_id>", methods=["GET", "POST"])
-@login_required
-def download_file(file_id):
-    teacher_id, filename = db.Files.get_file_info(file_id)
-
-    if not os.path.exists(os.path.join(UPLOAD_FOLDER, teacher_id, filename)):
-        flash("Invalid File")
-        return redirect(url_for("index"))
-
-    return send_file(f"./uploads/{teacher_id}/{filename}")
+# @app.route("/view_files_test", methods=["GET", "POST"])
+# @login_required
+# def file_view_test():
+#     if not db.Teacher.verify_teacher(session["google_id"]):
+#         return redirect(url_for("index"))
+#
+#     files = db.Files.get_teacher_files(session["google_id"])
+#     print(files)
+#
+#     return render_template("view_files.html", files=files)

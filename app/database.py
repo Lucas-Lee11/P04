@@ -158,37 +158,24 @@ class Teacher:
             return None
 
     @staticmethod
-    def get_teacher_pronouns(teacher_id: str) -> str:
+    def get_teacher_info(teacher_id: str) -> tuple:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            pronouns = c.execute(
-                "SELECT pronouns FROM teachers WHERE teacher_id = (?)",
+            info = c.execute(
+                "SELECT name, email, pronouns, title FROM teachers WHERE teacher_id = (?)",
                 (teacher_id,),
             ).fetchone()
 
-            if pronouns is not None:
-                return pronouns[0]
-            return None
-    
-    @staticmethod
-    def get_teacher_title(teacher_id: str) -> str:
-        with sqlite3.connect(DB_FILE) as db:
-            c = db.cursor()
-
-            title = c.execute(
-                "SELECT title FROM teachers WHERE teacher_id = (?)",
-                (teacher_id,),
-            ).fetchone()
-
-            if title is not None:
-                return title[0]
+            if info is not None:
+                return info
             return None
 
     @staticmethod
     def add_schedule_period(teacher_id: str, pd: int, text: str) -> None:
         if not (1 <= pd <= 10):
             return
+
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
@@ -219,6 +206,30 @@ class Teacher:
             c.execute(
                 "UPDATE teachers SET title = (?) WHERE teacher_id = (?)",
                 (title, teacher_id),
+            )
+
+            db.commit()
+
+    @staticmethod
+    def add_teacher_name(teacher_id: str, name: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            c.execute(
+                "UPDATE teachers SET name = (?) WHERE teacher_id = (?)",
+                (name, teacher_id),
+            )
+
+            db.commit()
+
+    @staticmethod
+    def add_teacher_email(teacher_id: str, email: str) -> None:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            c.execute(
+                "UPDATE teachers SET email = (?) WHERE teacher_id = (?)",
+                (email, teacher_id),
             )
 
             db.commit()
@@ -405,10 +416,10 @@ teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
 Teacher.add_schedule_period(teacher_id, 1, "rm 840")
 schedule = Teacher.get_schedule_periods(teacher_id)
 print(schedule)
+
 Teacher.add_teacher_pronouns(teacher_id, "she/her")
-pronouns = Teacher.get_teacher_pronouns(teacher_id)
-Teacher.add_teacher_title(teacher_id, "Mr.")
-title = Teacher.get_teacher_title(teacher_id)
+Teacher.add_teacher_title(teacher_id, "Ms.")
+name, email, pronouns, title = Teacher.get_teacher_info(teacher_id)
 print(pronouns, title)
 
 

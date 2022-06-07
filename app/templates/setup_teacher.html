@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
     <h1>Set Up Teacher Profile</h1>
-    <form action="/update_teacherprofile" method="POST"enctype="multipart/form-data">
+    <form action={{url_for("update_teacherprofile")}} method="POST" enctype="multipart/form-data">
         <div class="row">
             <div class="col-3">
                 <label for="prefixes">(Prefix)</label>
