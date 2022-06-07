@@ -37,7 +37,6 @@ flow = Flow.from_client_secrets_file(
 TEACHERS = [
     "cliu20@stuy.edu",
     "ekrechmer20@stuy.edu",
-    "llee20@stuy.edu",
 ]
 
 
@@ -329,40 +328,44 @@ def search():
         print(info)
     return render_template("student_searchresults.html", info=info)
 
-@app.route("/view_teacher/<name>", methods=["GET", "POST"])
+@app.route("/schedule/<hex>", methods=["GET", "POST"])
 @login_required
-def view_teacher(name):
-    # todo: somewhere here do the link checking
+def view_teacher(hex):
 
-    email_searched = request.form.get("email")
+    teacher_id = db.Teacher.hex_to_teacher_id(hex)
+    name, email, pronouns, title = db.Teacher.get_teacher_info(teacher_id)
 
-    prefix = ""
-    name = ""
-    pronouns = ""
-    email = ""
     schedule = []
-    for x in range(10):
-        schedule.append("")
-
-    if db.Teacher.get_teacher_id(email_searched):
-        teacher_id = db.Teacher.get_teacher_id(email_searched)
-        info = db.Teacher.get_teacher_info(teacher_id)
-        schedule = db.Teacher.get_schedule_periods(teacher_id)
-        print(info)
-        if info[0]:
-            name = info[0]
-        if info[1]:
-            email = info[1]
-        if info[2]:
-            pronouns = info[2]
-        if info[3]:
-            prefix = info[3]
+    for i in range(10):
+        schedule.append(["", ""])
+    print("CALL 1")
+    print(schedule)
+    schedule_info = db.Teacher.get_schedule_periods(teacher_id)
+    if None not in schedule_info:
+        print(schedule_info)
+        schedule = []
+        for period in schedule_info:
+            if not period:
+                pass
+            else:
+                schedule.append(period.split(":"))
         print(schedule)
-    
-    teachers = db.Teacher.get_teacher_list()
-    
-    return render_template("view_teacherprofile.html", teacher_list = teachers, name = name, 
-    prefix = prefix, email = email, pronouns = pronouns, schedule = schedule)
+
+    files = db.Files.get_teacher_files(teacher_id)
+
+    is_teacher = db.Teacher.verify_teacher(teacher_id)
+
+    # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
+    return render_template(
+        "view_teacherprofile.html",
+        schedule=schedule,
+        name=name,
+        email=email,
+        prefix=title,
+        pronouns=pronouns,
+        files=files,
+        is_teacher=is_teacher,
+    )
 
 
 

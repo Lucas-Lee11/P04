@@ -69,6 +69,7 @@ class Teacher:
                 """
                 CREATE TABLE IF NOT EXISTS teachers(
                     teacher_id  TEXT PRIMARY KEY,
+                    teacher_hex TEXT DEFAULT (hex(randomblob(8))),
                     name        TEXT NOT NULL,
                     email       TEXT NOT NULL,
                     pronouns    TEXT,
@@ -129,6 +130,19 @@ class Teacher:
             return None
 
     @staticmethod
+    def hex_to_teacher_id(hex: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            teacher_id = c.execute(
+                "SELECT teacher_id FROM teachers WHERE teacher_hex = (?)", (hex,)
+            ).fetchone()
+
+            if teacher_id is not None:
+                return teacher_id[0]
+            return None
+
+    @staticmethod
     def get_teacher_id_name(name: str) -> str:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
@@ -148,8 +162,7 @@ class Teacher:
 
             teachers = c.execute(
                 """
-                SELECT teacher_id, name, email, period_1, period_2, period_3, period_4, period_5, period_6, period_7 , period_8, period_9, period_10
-                FROM teachers
+                SELECT teacher_hex, name FROM teachers
                 """
             ).fetchall()
 
