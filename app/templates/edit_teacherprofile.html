@@ -22,23 +22,23 @@
             <div class="col-3">
                 <label for="prefixes">(Prefix)</label>
                 <select list="prefixes" name="prefixes" class="form-control form-select">
-                    <option value="None">None</option>
-                    <option value="Mr.">Mr.</option>
-                    <option value="Ms.">Ms.</option>
-                    <option value="Mrs.">Mrs.</option>
-                    <option value="Mx.">Mx.</option>
-                    <option value="Dr.">Dr.</option>
+                    <option {{"selected" if title == "None"}} value="None">None</option>
+                    <option {{"selected" if title == "Mr."}} value="Mr.">Mr.</option>
+                    <option {{"selected" if title == "Ms."}} value="Ms.">Ms.</option>
+                    <option {{"selected" if title == "Mrs."}} value="Mrs.">Mrs.</option>
+                    <option {{"selected" if title == "Mx."}} value="Mx.">Mx.</option>
+                    <option {{"selected" if title == "Dr."}} value="Dr.">Dr.</option>
                 </select>
             </div>
             <div class="col-9">
                 <label for="name">Name</label>
-                <input type="text" id="name" value="{{name}}" class="form-control">
+                <input type="text" name="name" value="{{name}}" class="form-control">
             </div>
         </div>
         <div class="row my-3">
             <div class="col-3">
                 <label for="pronouns">Pronouns</label>
-                <input type="text" name="pronouns" class="form-control">
+                <input type="text" name="pronouns" value="{{pronouns}}" class="form-control">
             </div>
             <div class="col-9">
                 <label for="email">Email</label>

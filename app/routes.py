@@ -158,6 +158,10 @@ def teacher():
 def edit_teacherprofile():
     teachers = db.Teacher.get_teacher_list()
 
+    info = db.Teacher.get_teacher_info(session["google_id"])
+    info = tuple("" if data is None else data for data in info)
+    name, email, pronouns, title = info
+
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     print(schedule_info)
     schedule = []
@@ -177,29 +181,31 @@ def edit_teacherprofile():
         schedule=schedule,
         name=session["name"],
         email=session["email"],
+        pronouns=pronouns,
+        title=title,
         files=files)
 
 
 @app.route("/teacher/edit", methods=["POST"])
 @login_required
 def update_teacherprofile():
+
     prefix = request.form.get("prefixes")
     name = request.form.get("name")
-    pronouns = request.form.get("Pronouns")
-    email = request.form.get("Email")
-    # TODO: CREATE A DB METHOD that takes into account
-    # all of the following info to push to the database
-    # TODO: CREATE A DB METHOD that gets all of this
-    # information from where it resides in the db
+    pronouns = request.form.get("pronouns")
+    email = request.form.get("email")
 
-    # for now, i will use the info we have already
+    db.Teacher.add_teacher_name(session["google_id"], name)
+    db.Teacher.add_teacher_title(session["google_id"], prefix)
+    db.Teacher.add_teacher_email(session["google_id"], email)
+    db.Teacher.add_teacher_pronouns(session["google_id"], pronouns)
+
     if "file" in request.files:
 
         files = request.files.getlist("file")
         for file in files:
             if file.filename == "":
                 continue
-
             db.Files.add_teacher_file(session["google_id"], file)
 
 
@@ -225,13 +231,16 @@ def update_teacherprofile():
             schedule.append(period.split(":"))
     teachers = db.Teacher.get_teacher_list()
 
-
-    # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return redirect(url_for("view_teacherprofile"))
 
 @app.route("/teacher/view", methods=["GET", "POST"])
 @login_required
 def view_teacherprofile():
+    info = db.Teacher.get_teacher_info(session["google_id"])
+    info = tuple("" if data is None else data for data in info)
+    name, email, pronouns, title = info
+
+
     schedule = []
     for x in range(10):
         schedule.append(["",""])
@@ -250,13 +259,17 @@ def view_teacherprofile():
     teachers = db.Teacher.get_teacher_list()
     files = db.Files.get_teacher_files(session["google_id"])
 
+
+
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return render_template(
         "view_teacherprofile.html",
         schedule=schedule,
         teacher_list=teachers,
-        name=session["name"],
-        email=session["email"],
+        name=name,
+        email=email,
+        prefix=title,
+        pronouns=pronouns,
         files=files)
 
 
@@ -267,7 +280,7 @@ def student():
         return redirect(url_for("teacher"))
 
     # Fetches all teachers and their information (might want to limit how many teachers we get once we implement search functionality)
-    all_teachers = db.Teacher.get_teacher_list() 
+    all_teachers = db.Teacher.get_teacher_list()
 
     # Stars teacher from checkbox form submission
     if request.method == "POST":
@@ -288,7 +301,7 @@ def student():
     # Fetches a students starred teachers
     starred_teachers_id = db.StarredTeachers.get_student_stars(session["google_id"])
     print(starred_teachers_id)
-    
+
     # Fetches the relevant teacher information of a student's starred teachers
     teacher_names = []
     classes_taught = []
@@ -296,7 +309,7 @@ def student():
         teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
         classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
 
-    return render_template("student.html", teacher_list=all_teachers, 
+    return render_template("student.html", teacher_list=all_teachers,
                                            starred_teachers = zip(starred_teachers_id, teacher_names, classes_taught))
 
 
