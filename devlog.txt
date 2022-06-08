@@ -266,6 +266,7 @@ elizaK -- 2022-06-08 10:15
 - if there are no results, then it's blank
 
 andrewJ -- 2022-06-08 10:00
-- Starred teachers dashboard page
+- starred teachers dashboard page
   - can view profiles and remove teachers
 - starring teachers adds them to the navbar correctly
+- stars autofill if you starred a teacher
