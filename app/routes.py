@@ -41,6 +41,7 @@ TEACHERS = [
     # "ekrechmer20@stuy.edu",
     "llee20@stuy.edu",
     # "ajuang20@stuy.edu",
+    "eknapp20@stuy.edu"
 ]
 
 
