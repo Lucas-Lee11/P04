@@ -245,3 +245,6 @@ lucasL -- 2022-06-07 21:34
 elizaK -- 2022-06-07 22:59
 - search functionality if the name you search
 is contained somewhere within the teacher string
+
+christopherL -- 2022-06-08 08:18
+- prepopulate edit profile with existing values
