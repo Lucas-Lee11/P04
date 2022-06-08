@@ -16,7 +16,7 @@
     <li>
       {{info[0]}} ({{info[1]}})
     </li>
-    <form action="/view_teacher/{{info[0]}}" method="POST">
+    <form action="/view_teacher/{{hex}}" method="POST">
       <input type="hidden" value="{{info[1]}}" name="email">
       <input type="submit" value="View Full Profile"> 
     </form>

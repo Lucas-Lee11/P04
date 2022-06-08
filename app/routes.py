@@ -39,6 +39,7 @@ TEACHERS = [
     "cliu20@stuy.edu",
     # "ekrechmer20@stuy.edu",
     # "llee20@stuy.edu",
+    # "eknapp20@stuy.edu"
 ]
 
 
@@ -321,12 +322,14 @@ def student():
 def search():
     teacher_searched = request.form.get("teacher")
     info = []
+    hex = ""
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_id = db.Teacher.get_teacher_id_name(teacher_searched)
         info = db.Teacher.get_teacher_info(teacher_id)
+        hex = db.Teacher.teacher_id_to_hex(teacher_id)
         print(info)
-    return render_template("student_searchresults.html", info=info)
+    return render_template("student_searchresults.html", info=info, hex=hex)
 
 
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
