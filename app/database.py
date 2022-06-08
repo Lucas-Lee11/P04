@@ -162,14 +162,14 @@ class Teacher:
 
             # search by last name
 
-            teacher_id = c.execute(
+            teacher_ids = c.execute(
                 f"SELECT teacher_id FROM teachers WHERE name LIKE '%{name}%'"
-            ).fetchone()
+            ).fetchall()
 
-            print(teacher_id[0])
+            print(teacher_ids)
 
-            if teacher_id[0] is not None:
-                return teacher_id[0]
+            if teacher_ids is not None:
+                return teacher_ids
 
             return None
 

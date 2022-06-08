@@ -260,3 +260,7 @@ elizaK -- 2022-06-08 9:25
 - created id to hex method for db
 - used hexes in the url in the search teachers
 - you can only type in letters to search to prevent sql injection
+
+elizaK -- 2022-06-08 10:15
+- multiple search results return now
+- if there are no results, then it's blank
