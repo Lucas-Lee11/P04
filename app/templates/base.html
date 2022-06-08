@@ -25,7 +25,7 @@
                     {% if not is_teacher %}
                     <a class="nav-link" href="{{ url_for('student') }}">Find Teachers</a>
                     {% else %}
-                    <a class="nav-link" href="{{ url_for('search') }}">Find Teachers</a>
+                    <a class="nav-link" href="{{ url_for('teacher') }}">Find Teachers</a>
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

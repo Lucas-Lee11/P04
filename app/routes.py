@@ -40,8 +40,7 @@ TEACHERS = [
     "cliu20@stuy.edu",
     # "ekrechmer20@stuy.edu",
     "llee20@stuy.edu",
-    # "ajuang20@stuy.edu",
-    # "eknapp20@stuy.edu"
+    "ajuang20@stuy.edu",
 ]
 
 
@@ -164,10 +163,35 @@ def teacher():
     db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
     ####################################
 
-    return render_template(
-        "teacher_landing.html", name=session["name"], is_teacher=True
-    )
+    if request.method == "POST":
+        starred_id = request.form.getlist("starred_id")
+        print(starred_id)
+        for teacher_id in starred_id:
+            if not db.StarredTeachers.starred_relationship_exists(
+                session["google_id"], teacher_id
+            ):
+                db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
+                print("skljfladfkj")
 
+        removed_id = request.form.get("remove_star")
+        db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
+
+    teachers = db.Teacher.get_teacher_list()
+    starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
+
+    # Fetches the relevant teacher information of a student's starred teachers
+    starred_teachers = []
+    for teacher_hex in starred_teachers_hex:
+        teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
+        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+
+    return render_template(
+        "teacher_landing.html", 
+        name=session["name"], 
+        teachers=teachers,
+        starred_teachers=starred_teachers, 
+        starred_teachers_hex = starred_teachers_hex
+    )
 
 
 @app.route("/teacher/edit", methods=["GET"])

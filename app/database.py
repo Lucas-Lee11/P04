@@ -509,12 +509,12 @@ name, email, pronouns, title = Teacher.get_teacher_info(teacher_id)
 print(pronouns, title)
 
 
-StarredTeachers.star_teacher(student_id, teacher_id)
-stars = StarredTeachers.get_student_stars(student_id)
-print(stars)
-StarredTeachers.unstar_teacher(student_id, teacher_id)
-stars = StarredTeachers.get_student_stars(student_id)
-print(stars)
+# StarredTeachers.student_star_teacher(student_id, teacher_id)
+# stars = StarredTeachers.get_student_stars(student_id)
+# print(stars)
+# StarredTeachers.student_unstar_teacher(student_id, teacher_id)
+# stars = StarredTeachers.get_student_stars(student_id)
+# print(stars)
 
 # Files.add_teacher_file(teacher_id, "./README.md")
 Files.get_teacher_files(teacher_id)
