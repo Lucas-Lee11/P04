@@ -84,12 +84,15 @@
                 break;
               }
             }
-          }
-          if (select.selectedIndex === -1) {
-            newOption = document.createElement("option");
-            newOption.innerHTML = statusValue;
-            select.appendChild(newOption);
-            select.selectedIndex = select.options.length - 1;
+            
+            if (select.selectedIndex === -1) {
+              newOption = document.createElement("option");
+              newOption.innerHTML = statusValue;
+              select.appendChild(newOption);
+              select.selectedIndex = select.options.length - 1;
+            }
+          } else {
+            select.selectedIndex = 0;
           }
         </script>
         {% endfor %}

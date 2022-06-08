@@ -214,10 +214,10 @@ def update_teacherprofile():
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
 
-    if "schedule_upload" in request.files:
+    schedule_upload = request.files["schedule_upload"].read().decode("utf-8")
+    if schedule_upload:
         classes = []
-        schedule_upload = request.files["schedule_upload"]
-        schedule_data = schedule_upload.read().decode("utf-8").splitlines()
+        schedule_data = schedule_upload.splitlines()
         reader = csv.reader(schedule_data[1:])
         for row in reader:
             if not row[1]:
@@ -290,7 +290,6 @@ def student():
     db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
     ####################################
 
-
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         for teacher_id in starred_id:
@@ -301,8 +300,6 @@ def student():
 
         removed_id = request.form.get("remove_star")
         db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
-
-
 
     teachers = db.Teacher.get_teacher_list()
     starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
@@ -315,9 +312,7 @@ def student():
     starred_teachers = zip(starred_teachers_hex, starred_teachers_name)
 
     return render_template(
-        "student.html",
-        teachers=teachers,
-        starred_teachers=starred_teachers
+        "student.html", teachers=teachers, starred_teachers=starred_teachers
     )
 
 
@@ -332,6 +327,7 @@ def search():
         info = db.Teacher.get_teacher_info(teacher_id)
         print(info)
     return render_template("student_searchresults.html", info=info)
+
 
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
 @login_required
@@ -358,7 +354,7 @@ def view_teacher(hex):
 
     files = db.Files.get_teacher_files(teacher_id)
 
-    is_teacher = db.Teacher.verify_teacher(teacher_id)
+    is_teacher = db.Teacher.verify_teacher(session["google_id"])
 
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return render_template(
