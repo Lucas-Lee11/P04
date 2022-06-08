@@ -36,12 +36,11 @@ flow = Flow.from_client_secrets_file(
 )
 
 # whitelisted tseachers here for now
-TEACHERS = [
-    "cliu20@stuy.edu",
-    # "ekrechmer20@stuy.edu",
-    "llee20@stuy.edu",
-    "ajuang20@stuy.edu",
-]
+TEACHERS = []
+with open("teachers.csv", newline="") as csvfile:
+    reader = csv.reader(csvfile)
+    for row in reader:
+        TEACHERS.append(row[0])
 
 
 def login_required(function):
