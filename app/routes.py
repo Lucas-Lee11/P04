@@ -37,7 +37,9 @@ flow = Flow.from_client_secrets_file(
 
 # whitelisted tseachers here for now
 TEACHERS = []
-with open("teachers.csv", newline="") as csvfile:
+with open(
+    os.path.join(pathlib.Path(__file__).parent, "teachers.csv"), newline=""
+) as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         TEACHERS.append(row[0])
