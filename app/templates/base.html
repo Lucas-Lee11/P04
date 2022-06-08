@@ -27,6 +27,7 @@
                             Starred Teachers
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{url_for("starred_teachers")}}"><b>Starred Teachers Dashboard</b></a></li>
                             {% for hex, name in starred_teachers %}
                             <li><a class="dropdown-item" href="{{url_for("view_teacher", hex=hex)}}">{{name}}</a></li>
                             {% endfor %}

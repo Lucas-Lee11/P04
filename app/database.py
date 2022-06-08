@@ -169,8 +169,8 @@ class Teacher:
             print(teacher_id)
 
             if teacher_id is not None:
-                return teacher_id
-            
+                return teacher_id[0]
+
             return None
 
 
@@ -444,13 +444,19 @@ class Files:
             return None
 
     @staticmethod
-    def remove_teacher_file(teacher_id:str, filename: str) -> None:
+    def remove_teacher_file(teacher_id:str, file_id: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
-                "DELETE FROM files WHERE teacher_id = (?) AND filename = (?)",
-                (teacher_id, filename),
+                "DELETE FROM files WHERE teacher_id = (?) AND file_id = (?)",
+                (teacher_id, file_id)
             )
+            _, filename = Files.get_file_info(file_id)
+
+            path = os.path.join(UPLOAD_FOLDER, teacher_id, filename)
+            if os.path.exists(path):
+                os.remove(path)
+
             db.commit()
 
     @staticmethod
