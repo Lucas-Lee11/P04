@@ -408,18 +408,6 @@ def view_teacher(hex):
         is_teacher=is_teacher,
     )
 
-    teachers = db.Teacher.get_teacher_list()
-
-    return render_template(
-        "view_teacherprofile.html",
-        teacher_list=teachers,
-        name=name,
-        prefix=prefix,
-        email=email,
-        pronouns=pronouns,
-        schedule=schedule,
-    )
-
 
 @app.route("/file/<file_id>", methods=["GET", "POST"])
 @login_required
