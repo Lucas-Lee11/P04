@@ -39,7 +39,8 @@ flow = Flow.from_client_secrets_file(
 TEACHERS = [
     "cliu20@stuy.edu",
     # "ekrechmer20@stuy.edu",
-    "llee20@stuy.edu"
+    "llee20@stuy.edu",
+    # "ajuang20@stuy.edu",
 ]
 
 
