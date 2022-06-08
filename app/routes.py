@@ -327,9 +327,15 @@ def search():
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_id = db.Teacher.get_teacher_id_name(teacher_searched)
+        print(teacher_id)
+
+        # COME BACK TO THIS!!!
+
+        # right now, doesn't work bc i wld have to for loop through the 
+        # array of teacher ids above- for id in teacher_ids
         info = db.Teacher.get_teacher_info(teacher_id)
         hex = db.Teacher.teacher_id_to_hex(teacher_id)
-        print(info)
+        # print(info)
     return render_template("student_searchresults.html", info=info, hex=hex)
 
 
