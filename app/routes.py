@@ -21,6 +21,7 @@ from app import secret
 
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024 #10MB
 UPLOAD_FOLDER = "./app/uploads"
 
 GOOGLE_CLIENT_ID = secret.setup()
@@ -34,11 +35,11 @@ flow = Flow.from_client_secrets_file(
     ],
 )
 
-# whitelisted teachers here for now
+# whitelisted tseachers here for now
 TEACHERS = [
     "cliu20@stuy.edu",
     # "ekrechmer20@stuy.edu",
-    # "llee20@stuy.edu",
+    "llee20@stuy.edu"
 ]
 
 
@@ -200,12 +201,18 @@ def update_teacherprofile():
     db.Teacher.add_teacher_email(session["google_id"], email)
     db.Teacher.add_teacher_pronouns(session["google_id"], pronouns)
 
-    print("FILES", request.files)
+    existing_files = [filename for file_id, filename in db.Files.get_teacher_files(session["google_id"])]
     if "file" in request.files:
         files = request.files.getlist("file")
         for file in files:
             if file.filename != "":
-                db.Files.add_teacher_file(session["google_id"], file)
+                if file.filename in existing_files:
+                    flash(f"File {file.filename} already exists, please delete it first")
+                else:
+                    db.Files.add_teacher_file(session["google_id"], file)
+
+    for file_id in request.form.getlist("delete_file"):
+        db.Files.remove_teacher_file(session["google_id"], file_id)
 
     classes = []
     for i in range(10):
