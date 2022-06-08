@@ -14,6 +14,7 @@ from flask import g
 DB_FILE = "loophole.db"
 UPLOAD_FOLDER = "./app/uploads"
 
+
 class Student:
     @staticmethod
     def create_db() -> None:
@@ -173,8 +174,6 @@ class Teacher:
 
             return None
 
-
-
     @staticmethod
     def get_teacher_list() -> list:
         with sqlite3.connect(DB_FILE) as db:
@@ -189,7 +188,6 @@ class Teacher:
             if teachers is not None:
                 return teachers
             return None
-
 
     @staticmethod
     def get_schedule_periods(teacher_id: str) -> tuple:
@@ -299,6 +297,7 @@ class Teacher:
 
             db.commit()
 
+
 class StarredTeachers:
     @staticmethod
     def create_db() -> None:
@@ -379,7 +378,6 @@ class StarredTeachers:
             return False
 
 
-
 class Files:
     @staticmethod
     def create_db() -> None:
@@ -424,7 +422,7 @@ class Files:
             path = os.path.join(UPLOAD_FOLDER, teacher_id, filename)
 
             if not os.path.exists(os.path.join(UPLOAD_FOLDER, teacher_id)):
-                os.makedirs( os.path.join(UPLOAD_FOLDER, teacher_id))
+                os.makedirs(os.path.join(UPLOAD_FOLDER, teacher_id))
 
             file.save(path)
 
@@ -436,7 +434,8 @@ class Files:
             c = db.cursor()
 
             files = c.execute(
-                "SELECT file_id, filename FROM files WHERE teacher_id = (?)", (teacher_id,)
+                "SELECT file_id, filename FROM files WHERE teacher_id = (?)",
+                (teacher_id,),
             ).fetchall()
 
             if files is not None:
@@ -444,12 +443,12 @@ class Files:
             return None
 
     @staticmethod
-    def remove_teacher_file(teacher_id:str, file_id: str) -> None:
+    def remove_teacher_file(teacher_id: str, file_id: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
                 "DELETE FROM files WHERE teacher_id = (?) AND file_id = (?)",
-                (teacher_id, file_id)
+                (teacher_id, file_id),
             )
             _, filename = Files.get_file_info(file_id)
 

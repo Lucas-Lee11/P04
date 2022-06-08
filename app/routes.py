@@ -21,7 +21,7 @@ from app import secret
 
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024 #10MB
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10MB
 UPLOAD_FOLDER = "./app/uploads"
 
 GOOGLE_CLIENT_ID = secret.setup()
@@ -183,14 +183,14 @@ def teacher():
     starred_teachers = []
     for teacher_hex in starred_teachers_hex:
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
-        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+        starred_teachers.append((teacher_hex, db.Teacher.get_teacher_name(teacher_id)))
 
     return render_template(
-        "teacher_landing.html", 
-        name=session["name"], 
+        "teacher_landing.html",
+        name=session["name"],
         teachers=teachers,
-        starred_teachers=starred_teachers, 
-        starred_teachers_hex = starred_teachers_hex
+        starred_teachers=starred_teachers,
+        starred_teachers_hex=starred_teachers_hex,
     )
 
 
@@ -239,13 +239,18 @@ def update_teacherprofile():
     db.Teacher.add_teacher_email(session["google_id"], email)
     db.Teacher.add_teacher_pronouns(session["google_id"], pronouns)
 
-    existing_files = [filename for file_id, filename in db.Files.get_teacher_files(session["google_id"])]
+    existing_files = [
+        filename
+        for file_id, filename in db.Files.get_teacher_files(session["google_id"])
+    ]
     if "file" in request.files:
         files = request.files.getlist("file")
         for file in files:
             if file.filename != "":
                 if file.filename in existing_files:
-                    flash(f"File {file.filename} already exists, please delete it first")
+                    flash(
+                        f"File {file.filename} already exists, please delete it first"
+                    )
                 else:
                     db.Files.add_teacher_file(session["google_id"], file)
 
@@ -353,10 +358,13 @@ def student():
     starred_teachers = []
     for teacher_hex in starred_teachers_hex:
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
-        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+        starred_teachers.append((teacher_hex, db.Teacher.get_teacher_name(teacher_id)))
 
     return render_template(
-        "student.html", teachers=teachers, starred_teachers=starred_teachers, starred_teachers_hex = starred_teachers_hex
+        "student.html",
+        teachers=teachers,
+        starred_teachers=starred_teachers,
+        starred_teachers_hex=starred_teachers_hex,
     )
 
 
@@ -378,7 +386,7 @@ def starred_teachers():
     starred_teachers = []
     for teacher_hex in starred_teachers_hex:
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
-        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+        starred_teachers.append((teacher_hex, db.Teacher.get_teacher_name(teacher_id)))
 
     return render_template("starred_teachers.html", starred_teachers=starred_teachers)
 
@@ -400,9 +408,11 @@ def search():
             hex_and_info.append(db.Teacher.teacher_id_to_hex(id[0]))
             hex_and_info.append(db.Teacher.get_teacher_info(id[0]))
             info.append(hex_and_info)
-    
+
     is_teacher = db.Teacher.verify_teacher(session["google_id"])
-    return render_template("student_searchresults.html", info=info, is_teacher=is_teacher)
+    return render_template(
+        "student_searchresults.html", info=info, is_teacher=is_teacher
+    )
 
 
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
@@ -430,7 +440,7 @@ def view_teacher(hex):
 
     files = db.Files.get_teacher_files(teacher_id)
 
-    is_teacher = db.Teacher.verify_teacher(session["google_id"])
+    is_teacher = db.Teacher.hex_to_teacher_id(hex) == session["google_id"]
 
     # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return render_template(
