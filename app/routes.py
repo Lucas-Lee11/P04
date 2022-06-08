@@ -312,11 +312,12 @@ def student():
     starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
 
     # Fetches the relevant teacher information of a student's starred teachers
-    starred_teachers_name = []
+    starred_teachers = []
     for teacher_hex in starred_teachers_hex:
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
-        starred_teachers_name.append(db.Teacher.get_teacher_name(teacher_id))
-    starred_teachers = zip(starred_teachers_hex, starred_teachers_name)
+        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+
+    print(starred_teachers)
 
     return render_template(
         "student.html", teachers=teachers, starred_teachers=starred_teachers
@@ -328,12 +329,14 @@ def student():
 def search():
     teacher_searched = request.form.get("teacher")
     info = []
+    hex = ""
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_id = db.Teacher.get_teacher_id_name(teacher_searched)
         info = db.Teacher.get_teacher_info(teacher_id)
+        hex = db.Teacher.teacher_id_to_hex(teacher_id)
         print(info)
-    return render_template("student_searchresults.html", info=info)
+    return render_template("student_searchresults.html", info=info, hex=hex)
 
 
 @app.route("/schedule/<hex>", methods=["GET", "POST"])

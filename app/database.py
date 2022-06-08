@@ -143,6 +143,19 @@ class Teacher:
             return None
 
     @staticmethod
+    def teacher_id_to_hex(id: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            hex = c.execute(
+                "SELECT teacher_hex FROM teachers WHERE teacher_id = (?)", (id,)
+            ).fetchone()
+
+            if hex is not None:
+                return hex[0]
+            return None
+
+    @staticmethod
     def get_teacher_id_name(name: str) -> str:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
