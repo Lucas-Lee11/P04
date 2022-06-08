@@ -6,22 +6,26 @@
 
   <h1>Find Teachers</h1>
 
-  <form action="/search" method="POST">
-    <input type="text" name = "teacher" placeholder="Search... (letters only)"
-    onkeydown="return /[a-z]/i.test(event.key)">
-    <input type="submit" value="Search">
+  <form class="form" action="{{ url_for('search') }}" id="searchForm" method="POST">
+    <div class="d-flex my-4">
+      <div class="input-group">
+        <input type="text" name="teacher" placeholder="Search... (letters only)" class="form-control rounded" onkeydown="return /[a-z]/i.test(event.key)">
+        <span class="input-group-text" type="submit" onclick="document.getElementById('searchForm').submit()"><i class="fas fa-search"></i></span>
+      </div>
+    </div>
   </form>
 
   <!-- loop through the results here and post them with links to the page (right now, it's not possible to have more than 1 result) -->
-  <ul>
+  <ul class="list-group">
     {% for hex, data in info %}
-    <li>
+    <li class="list-group-item">
       {{ data[0] }} ({{ data[1] }})
+      <form action="{{ url_for('view_teacher', hex=hex) }}" method="POST">
+        <input type="hidden" value="{{ data[1] }}" name="email">
+        <button class="btn btn-secondary btn-sm" type="submit">View Full Profile</button>
+      </form>
     </li>
-    <form action="{{ url_for('schedule', hex=hex) }}" method="POST">
-      <input type="hidden" value="{{ data[1] }}" name="email">
-      <input type="submit" value="View Full Profile"> 
-    </form>
+    
     {% endfor %}
   </ul>
 

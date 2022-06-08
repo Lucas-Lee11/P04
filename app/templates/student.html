@@ -8,24 +8,20 @@
 
   <h1>Find Teachers</h1>
 
-  <div class="input-group rounded">
-    <form action="{{ url_for('search') }}" method="POST">
-      <input type="text" name="teacher" placeholder="Search...(letters only)" 
-      class="form-control rounded" aria-label="Search" 
-      aria-describedby="search-addon"
-      onkeydown="return /[a-z]/i.test(event.key)">
-
-      <input type="submit" value="Search" class="input-group-text border-0" id="search-addon">
-    </form>
-  </div>
-
+  <form class="form" action="{{ url_for('search') }}" id="searchForm" method="POST">
+    <div class="d-flex my-4">
+      <div class="input-group">
+        <input type="text" name="teacher" placeholder="Search... (letters only)" class="form-control rounded" onkeydown="return /[a-z]/i.test(event.key)">
+        <span class="input-group-text" type="submit" onclick="document.getElementById('searchForm').submit()"><i class="fas fa-search"></i></span>
+      </div>
+    </div>
+  </form>
 
   <form action="{{ url_for('student') }}" method="POST">
-    <table>
+    <table class="table">
       <tr>
-        <th style="padding-right:20px;">Star</th>
-        <th style="padding-right:20px;">Teacher</th>
-        <!-- <th style="padding-right:20px;">Classes Taught</th> -->
+        <th>Star</th>
+        <th>Teacher</th>
       </tr>
       {% for id, name in teachers %}
       <tr>
@@ -35,13 +31,11 @@
           {% else %}
           <input type="checkbox" name="starred_id" value="{{ id }}" class="star">
           {% endif %}
-          
         </td>
-        <td style="padding-top: 15px;"><a href="{{ url_for('view_teacher', hex=id) }}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
+        <td style="padding-top: 15px;"><a href="{{ url_for('view_teacher', hex=id) }}">{{ name }}</a></td> <!-- this will link to the teacher's profile -->
       </tr>
       {% endfor %}
     </table>
-    <br>
     <div class="my-4">
       <button type="submit" class="btn btn-primary">Save</button>
     </div>

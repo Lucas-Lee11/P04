@@ -192,6 +192,7 @@ def teacher():
         teachers=teachers,
         starred_teachers=starred_teachers,
         starred_teachers_hex=starred_teachers_hex,
+        is_teacher=True,
     )
 
 
