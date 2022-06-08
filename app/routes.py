@@ -38,7 +38,7 @@ flow = Flow.from_client_secrets_file(
 TEACHERS = [
     "cliu20@stuy.edu",
     # "ekrechmer20@stuy.edu",
-    "llee20@stuy.edu",
+    # "llee20@stuy.edu",
 ]
 
 
@@ -290,10 +290,7 @@ def student():
     db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
     ####################################
 
-    # Fetches all teachers and their information (might want to limit how many teachers we get once we implement search functionality)
-    all_teachers = db.Teacher.get_teacher_list()
 
-    # Stars teacher from checkbox form submission
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         for teacher_id in starred_id:
@@ -305,23 +302,22 @@ def student():
         removed_id = request.form.get("remove_star")
         db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
 
-    # Fetches a students starred teachers
-    starred_teachers_id = db.StarredTeachers.get_student_stars(session["google_id"])
-    print(starred_teachers_id)
+
+
+    teachers = db.Teacher.get_teacher_list()
+    starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
 
     # Fetches the relevant teacher information of a student's starred teachers
-    teacher_names = []
-    classes_taught = []
-    for teacher_id in starred_teachers_id:
-        teacher_names.append(db.Teacher.get_teacher_name(teacher_id))
-        classes_taught.append(db.Teacher.get_schedule_periods(teacher_id))
-
-    print(teacher_names)
+    starred_teachers_name = []
+    for teacher_hex in starred_teachers_hex:
+        teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
+        starred_teachers_name.append(db.Teacher.get_teacher_name(teacher_id))
+    starred_teachers = zip(starred_teachers_hex, starred_teachers_name)
 
     return render_template(
         "student.html",
-        teacher_list=all_teachers,
-        starred_teachers=zip(starred_teachers_id, teacher_names, classes_taught),
+        teachers=teachers,
+        starred_teachers=starred_teachers
     )
 
 
