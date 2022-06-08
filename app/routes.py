@@ -153,9 +153,21 @@ def logout():
 @app.route("/teacher", methods=["GET", "POST"])
 @teacher_required
 def teacher():
+    if not db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("student"))
+
+    ####### FOR TESTING PURPOSES #######
+    db.Teacher.create_db()
+    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
+    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
+    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
+    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
+    ####################################
+
     return render_template(
         "teacher_landing.html", name=session["name"], is_teacher=True
     )
+
 
 
 @app.route("/teacher/edit", methods=["GET"])
