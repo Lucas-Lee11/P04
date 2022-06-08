@@ -270,3 +270,6 @@ andrewJ -- 2022-06-08 10:00
   - can view profiles and remove teachers
 - starring teachers adds them to the navbar correctly
 - stars autofill if you starred a teacher
+
+lucasL -- 2022-06-08 11:10
+- flashes
