@@ -4,136 +4,136 @@
 
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
-    <h1>Edit Profile</h1>
-    <form action="{{ url_for('edit_teacherprofile') }}" method="POST" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-3">
-                <label for="prefixes">(Prefix)</label>
-                <select list="prefixes" name="prefixes" class="form-control form-select">
-                    <option {{ "selected" if title == "None" }} value="None">None</option>
-                    <option {{ "selected" if title == "Mr." }} value="Mr.">Mr.</option>
-                    <option {{ "selected" if title == "Ms." }} value="Ms.">Ms.</option>
-                    <option {{ "selected" if title == "Mrs." }} value="Mrs.">Mrs.</option>
-                    <option {{ "selected" if title == "Mx." }} value="Mx.">Mx.</option>
-                    <option {{ "selected" if title == "Dr." }} value="Dr.">Dr.</option>
-                </select>
-            </div>
-            <div class="col-9">
-                <label for="name">Name</label>
-                <input type="text" name="name" value="{{name}}" class="form-control">
-            </div>
-        </div>
-        <div class="row my-3">
-            <div class="col-3">
-                <label for="pronouns">Pronouns</label>
-                <input type="text" name="pronouns" value="{{pronouns}}" class="form-control">
-            </div>
-            <div class="col-9">
-                <label for="email">Email</label>
-                <input type="text" name="email" value="{{email}}" class="form-control">
-            </div>
-        </div>
-        <div class="form-group my-3">
-            <label for="files">Important Files (e.g., syllabi)</label>
-            <input class="form-control" type="file" name="file" multiple>
-        </div>
+  <h1>Edit Profile</h1>
+  <form action="{{ url_for('edit_teacherprofile') }}" method="POST" enctype="multipart/form-data">
+    <div class="row">
+      <div class="col-3">
+        <label for="prefixes">(Prefix)</label>
+        <select list="prefixes" name="prefixes" class="form-control form-select">
+          <option {{ "selected" if title == "None" }} value="None">None</option>
+          <option {{ "selected" if title == "Mr." }} value="Mr.">Mr.</option>
+          <option {{ "selected" if title == "Ms." }} value="Ms.">Ms.</option>
+          <option {{ "selected" if title == "Mrs." }} value="Mrs.">Mrs.</option>
+          <option {{ "selected" if title == "Mx." }} value="Mx.">Mx.</option>
+          <option {{ "selected" if title == "Dr." }} value="Dr.">Dr.</option>
+        </select>
+      </div>
+      <div class="col-9">
+        <label for="name">Name</label>
+        <input type="text" name="name" value="{{name}}" class="form-control">
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-3">
+        <label for="pronouns">Pronouns</label>
+        <input type="text" name="pronouns" value="{{pronouns}}" class="form-control">
+      </div>
+      <div class="col-9">
+        <label for="email">Email</label>
+        <input type="text" name="email" value="{{email}}" class="form-control">
+      </div>
+    </div>
+    <div class="form-group my-3">
+      <label for="files">Important Files (e.g., syllabi)</label>
+      <input class="form-control" type="file" name="file" multiple>
+    </div>
 
-        {% for id, filename in files %}
-        <a href="{{ url_for('download_file', file_id=id) }}">{{filename}}</a>
-        <input type="checkbox" name="delete_file" value={{id}} class="star">
+    {% for id, filename in files %}
+    <a href="{{ url_for('download_file', file_id=id) }}">{{filename}}</a>
+    <input type="checkbox" name="delete_file" value={{id}} class="star">
+    {% endfor %}
+
+    <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Room Number</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <script>
+          let statusValue;
+          let select;
+          let newOption;
+        </script>
+        {% for i in range(1, 11) %}
+        <tr>
+          <td>{{ i }}</td>
+          <td><input type="text" name="class{{ i }}" value="{{ schedule[i-1][0] if schedule[i-1] }}"" class=" form-control"></td>
+          <td>
+            <select name="status{{ i }}" value="{{ schedule[i-1][1] if schedule[i-1] }}" class="form-control form-select" id="status{{ i }}">
+              <option>Never free (teaching)</option>
+              <option>Never free (working/lunch/etc)</option>
+              <option>Free for walk-ins</option>
+              <option>Free -- appointment only</option>
+              <option>Teaching, but free both before and after during passing</option>
+              <option>Teaching, but free only before this period during passing</option>
+              <option>Teaching, but free only after this period during passing</option>
+            </select>
+          </td>
+        </tr>
+        <script>
+          statusValue = "{{ schedule[i-1][1] if schedule[i-1] }}";
+          select = document.getElementById("status{{ i }}");
+          select.selectedIndex = -1;
+          if (statusValue) {
+            for (let i = 0, j = select.options.length; i < j; i++) {
+              if (select.options[i].innerHTML === statusValue) {
+                select.selectedIndex = i;
+                break;
+              }
+            }
+
+            if (select.selectedIndex === -1) {
+              newOption = document.createElement("option");
+              newOption.innerHTML = statusValue;
+              select.appendChild(newOption);
+              select.selectedIndex = select.options.length - 1;
+            }
+          } else {
+            select.selectedIndex = 0;
+          }
+        </script>
         {% endfor %}
-
-        <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Room Number</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <script>
-                    let statusValue;
-                    let select;
-                    let newOption;
-                </script>
-                {% for i in range(1, 11) %}
-                <tr>
-                    <td>{{ i }}</td>
-                    <td><input type="text" name="class{{ i }}" value="{{ schedule[i-1][0] if schedule[i-1] }}"" class=" form-control"></td>
-                    <td>
-                        <select name="status{{ i }}" value="{{ schedule[i-1][1] if schedule[i-1] }}" class="form-control form-select" id="status{{ i }}">
-                            <option>Never free (teaching)</option>
-                            <option>Never free (working/lunch/etc)</option>
-                            <option>Free for walk-ins</option>
-                            <option>Free -- appointment only</option>
-                            <option>Teaching, but free both before and after during passing</option>
-                            <option>Teaching, but free only before this period during passing</option>
-                            <option>Teaching, but free only after this period during passing</option>
-                        </select>
-                    </td>
-                </tr>
-                <script>
-                    statusValue = "{{ schedule[i-1][1] if schedule[i-1] }}";
-                    select = document.getElementById("status{{ i }}");
-                    select.selectedIndex = -1;
-                    if (statusValue) {
-                        for (let i = 0, j = select.options.length; i < j; i++) {
-                            if (select.options[i].innerHTML === statusValue) {
-                                select.selectedIndex = i;
-                                break;
-                            }
-                        }
-
-                        if (select.selectedIndex === -1) {
-                            newOption = document.createElement("option");
-                            newOption.innerHTML = statusValue;
-                            select.appendChild(newOption);
-                            select.selectedIndex = select.options.length - 1;
-                        }
-                    } else {
-                        select.selectedIndex = 0;
-                    }
-                </script>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="accordion" id="scheduleUploadAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTarget">
-                        CSV Schedule Upload (advanced)
-                    </button>
-                </h2>
-                <div id="collapseTarget" class="accordion-collapse collapse" data-bs-parent="#scheduleUploadAccordion">
-                    <div class="accordion-body">
-                        <div class="form-group my-3">
-                            <p>
-                                Optionally, you can upload a CSV file with your schedule instead of
-                                using the table above.
-                            </p>
-                            <p>
-                                This should consist of a file containing the following headers:
-                                "room_number" and "status" (see example
-                                <a href="{{ url_for('static', filename='template.csv') }} ">here</a>).
-                                Make sure you have all of the periods listed in order.
-                                For status, you can either use one of the dropdown options
-                                above, create your own, or, if left blank, we'll use "Never
-                                free (teaching)" or "Free for walk-ins" by default.
-                            </p>
-                            <p><b>
-                                    This will override any schedules indicated above.
-                                </b></p>
-                            <input class="form-control" type="file" name="schedule_upload">
-                        </div>
-                    </div>
-                </div>
+      </tbody>
+    </table>
+    <div class="accordion" id="scheduleUploadAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingOne">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTarget">
+            CSV Schedule Upload (advanced)
+          </button>
+        </h2>
+        <div id="collapseTarget" class="accordion-collapse collapse" data-bs-parent="#scheduleUploadAccordion">
+          <div class="accordion-body">
+            <div class="form-group my-3">
+              <p>
+                Optionally, you can upload a CSV file with your schedule instead of
+                using the table above.
+              </p>
+              <p>
+                This should consist of a file containing the following headers:
+                "room_number" and "status" (see example
+                <a href="{{ url_for('static', filename='template.csv') }} ">here</a>).
+                Make sure you have all of the periods listed in order.
+                For status, you can either use one of the dropdown options
+                above, create your own, or, if left blank, we'll use "Never
+                free (teaching)" or "Free for walk-ins" by default.
+              </p>
+              <p><b>
+                  This will override any schedules indicated above.
+                </b></p>
+              <input class="form-control" type="file" name="schedule_upload">
             </div>
+          </div>
         </div>
-        <div class="my-4">
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-    </form>
+      </div>
+    </div>
+    <div class="my-4">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
 </div>
 {% endblock %}

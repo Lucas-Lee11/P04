@@ -4,47 +4,47 @@
 {% block content %}
 <link href="{{url_for('static',filename='css/star.css')}}" rel="stylesheet">
 <div class="container-xxl my-4 bd-layout">
-    <p>Are you a teacher? Please contact us for assistance.</p>
+  <p>Are you a teacher? Please contact us for assistance.</p>
 
-    <h1>Find Teachers</h1>
+  <h1>Find Teachers</h1>
 
-    <div class="input-group rounded">
-        <form action="/search" method="POST">
-            <input type="text" name="teacher" placeholder="Search...(letters only)" 
-            class="form-control rounded" aria-label="Search" 
-            aria-describedby="search-addon"
-            onkeydown="return /[a-z]/i.test(event.key)">
+  <div class="input-group rounded">
+    <form action="/search" method="POST">
+      <input type="text" name="teacher" placeholder="Search...(letters only)" 
+      class="form-control rounded" aria-label="Search" 
+      aria-describedby="search-addon"
+      onkeydown="return /[a-z]/i.test(event.key)">
 
-            <input type="submit" value="Search" class="input-group-text border-0" id="search-addon">
-        </form>
-    </div>
-
-
-    <form action="/student" method="POST">
-        <table>
-            <tr>
-                <th style="padding-right:20px;">Star</th>
-                <th style="padding-right:20px;">Teacher</th>
-                <!-- <th style="padding-right:20px;">Classes Taught</th> -->
-            </tr>
-            {% for id, name in teachers %}
-            <tr>
-                <td>
-                    {% if id in starred_teachers_hex %}
-                    <input type="checkbox" name="starred_id" value={{id}} class="star" checked>
-                    {% else %}
-                    <input type="checkbox" name="starred_id" value={{id}} class="star">
-                    {% endif %}
-                    
-                </td>
-                <td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=id)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
-            </tr>
-            {% endfor %}
-        </table>
-        <br>
-        <div class="my-4">
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
+      <input type="submit" value="Search" class="input-group-text border-0" id="search-addon">
     </form>
+  </div>
+
+
+  <form action="/student" method="POST">
+    <table>
+      <tr>
+        <th style="padding-right:20px;">Star</th>
+        <th style="padding-right:20px;">Teacher</th>
+        <!-- <th style="padding-right:20px;">Classes Taught</th> -->
+      </tr>
+      {% for id, name in teachers %}
+      <tr>
+        <td>
+          {% if id in starred_teachers_hex %}
+          <input type="checkbox" name="starred_id" value={{id}} class="star" checked>
+          {% else %}
+          <input type="checkbox" name="starred_id" value={{id}} class="star">
+          {% endif %}
+          
+        </td>
+        <td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=id)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
+      </tr>
+      {% endfor %}
+    </table>
+    <br>
+    <div class="my-4">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
 </div>
 {% endblock %}
