@@ -69,6 +69,7 @@ class Teacher:
                 """
                 CREATE TABLE IF NOT EXISTS teachers(
                     teacher_id  TEXT PRIMARY KEY,
+                    teacher_hex TEXT DEFAULT (hex(randomblob(8))),
                     name        TEXT NOT NULL,
                     email       TEXT NOT NULL,
                     pronouns    TEXT,
@@ -129,6 +130,19 @@ class Teacher:
             return None
 
     @staticmethod
+    def hex_to_teacher_id(hex: str) -> str:
+        with sqlite3.connect(DB_FILE) as db:
+            c = db.cursor()
+
+            teacher_id = c.execute(
+                "SELECT teacher_id FROM teachers WHERE teacher_hex = (?)", (hex,)
+            ).fetchone()
+
+            if teacher_id is not None:
+                return teacher_id[0]
+            return None
+
+    @staticmethod
     def get_teacher_id_name(name: str) -> str:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
@@ -156,8 +170,7 @@ class Teacher:
 
             teachers = c.execute(
                 """
-                SELECT teacher_id, name, email, period_1, period_2, period_3, period_4, period_5, period_6, period_7 , period_8, period_9, period_10
-                FROM teachers
+                SELECT teacher_hex, name FROM teachers
                 """
             ).fetchall()
 
@@ -282,10 +295,10 @@ class StarredTeachers:
             c.execute(
                 """
                 CREATE TABLE IF NOT EXISTS starred_teachers(
-                    star_id    TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
-                    teacher_id TEXT NOT NULL,
-                    student_id TEXT NOT NULL,
-                    FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
+                    star_id     TEXT PRIMARY KEY DEFAULT (hex(randomblob(8))),
+                    teacher_hex TEXT NOT NULL,
+                    student_id  TEXT NOT NULL,
+                    FOREIGN KEY(teacher_hex) REFERENCES teachers(teacher_hex)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE,
                     FOREIGN KEY(student_id) REFERENCES students(student_id)
@@ -304,22 +317,22 @@ class StarredTeachers:
             db.commit()
 
     @staticmethod
-    def star_teacher(student_id: str, teacher_id: str) -> None:
+    def star_teacher(student_id: str, teacher_hex: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
-                "INSERT OR IGNORE INTO starred_teachers (teacher_id, student_id) VALUES (?, ?)",
-                (teacher_id, student_id),
+                "INSERT OR IGNORE INTO starred_teachers (teacher_hex, student_id) VALUES (?, ?)",
+                (teacher_hex, student_id),
             )
             db.commit()
 
     @staticmethod
-    def unstar_teacher(student_id: str, teacher_id: str) -> None:
+    def unstar_teacher(student_id: str, teacher_hex: str) -> None:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
             c.execute(
-                "DELETE FROM starred_teachers WHERE teacher_id = (?) AND student_id = (?)",
-                (teacher_id, student_id),
+                "DELETE FROM starred_teachers WHERE teacher_hex = (?) AND student_id = (?)",
+                (teacher_hex, student_id),
             )
             db.commit()
 
@@ -329,7 +342,7 @@ class StarredTeachers:
             c = db.cursor()
 
             teachers = c.execute(
-                "SELECT teacher_id FROM starred_teachers WHERE student_id = (?)",
+                "SELECT teacher_hex FROM starred_teachers WHERE student_id = (?)",
                 (student_id,),
             ).fetchall()
 
@@ -340,13 +353,13 @@ class StarredTeachers:
             return None
 
     @staticmethod
-    def starred_relationship_exists(student_id: str, teacher_id: str) -> bool:
+    def starred_relationship_exists(student_id: str, teacher_hex: str) -> bool:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
             starred = c.execute(
-                "SELECT * FROM starred_teachers WHERE teacher_id = (?) AND student_id = (?)",
-                (teacher_id, student_id),
+                "SELECT * FROM starred_teachers WHERE teacher_hex = (?) AND student_id = (?)",
+                (teacher_hex, student_id),
             ).fetchone()
 
             if starred is not None:
