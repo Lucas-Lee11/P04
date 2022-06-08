@@ -5,7 +5,6 @@
 
 import sqlite3
 import os
-from xmlrpc.client import boolean
 from werkzeug.utils import secure_filename
 import shutil
 
