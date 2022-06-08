@@ -317,11 +317,23 @@ def student():
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
         starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
 
-    print(starred_teachers)
-
     return render_template(
         "student.html", teachers=teachers, starred_teachers=starred_teachers
     )
+
+
+@app.route("/starred_teachers", methods=["GET", "POST"])
+@login_required
+def starred_teachers():
+    starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
+
+    # Fetches the relevant teacher information of a student's starred teachers
+    starred_teachers = []
+    for teacher_hex in starred_teachers_hex:
+        teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
+        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+
+    return render_template("starred_teachers.html", starred_teachers=starred_teachers)
 
 
 @app.route("/search", methods=["GET", "POST"])
