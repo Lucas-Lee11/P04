@@ -325,6 +325,15 @@ def student():
 @app.route("/starred_teachers", methods=["GET", "POST"])
 @login_required
 def starred_teachers():
+    if db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("teacher"))
+
+    # Remove teacher star
+    if request.method == "POST":
+        removed_hex = request.form.get("remove_star")
+        db.StarredTeachers.unstar_teacher(session["google_id"], removed_hex)
+
+    # Get list of starred teachers
     starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
 
     # Fetches the relevant teacher information of a student's starred teachers
