@@ -3,24 +3,26 @@
 
 {% block content %}
 <div class="container-xxl my-4 bd-layout">
-  <a href={{url_for("student")}}>Go Back to Starred Teachers</a>
+
   <h1>Find Teachers</h1>
 
   <form action="/search" method="POST">
-    <input type="text" placeholder="Search...">
+    <input type="text" name = "teacher" placeholder="Search...(letters only)"
+    onkeydown="return /[a-z]/i.test(event.key)">
     <input type="submit" value="Search">
   </form>
 
   <!-- loop through the results here and post them with links to the page (right now, it's not possible to have more than 1 result) -->
   <ul>
+    {% for hex, data in info %}
     <li>
-      {{info[0]}} ({{info[1]}})
+      {{data[0]}} ({{data[1]}})
     </li>
     <form action="/schedule/{{hex}}" method="POST">
-      <input type="hidden" value="{{info[1]}}" name="email">
+      <input type="hidden" value="{{data[1]}}" name="email">
       <input type="submit" value="View Full Profile"> 
     </form>
-
+    {% endfor %}
   </ul>
 
 </div>

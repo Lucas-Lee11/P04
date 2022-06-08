@@ -25,11 +25,17 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if "google_id" in session %}
+                    {% if not is_teacher %}
+                    <a class="nav-link" href="{{ url_for('student') }}">Find Teachers</a>
+                    {% else %}
+                    <a class="nav-link" href="{{ url_for('search') }}">Find Teachers</a>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Starred Teachers
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{url_for("starred_teachers")}}"><b>Starred Teachers</b></a></li>
                             {% for hex, name in starred_teachers %}
                             <li><a class="dropdown-item" href="{{url_for("view_teacher", hex=hex)}}">{{name}}</a></li>
                             {% endfor %}

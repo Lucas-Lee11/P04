@@ -39,7 +39,9 @@ flow = Flow.from_client_secrets_file(
 TEACHERS = [
     "cliu20@stuy.edu",
     # "ekrechmer20@stuy.edu",
-    # "llee20@stuy.edu"
+    "llee20@stuy.edu",
+    # "ajuang20@stuy.edu",
+    # "eknapp20@stuy.edu"
 ]
 
 
@@ -151,9 +153,21 @@ def logout():
 @app.route("/teacher", methods=["GET", "POST"])
 @teacher_required
 def teacher():
+    if not db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("student"))
+
+    ####### FOR TESTING PURPOSES #######
+    db.Teacher.create_db()
+    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
+    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
+    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
+    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
+    ####################################
+
     return render_template(
         "teacher_landing.html", name=session["name"], is_teacher=True
     )
+
 
 
 @app.route("/teacher/edit", methods=["GET"])
@@ -317,26 +331,54 @@ def student():
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
         starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
 
-    print(starred_teachers)
-
     return render_template(
-        "student.html", teachers=teachers, starred_teachers=starred_teachers
+        "student.html", teachers=teachers, starred_teachers=starred_teachers, starred_teachers_hex = starred_teachers_hex
     )
+
+
+@app.route("/starred_teachers", methods=["GET", "POST"])
+@login_required
+def starred_teachers():
+    if db.Teacher.verify_teacher(session["google_id"]):
+        return redirect(url_for("teacher"))
+
+    # Remove teacher star
+    if request.method == "POST":
+        removed_hex = request.form.get("remove_star")
+        db.StarredTeachers.unstar_teacher(session["google_id"], removed_hex)
+
+    # Get list of starred teachers
+    starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
+
+    # Fetches the relevant teacher information of a student's starred teachers
+    starred_teachers = []
+    for teacher_hex in starred_teachers_hex:
+        teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
+        starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
+
+    return render_template("starred_teachers.html", starred_teachers=starred_teachers)
 
 
 @app.route("/search", methods=["GET", "POST"])
 @login_required
 def search():
     teacher_searched = request.form.get("teacher")
+    print("THE FOLLOWING IS THE TEACHER SEARCHED")
+    print(teacher_searched)
     info = []
-    hex = ""
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
-        teacher_id = db.Teacher.get_teacher_id_name(teacher_searched)
-        info = db.Teacher.get_teacher_info(teacher_id)
-        hex = db.Teacher.teacher_id_to_hex(teacher_id)
-        print(info)
-    return render_template("student_searchresults.html", info=info, hex=hex)
+        teacher_ids = db.Teacher.get_teacher_id_name(teacher_searched)
+
+        info = []
+        for id in teacher_ids:
+            hex_and_info = []
+            hex_and_info.append(db.Teacher.teacher_id_to_hex(id[0]))
+            hex_and_info.append(db.Teacher.get_teacher_info(id[0]))
+            info.append(hex_and_info)
+    
+    is_teacher = db.Teacher.verify_teacher(session["google_id"])
+    return render_template("student_searchresults.html", info=info, is_teacher=is_teacher)
 
 
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
@@ -376,18 +418,6 @@ def view_teacher(hex):
         pronouns=pronouns,
         files=files,
         is_teacher=is_teacher,
-    )
-
-    teachers = db.Teacher.get_teacher_list()
-
-    return render_template(
-        "view_teacherprofile.html",
-        teacher_list=teachers,
-        name=name,
-        prefix=prefix,
-        email=email,
-        pronouns=pronouns,
-        schedule=schedule,
     )
 
 

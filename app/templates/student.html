@@ -10,7 +10,11 @@
 
     <div class="input-group rounded">
         <form action="/search" method="POST">
-            <input type="text" name="teacher" placeholder="Search..." class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
+            <input type="text" name="teacher" placeholder="Search...(letters only)" 
+            class="form-control rounded" aria-label="Search" 
+            aria-describedby="search-addon"
+            onkeydown="return /[a-z]/i.test(event.key)">
+
             <input type="submit" value="Search" class="input-group-text border-0" id="search-addon">
         </form>
     </div>
@@ -26,7 +30,12 @@
             {% for id, name in teachers %}
             <tr>
                 <td>
+                    {% if id in starred_teachers_hex %}
+                    <input type="checkbox" name="starred_id" value={{id}} class="star" checked>
+                    {% else %}
                     <input type="checkbox" name="starred_id" value={{id}} class="star">
+                    {% endif %}
+                    
                 </td>
                 <td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=id)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
             </tr>

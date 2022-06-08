@@ -162,15 +162,14 @@ class Teacher:
 
             # search by last name
 
-            # INSECURE FSTRING BUT LIKE HOW ELSE MAN???
-            teacher_id = c.execute(
-                f"SELECT teacher_id FROM teachers WHERE name LIKE '%{name}%' "
-            ).fetchone()
+            teacher_ids = c.execute(
+                f"SELECT teacher_id FROM teachers WHERE name LIKE '%{name}%'"
+            ).fetchall()
 
-            print(teacher_id)
+            print(teacher_ids)
 
-            if teacher_id is not None:
-                return teacher_id[0]
+            if teacher_ids is not None:
+                return teacher_ids
 
             return None
 

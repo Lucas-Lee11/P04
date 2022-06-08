@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Student Profile{% endblock %}
+
+{% block content %}
+<link href="{{url_for('static',filename='css/star.css')}}" rel="stylesheet">
+<div class="container-xxl my-4 bd-layout">
+    <p>Are you a teacher? Please contact us for assistance.</p>
+
+    <h1>Starred Teachers</h1>
+	<table>
+		<tr>
+			<th style="padding-right:20px;">Remove</th>
+			<th style="padding-right:20px;">Teacher</th>
+
+			<!-- <th style="padding-right:20px;">Classes Taught</th> -->
+		</tr>
+		{% for hex, name in starred_teachers %}
+		<tr>
+			<td>
+				<form action="/starred_teachers" method="POST">
+				  <input type="submit" value="x">
+				  <input type="hidden" name="remove_star" value={{hex}}>
+				</form>
+			</td>
+			<td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=hex)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}
