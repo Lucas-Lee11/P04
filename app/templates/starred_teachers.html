@@ -17,12 +17,12 @@
     {% for hex, name in starred_teachers %}
     <tr>
       <td>
-        <form action="/starred_teachers" method="POST">
+        <form action="{{ url_for('starred_teachers') }}" method="POST">
           <input type="submit" value="x">
-          <input type="hidden" name="remove_star" value={{hex}}>
+          <input type="hidden" name="remove_star" value="{{ hex }}">
         </form>
       </td>
-      <td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=hex)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
+      <td style="padding-top: 15px;"><a href="{{ url_for('view_teacher', hex=hex) }}">{{ name }}</a></td> <!-- this will link to the teacher's profile -->
     </tr>
     {% endfor %}
   </table>

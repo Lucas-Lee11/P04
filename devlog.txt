@@ -281,3 +281,4 @@ christopherL -- 2022-06-08 16:26
 - edit button doesn't appear on other teachers' pages anymore
 - fix flash css
 - convert to 2 spaces for html templates
+- clean up templates

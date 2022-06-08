@@ -20,17 +20,17 @@
       </div>
       <div class="col-9">
         <label for="name">Name</label>
-        <input type="text" name="name" value="{{name}}" class="form-control">
+        <input type="text" name="name" value="{{ name }}" class="form-control">
       </div>
     </div>
     <div class="row my-3">
       <div class="col-3">
         <label for="pronouns">Pronouns</label>
-        <input type="text" name="pronouns" value="{{pronouns}}" class="form-control">
+        <input type="text" name="pronouns" value="{{ pronouns }}" class="form-control">
       </div>
       <div class="col-9">
         <label for="email">Email</label>
-        <input type="text" name="email" value="{{email}}" class="form-control">
+        <input type="text" name="email" value="{{ email }}" class="form-control">
       </div>
     </div>
     <div class="form-group my-3">
@@ -40,7 +40,7 @@
 
     {% for id, filename in files %}
     <a href="{{ url_for('download_file', file_id=id) }}">{{filename}}</a>
-    <input type="checkbox" name="delete_file" value={{id}} class="star">
+    <input type="checkbox" name="delete_file" value="{{ id }}" class="star">
     {% endfor %}
 
     <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->

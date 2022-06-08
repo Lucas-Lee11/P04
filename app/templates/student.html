@@ -2,14 +2,14 @@
 {% block title %}Student Profile{% endblock %}
 
 {% block content %}
-<link href="{{url_for('static',filename='css/star.css')}}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/star.css') }}" rel="stylesheet">
 <div class="container-xxl my-4 bd-layout">
   <p>Are you a teacher? Please contact us for assistance.</p>
 
   <h1>Find Teachers</h1>
 
   <div class="input-group rounded">
-    <form action="/search" method="POST">
+    <form action="{{ url_for('search') }}" method="POST">
       <input type="text" name="teacher" placeholder="Search...(letters only)" 
       class="form-control rounded" aria-label="Search" 
       aria-describedby="search-addon"
@@ -20,7 +20,7 @@
   </div>
 
 
-  <form action="/student" method="POST">
+  <form action="{{ url_for('student') }}" method="POST">
     <table>
       <tr>
         <th style="padding-right:20px;">Star</th>
@@ -31,13 +31,13 @@
       <tr>
         <td>
           {% if id in starred_teachers_hex %}
-          <input type="checkbox" name="starred_id" value={{id}} class="star" checked>
+          <input type="checkbox" name="starred_id" value="{{ id }}" class="star" checked>
           {% else %}
-          <input type="checkbox" name="starred_id" value={{id}} class="star">
+          <input type="checkbox" name="starred_id" value="{{ id }}" class="star">
           {% endif %}
           
         </td>
-        <td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=id)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
+        <td style="padding-top: 15px;"><a href="{{ url_for('view_teacher', hex=id) }}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
       </tr>
       {% endfor %}
     </table>
