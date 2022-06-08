@@ -41,7 +41,7 @@ TEACHERS = [
     # "ekrechmer20@stuy.edu",
     "llee20@stuy.edu",
     # "ajuang20@stuy.edu",
-    "eknapp20@stuy.edu"
+    # "eknapp20@stuy.edu"
 ]
 
 
@@ -364,9 +364,9 @@ def search():
             hex_and_info.append(db.Teacher.teacher_id_to_hex(id[0]))
             hex_and_info.append(db.Teacher.get_teacher_info(id[0]))
             info.append(hex_and_info)
-
-        print(info)
-    return render_template("student_searchresults.html", info=info)
+    
+    is_teacher = db.Teacher.verify_teacher(session["google_id"])
+    return render_template("student_searchresults.html", info=info, is_teacher=is_teacher)
 
 
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
