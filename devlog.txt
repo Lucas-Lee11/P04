@@ -249,3 +249,7 @@ is contained somewhere within the teacher string
 christopherL -- 2022-06-08 08:18
 - prepopulate edit profile with existing values
 - fixed teacher edit profile
+
+elizaK -- 2022-06-08 9:02
+- created id to hex method for db
+- used hexes in the url in the search teachers
