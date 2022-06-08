@@ -349,12 +349,12 @@ def starred_teachers():
 @login_required
 def search():
     teacher_searched = request.form.get("teacher")
+    print("THE FOLLOWING IS THE TEACHER SEARCHED")
+    print(teacher_searched)
     info = []
-    hex = ""
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_ids = db.Teacher.get_teacher_id_name(teacher_searched)
-        print(teacher_ids)
 
         info = []
         for id in teacher_ids:
