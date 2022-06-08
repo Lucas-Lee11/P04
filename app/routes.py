@@ -166,13 +166,11 @@ def teacher():
 
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
-        print(starred_id)
         for teacher_id in starred_id:
             if not db.StarredTeachers.starred_relationship_exists(
                 session["google_id"], teacher_id
             ):
                 db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
-                print("skljfladfkj")
 
         removed_id = request.form.get("remove_star")
         db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
@@ -210,7 +208,6 @@ def edit_teacherprofile():
             pass
         else:
             schedule.append(period.split(":"))
-    print(schedule)
 
     files = db.Files.get_teacher_files(session["google_id"])
 
@@ -276,14 +273,11 @@ def update_teacherprofile():
                 row[1] = "Never free (teaching)" if row[0] else "Free for walk-ins"
             classes.append(row)
 
-    print(classes)
-
     teacher_id = session["google_id"]
     for i, group in enumerate(classes):
         db.Teacher.add_schedule_period(teacher_id, i + 1, group[0] + ":" + group[1])
 
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
-    print(schedule_info)
     schedule = []
     for period in schedule_info:
         if not period:
@@ -397,8 +391,6 @@ def starred_teachers():
 @login_required
 def search():
     teacher_searched = request.form.get("teacher")
-    print("THE FOLLOWING IS THE TEACHER SEARCHED")
-    print(teacher_searched)
     info = []
     # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
@@ -427,18 +419,14 @@ def view_teacher(hex):
     schedule = []
     for i in range(10):
         schedule.append(["", ""])
-    print("CALL 1")
-    print(schedule)
     schedule_info = db.Teacher.get_schedule_periods(teacher_id)
     if None not in schedule_info:
-        print(schedule_info)
         schedule = []
         for period in schedule_info:
             if not period:
                 pass
             else:
                 schedule.append(period.split(":"))
-        print(schedule)
 
     files = db.Files.get_teacher_files(teacher_id)
 

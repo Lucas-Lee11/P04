@@ -485,37 +485,5 @@ def drop_dbs():
     Files.drop_db()
 
 
-# Testing
-drop_dbs()
-create_dbs()
-
-# need to fix based on new schemas
-
-Student.create_student("lucas_id", "Lucas Lee", "llee20@stuy.edu")
-student_id = Student.get_student_id("llee20@stuy.edu")
-print(student_id)
-
-Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
-teacher_id = Teacher.get_teacher_id("dsharaf@stuy.edu")
-Teacher.add_schedule_period(teacher_id, 1, "rm 840")
-schedule = Teacher.get_schedule_periods(teacher_id)
-print(schedule)
-
-Teacher.add_teacher_pronouns(teacher_id, "she/her")
-Teacher.add_teacher_title(teacher_id, "Ms.")
-name, email, pronouns, title = Teacher.get_teacher_info(teacher_id)
-print(pronouns, title)
-
-
-# StarredTeachers.student_star_teacher(student_id, teacher_id)
-# stars = StarredTeachers.get_student_stars(student_id)
-# print(stars)
-# StarredTeachers.student_unstar_teacher(student_id, teacher_id)
-# stars = StarredTeachers.get_student_stars(student_id)
-# print(stars)
-
-# Files.add_teacher_file(teacher_id, "./README.md")
-Files.get_teacher_files(teacher_id)
-
 drop_dbs()
 create_dbs()
