@@ -30,7 +30,12 @@
             {% for id, name in teachers %}
             <tr>
                 <td>
+                    {% if id in starred_teachers_hex %}
+                    <input type="checkbox" name="starred_id" value={{id}} class="star" checked>
+                    {% else %}
                     <input type="checkbox" name="starred_id" value={{id}} class="star">
+                    {% endif %}
+                    
                 </td>
                 <td style="padding-top: 15px;"><a href="{{url_for("view_teacher", hex=id)}}">{{name}}</a></td> <!-- this will link to the teacher's profile -->
             </tr>

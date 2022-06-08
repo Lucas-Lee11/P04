@@ -319,7 +319,7 @@ def student():
         starred_teachers.append((teacher_hex,db.Teacher.get_teacher_name(teacher_id)))
 
     return render_template(
-        "student.html", teachers=teachers, starred_teachers=starred_teachers
+        "student.html", teachers=teachers, starred_teachers=starred_teachers, starred_teachers_hex = starred_teachers_hex
     )
 
 
