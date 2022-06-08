@@ -264,3 +264,8 @@ elizaK -- 2022-06-08 9:25
 elizaK -- 2022-06-08 10:15
 - multiple search results return now
 - if there are no results, then it's blank
+
+andrewJ -- 2022-06-08 10:00
+- Starred teachers dashboard page
+  - can view profiles and remove teachers
+- starring teachers adds them to the navbar correctly
