@@ -282,3 +282,4 @@ christopherL -- 2022-06-08 16:26
 - fix flash css
 - convert to 2 spaces for html templates
 - clean up templates
+- update deployment instructions

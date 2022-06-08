@@ -33,24 +33,24 @@ We will be making a site with the primary function of allowing students to see i
 ## Launch Codes
 1. Clone repository
 ```
- $ git clone https://github.com/Lucas-Lee11/P04.git
- $ cd P04
+$ git clone https://github.com/Lucas-Lee11/P04.git
+$ cd P04
 ```
 
 2. Create a new virtual environment
 ```
- $ python3 -m venv env_name
- $ source env_name/bin/activate
+$ python3 -m venv env_name
+$ source env_name/bin/activate
 ```
 
 3. Install project dependencies
 ```
- (env_name) $ pip3 install -r requirements.txt
+(env_name) $ pip3 install -r requirements.txt
 ```
 
 4. Run the app
 ```
- (env_name) $ python3 loophole.py
+(env_name) $ python3 loophole.py
 ```
 Access the app by going to http://127.0.0.1:5000/
 
@@ -77,9 +77,9 @@ $ sudo pip3 install -r requirements.txt
 
 4. Configure your virtual host. Note: you can use any text editor (nano, etc.) in place of vim. Replace DROPLET_IP_ADDRESS and USERNAME as appropriate.
 ```
-$ sudo vim /etc/apache2/sites-available/TeacherTally.conf
+$ sudo vim TeacherTally.conf
 ```
-Paste the following template in the `.conf` file:
+You should see the following template in the `.conf` file:
 ```
 <VirtualHost *:80>
     ServerName DROPLET_IP_ADDRESS
@@ -103,7 +103,12 @@ Note: In order to deploy multiple apps, you won't be able to deploy both at the 
 
 Save and close the file. For vim users, type `:wq`.
 
-5. Enable the virtual host.
+5. Move the `.conf` file to the correct location.
+```
+$ sudo cp TeacherTally.conf /etc/apache2/sites-available/TeacherTally.conf
+```
+
+6. Enable the virtual host.
 ```
 $ sudo a2ensite TeacherTally
 ```
@@ -111,33 +116,6 @@ To disable your site, use
 ```
 $ sudo a2dissite TeacherTally
 ```
-
-6. Create your `.wsgi` file.
-```
-$ cd /var/www/P04
-$ sudo vim TeacherTally.wsgi
-```
-Paste the following template:
-```python
-#!/usr/bin/python
-import sys
-import logging
-from os import urandom
-
-logging.basicConfig(stream=sys.stderr)
-sys.path.insert(0,"/var/www/P04/")
-sys.path.insert(0,"/var/www/P04/app/")
-
-def application(environ, start_response):
-    from app import app as _application
-    return _application(environ, start_response)
-
-if __name__ == "__main__":
-    _application.run()
-```
-Note: if you're running this app on anything other than the root path (just your IP address or domain name), you may need to use `environ["SCRIPT_NAME"] = "APP_NAME"` before you import your app in the `application` method. Whether this is necessary depends on whether you used explicit paths in links within your app (e.g., `<a href="/login">`) or generated links (e.g., `<a href="{{ url_for('login') }}">`. Generated links are preferred since they will not require any changes to the `.wsgi` file.
-
-Save and close the `.wsgi` file.
 
 7. Change the permissions on your database file.
 Run the following. This will likely cause an error--it is necessary to generate the database file.
@@ -159,11 +137,13 @@ $ sudo vim app/database.py
 ```
 Replace `loophole.db` with `tmp/loophole.db`.
 
-8. Restart apache.
+8. Apply deployment fixes.
+Uncomment the `if __name__ == "__main__"` line at the bottom of `app/__init__.py`
+and indent the following `app.run()`.
+
+9.  Restart apache.
 ```
 $ sudo service apache2 restart
 ```
 
 9. Test your app by going to `http://DROPLET_IP_ADDRESS` in a web browser.
-
-## Contributing
