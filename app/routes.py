@@ -174,13 +174,6 @@ def teacher():
         return redirect(url_for("student"))
     teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
 
-    ####### FOR TESTING PURPOSES #######
-    db.Teacher.create_db()
-    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
-    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
-    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
-    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
-    ####################################
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         if len(starred_id) > len(teachers_hex):
@@ -258,6 +251,9 @@ def update_teacherprofile():
     db.Teacher.add_teacher_email(session["google_id"], email)
     db.Teacher.add_teacher_pronouns(session["google_id"], pronouns)
 
+    for file_id in request.form.getlist("delete_file"):
+        db.Files.remove_teacher_file(session["google_id"], file_id)
+
     existing_files = [
         filename
         for file_id, filename in db.Files.get_teacher_files(session["google_id"])
@@ -272,9 +268,6 @@ def update_teacherprofile():
                     )
                 else:
                     db.Files.add_teacher_file(session["google_id"], file)
-
-    for file_id in request.form.getlist("delete_file"):
-        db.Files.remove_teacher_file(session["google_id"], file_id)
 
     classes = []
     for i in range(10):
@@ -438,7 +431,7 @@ def view_teacher(hex):
             session["google_id"], starred_hex
         ):
             db.StarredTeachers.star_teacher(session["google_id"], starred_hex)
-                    
+
     teacher_id = db.Teacher.hex_to_teacher_id(hex)
     if not teacher_id:
         return redirect(url_for("index"))
