@@ -38,10 +38,20 @@
       <input class="form-control" type="file" name="file" multiple>
     </div>
 
-    {% for id, filename in files %}
-    <a href="{{ url_for('download_file', file_id=id) }}">{{filename}}</a>
-    <input type="checkbox" name="delete_file" value="{{ id }}" class="star">
-    {% endfor %}
+    {% if files %}
+    <table class="table">
+      <tr>
+        <th>File</th>
+        <th>Remove</th>
+      </tr>
+      {% for id, filename in files %}
+      <tr>
+        <td><a href="{{ url_for('download_file', file_id=id) }}">{{ filename }}</a></td>
+        <td><input class="form-check-input" type="checkbox" name="delete_file" value="{{ id }}"></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
 
     <!-- this is the table with the teachers' schedule; they input what classes they teach, when, and free periods -->
     <table class="table">

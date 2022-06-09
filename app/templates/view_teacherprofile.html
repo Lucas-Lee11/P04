@@ -10,35 +10,40 @@
   <p><a href="{{ url_for('edit_teacherprofile') }}">Edit Profile</a></p>
   {% endif %}
   {% if prefix == "None" %}
-    <p>Name: {{ name }}</p>
+    <p><b>Name:</b> {{ name }}</p>
   {% else %}
-    <p>Name: {{ prefix }} {{ name }}</p>
+    <p><b>Name:</b> {{ prefix }} {{ name }}</p>
   {% endif %}
-  <p>Pronouns: {{ pronouns }}</p>
-  <p>(Preferred) Email(s): {{ email }}</p>
-  <p>Important Files (i.e. syllabi):</p>
-
-  {% for id, filename in files %}
-  <a href="{{url_for('download_file', file_id=id)}}">{{filename}}</a>
-  {% endfor %}
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Period</th>
-        <th>Room Number</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for i in range(1, 11) %}
-      <tr>
-        <td>{{ i }}</td>
-        <td>{{ schedule[i - 1][0] }}</td>
-        <td>{{ schedule[i - 1][1] }}</td>
-      </tr>
+  <p><b>Pronouns:</b> {{ pronouns }}</p>
+  <p><b>Email(s):</b> {{ email }}</p>
+  <p>
+    <b>Important Files:</b>
+    <div class="list-group list-group-flush">
+      {% for id, filename in files %}
+      <a href="{{url_for('download_file', file_id=id)}}" class="list-group-item list-group-item-action text-primary">{{ filename }}</a>
       {% endfor %}
-    </tbody>
-  </table>
+    </div>
+  </p>
+
+  <div class="my-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Room Number</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(1, 11) %}
+        <tr>
+          <td>{{ i }}</td>
+          <td>{{ schedule[i - 1][0] }}</td>
+          <td>{{ schedule[i - 1][1] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
