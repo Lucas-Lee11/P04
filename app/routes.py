@@ -173,7 +173,7 @@ def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("student"))
     teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
-
+    
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         if len(starred_id) > len(teachers_hex):
@@ -427,11 +427,15 @@ def search():
 def view_teacher(hex):
     if request.method == "POST":
         starred_hex = request.form.get("starred_hex")
-        if not db.StarredTeachers.starred_relationship_exists(
-            session["google_id"], starred_hex
-        ):
-            db.StarredTeachers.star_teacher(session["google_id"], starred_hex)
-
+        if starred_hex is None:
+            if db.StarredTeachers.starred_relationship_exists(session["google_id"], hex):
+                db.StarredTeachers.unstar_teacher(session["google_id"], hex)
+        else:
+            if not db.StarredTeachers.starred_relationship_exists(
+                session["google_id"], starred_hex
+            ):
+                db.StarredTeachers.star_teacher(session["google_id"], starred_hex)
+                    
     teacher_id = db.Teacher.hex_to_teacher_id(hex)
     if not teacher_id:
         return redirect(url_for("index"))
