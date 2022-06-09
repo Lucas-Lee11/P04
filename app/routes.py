@@ -373,9 +373,6 @@ def student():
 @app.route("/starred_teachers", methods=["GET", "POST"])
 @login_required
 def starred_teachers():
-    if db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("teacher"))
-
     # Remove teacher star
     if request.method == "POST":
         removed_hex = request.form.get("remove_star")
@@ -438,6 +435,15 @@ def view_teacher(hex):
 
     is_teacher = db.Teacher.hex_to_teacher_id(hex) == session["google_id"]
 
+    teachers = db.Teacher.get_teacher_list()
+    starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
+
+    # Fetches the relevant teacher information of a student's starred teachers
+    starred_teachers = []
+    for teacher_hex in starred_teachers_hex:
+        teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
+        starred_teachers.append((teacher_hex, db.Teacher.get_teacher_name(teacher_id)))
+
     return render_template(
         "view_teacherprofile.html",
         schedule=schedule,
@@ -447,6 +453,7 @@ def view_teacher(hex):
         pronouns=pronouns,
         files=files,
         is_teacher=is_teacher,
+        starred_teachers = starred_teachers,
     )
 
 
