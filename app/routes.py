@@ -95,7 +95,12 @@ def login():
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    flow.fetch_token(authorization_response=request.url)
+    try:
+        flow.fetch_token(authorization_response=request.url)
+    except:
+        flash("Login Error--please try again")
+        return redirect(url_for("index"))
+
     if not session["state"] == request.args["state"]:
         render_template("index.html", message="state is wrong- failed")
 
@@ -118,6 +123,16 @@ def callback():
     session["name"] = id_info.get("name")
     session["email"] = id_info.get("email")
     session["token"] = credentials.token
+
+    if not session["email"].endswith("stuy.edu"):
+        requests.post(
+            "https://oauth2.googleapis.com/revoke",
+            params={"token": session["token"]},
+            headers={"content-type": "application/x-www-form-urlencoded"},
+        )
+        session.clear()
+        flash("Non-Stuy email detected--please use your stuy.edu login!")
+        return redirect(url_for("index"))
 
     # check if email is whitelisted as a teacher, otherwise create student
     if session["email"] in TEACHERS:
@@ -379,7 +394,6 @@ def starred_teachers():
 def search():
     teacher_searched = request.form.get("teacher")
     info = []
-    # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_ids = db.Teacher.get_teacher_id_name(teacher_searched)
 
@@ -399,8 +413,9 @@ def search():
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
 @login_required
 def view_teacher(hex):
-
     teacher_id = db.Teacher.hex_to_teacher_id(hex)
+    if not teacher_id:
+        return redirect(url_for("index"))
     name, email, pronouns, title = db.Teacher.get_teacher_info(teacher_id)
 
     schedule = []

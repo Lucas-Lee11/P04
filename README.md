@@ -141,7 +141,7 @@ Replace `loophole.db` with `tmp/loophole.db`.
 Uncomment the `if __name__ == "__main__"` line at the bottom of `app/__init__.py`
 and indent the following `app.run()`.
 
-9. Add OAuth secret files.
+9. Add OAuth secret files (see 411 on GoogleAuth API).
 
 10. Restart apache.
 ```
