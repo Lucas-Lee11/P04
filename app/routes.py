@@ -95,7 +95,12 @@ def login():
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    flow.fetch_token(authorization_response=request.url)
+    try:
+        flow.fetch_token(authorization_response=request.url)
+    except:
+        flash("Login Error--please try again")
+        return redirect(url_for("index"))
+
     if not session["state"] == request.args["state"]:
         render_template("index.html", message="state is wrong- failed")
 
