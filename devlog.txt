@@ -294,4 +294,4 @@ andrewJ -- 2022-06-09 14:40
 - starred teachers show up in navbar when you view teacher profile bug fix
 - teachers can remove starred teachers bug fix 
 - unstarring on find teachers page
-- star teachers on their profile page (needs to look nicer + UNSTAR)
+- star teachers on their profile page (needs to look nicer)
