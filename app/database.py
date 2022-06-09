@@ -5,13 +5,14 @@
 
 import sqlite3
 import os
+import pathlib
 from werkzeug.utils import secure_filename
 import shutil
 
 from flask import g
 
 DB_FILE = "loophole.db"
-UPLOAD_FOLDER = "./app/uploads"
+UPLOAD_FOLDER = os.path.join(pathlib.Path(__file__).parent, "uploads")
 
 
 class Student:

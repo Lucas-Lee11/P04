@@ -22,7 +22,7 @@ from app import secret
 # env variable to bipass https
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10MB
-UPLOAD_FOLDER = "./app/uploads"
+UPLOAD_FOLDER = os.path.join(pathlib.Path(__file__).parent, "uploads")
 
 GOOGLE_CLIENT_ID = secret.setup()
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
