@@ -283,11 +283,12 @@ def update_teacherprofile():
 
     schedule_info = db.Teacher.get_schedule_periods(session["google_id"])
     schedule = []
-    for period in schedule_info:
-        if not period:
-            pass
-        else:
-            schedule.append(period.split(":"))
+    if schedule_info:
+        for period in schedule_info:
+            if not period:
+                pass
+            else:
+                schedule.append(period.split(":"))
 
     return redirect(url_for("view_teacherprofile"))
 
