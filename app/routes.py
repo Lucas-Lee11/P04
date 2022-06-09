@@ -263,6 +263,7 @@ def update_teacherprofile():
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
 
+    schedule_upload = ""
     try:
         schedule_upload = request.files["schedule_upload"].read().decode("utf-8")
     except:
