@@ -4,8 +4,19 @@
 {% block title %}View Your Profile{% endblock %}
 
 {% block content %}
+<link href="{{ url_for('static', filename='css/star.css') }}" rel="stylesheet">
+
 <div class="container-xxl my-4 bd-layout">
-  <h1>Teacher Profile</h1>
+  <h1>Teacher Profile
+    <form action="{{ url_for('view_teacher', hex=hex) }}" method="POST">
+      {% if isStarred %}
+      <input type="checkbox" name="starred_hex" value="{{ hex }}" class="star" checked>
+      {% else %}
+      <input type="checkbox" name="starred_hex" value="{{ hex }}" class="star">
+      {% endif %}
+      <button type="submit" class="btn btn-warning">Save</button>
+    </form>
+  </h1>
   {% if is_own_profile %}
   <p><a href="{{ url_for('edit_teacherprofile') }}">Edit Profile</a></p>
   {% endif %}
