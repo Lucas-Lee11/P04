@@ -373,9 +373,6 @@ def student():
 @app.route("/starred_teachers", methods=["GET", "POST"])
 @login_required
 def starred_teachers():
-    if db.Teacher.verify_teacher(session["google_id"]):
-        return redirect(url_for("teacher"))
-
     # Remove teacher star
     if request.method == "POST":
         removed_hex = request.form.get("remove_star")
