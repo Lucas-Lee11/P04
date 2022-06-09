@@ -316,7 +316,6 @@ def view_teacherprofile():
 
     is_teacher = db.Teacher.verify_teacher(session["google_id"])
 
-    # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return render_template(
         "view_teacherprofile.html",
         schedule=schedule,
@@ -439,7 +438,6 @@ def view_teacher(hex):
 
     is_teacher = db.Teacher.hex_to_teacher_id(hex) == session["google_id"]
 
-    # the name and email thing WILL BE CHANGED LATER WHEN THE DB FUNCTIONS ARE UPDATED
     return render_template(
         "view_teacherprofile.html",
         schedule=schedule,

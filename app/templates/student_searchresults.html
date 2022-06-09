@@ -15,7 +15,7 @@
     </div>
   </form>
 
-  <!-- loop through the results here and post them with links to the page (right now, it's not possible to have more than 1 result) -->
+  <!-- loop through the results here and post them with links to the page -->
   <ul class="list-group">
     {% for hex, data in info %}
     <li class="list-group-item">
@@ -25,9 +25,10 @@
         <button class="btn btn-secondary btn-sm" type="submit">View Full Profile</button>
       </form>
     </li>
-    
     {% endfor %}
   </ul>
+
+  <p><a href="{{ url_for('index') }}">Back</a></p>
 
 </div>
 {% endblock %}
