@@ -131,15 +131,11 @@ $ sudo mv loophole.db tmp/loophole.db
 $ sudo chown www-data:www-data tmp
 $ sudo chmod 755 tmp
 ```
-Lastly, fix the path to the database file in `app/database.py`.
-```
-$ sudo vim app/database.py
-```
-Replace `loophole.db` with `tmp/loophole.db`.
 
-8. Apply deployment fixes.
-Uncomment the `if __name__ == "__main__"` line at the bottom of `app/__init__.py`
-and indent the following `app.run()`.
+8. Apply the deployment patch.
+```
+$ sudo git apply deployment.patch
+```
 
 9. Add OAuth secret files (see 411 on GoogleAuth API and `app/keys/readme`).
 
