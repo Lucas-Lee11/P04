@@ -1,22 +1,19 @@
 # Teacher Tally by Loophole
 ## Roster
 - PM: Lucas Lee
-    - Flask routing
-    - Search functionality
     - Database
-    - AI/Handwriting OCR
+    - File storage
+    - Flask routing
 - D1: Andrew Juang
     - Database
     - Droplet deployment
     - File storage
 - D2: Ella Krechmer
     - HTML/CSS/SASS
-    - JS
     - Styling direction
     - Teacher profile
 - D3: Christopher Liu
     - Auth/Login
-    - AI/Handwriting OCR
     - Teacher directory
     - Droplet deployment
 - D4: Eliza Knapp
@@ -54,7 +51,7 @@ $ source env_name/bin/activate
 ```
 Access the app by going to http://127.0.0.1:5000/
 
-Alternatively, use our deployed droplet: http://137.184.158.41/
+Alternatively, use our deployed droplet: http://teachertally.me
 
 ## Deployment on a Server
 The following instructions are intended for deployment on a DigitalOcean droplet. They are current as of June 1, 2022.
