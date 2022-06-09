@@ -263,7 +263,10 @@ def update_teacherprofile():
         data.append(request.form.get("status" + str(i + 1)))
         classes.append(data)
 
-    schedule_upload = request.files["schedule_upload"].read().decode("utf-8")
+    try:
+        schedule_upload = request.files["schedule_upload"].read().decode("utf-8")
+    except:
+        flash("Error reading CSV file, make sure you uploaded the correct file")
     if schedule_upload:
         classes = []
         schedule_data = schedule_upload.splitlines()
