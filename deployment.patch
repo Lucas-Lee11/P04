@@ -1,0 +1,38 @@
+diff --git a/app/__init__.py b/app/__init__.py
+index c0091b2..de60cb1 100644
+--- a/app/__init__.py
++++ b/app/__init__.py
+@@ -11,9 +11,10 @@ app = Flask(__name__)
+ from app import routes
+ 
+ # Secret key 32 bytes (lowkey this is useless dwai)
+-app.secret_key = urandom(32)
++# app.secret_key = urandom(32)
++app.secret_key = "fa61769947ff4186bcd733bc75ee096e"
+ 
+ app.debug = True
+ 
+-# if __name__ == "__main__":
+-app.run()
++if __name__ == "__main__":
++    app.run()
+diff --git a/app/database.py b/app/database.py
+index 66f6f2d..a453042 100644
+--- a/app/database.py
++++ b/app/database.py
+@@ -9,7 +9,7 @@ import pathlib
+ from werkzeug.utils import secure_filename
+ import shutil
+ 
+-DB_FILE = "loophole.db"
++DB_FILE = "tmp/loophole.db"
+ UPLOAD_FOLDER = os.path.join(pathlib.Path(__file__).parent, "uploads")
+ 
+ 
+@@ -490,5 +490,5 @@ def drop_dbs():
+     Files.drop_db()
+ 
+ 
+-drop_dbs()
++# drop_dbs()
+ create_dbs()
