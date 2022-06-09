@@ -156,14 +156,6 @@ def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("student"))
 
-    ####### FOR TESTING PURPOSES #######
-    db.Teacher.create_db()
-    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
-    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
-    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
-    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
-    ####################################
-
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         for teacher_id in starred_id:
@@ -334,14 +326,6 @@ def student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("teacher"))
 
-    ####### FOR TESTING PURPOSES #######
-    db.Teacher.create_db()
-    db.Teacher.create_teacher("sharaf_id", "Daisy Sharaf", "dsharaf@stuy.edu")
-    db.Teacher.create_teacher("stern_id", "Joseph Stern", "jstern@stuy.edu")
-    db.Teacher.create_teacher("dw_id", "Jonalf Dyrland-Weaver", "dw@stuy.edu")
-    db.Teacher.create_teacher("chew_id", "Glen Chew", "gchew@stuy.edu")
-    ####################################
-
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         for teacher_id in starred_id:
@@ -453,7 +437,7 @@ def view_teacher(hex):
         pronouns=pronouns,
         files=files,
         is_teacher=is_teacher,
-        starred_teachers = starred_teachers,
+        starred_teachers=starred_teachers,
     )
 
 
