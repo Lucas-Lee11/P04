@@ -172,7 +172,7 @@ def logout():
 def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("student"))
-    
+
     teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
 
     if request.method == "POST":
@@ -481,3 +481,8 @@ def download_file(file_id):
         return redirect(url_for("index"))
 
     return send_file(f"./uploads/{teacher_id}/{filename}")
+
+@app.errorhandler(404)
+def page_not_found(e):
+    flash("Page not found")
+    return redirect(url_for("index"))
