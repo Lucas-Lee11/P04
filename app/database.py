@@ -413,10 +413,15 @@ class Files:
         with sqlite3.connect(DB_FILE) as db:
             c = db.cursor()
 
-            id = c.execute(
-                "INSERT INTO files(teacher_id, filename) VALUES (?, ?) RETURNING file_id",
+            c.execute(
+                "INSERT INTO files(teacher_id, filename) VALUES (?, ?)",
                 (teacher_id, filename),
-            ).fetchone()[0]
+            )
+
+            # id = c.execute(
+            #     "INSERT INTO files(teacher_id, filename) VALUES (?, ?) RETURNING file_id",
+            #     (teacher_id, filename),
+            # ).fetchone()[0]
 
             path = os.path.join(UPLOAD_FOLDER, teacher_id, filename)
 
