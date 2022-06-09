@@ -9,8 +9,6 @@ import pathlib
 from werkzeug.utils import secure_filename
 import shutil
 
-from flask import g
-
 DB_FILE = "loophole.db"
 UPLOAD_FOLDER = os.path.join(pathlib.Path(__file__).parent, "uploads")
 
@@ -485,6 +483,7 @@ def create_dbs():
 
 
 def drop_dbs():
+    print("DROPPING DBS")
     Student.drop_db()
     Teacher.drop_db()
     StarredTeachers.drop_db()
