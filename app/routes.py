@@ -296,7 +296,9 @@ def update_teacherprofile():
 @app.route("/teacher/view", methods=["GET", "POST"])
 @login_required
 def view_teacherprofile():
-    name, email, pronouns, title = db.Teacher.get_teacher_info(session["google_id"])
+    teacher_info = db.Teacher.get_teacher_info(session["google_id"])
+    if teacher_info:
+        name, email, pronouns, title = teacher_info
 
     schedule = []
     for i in range(10):
