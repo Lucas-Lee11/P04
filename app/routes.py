@@ -172,17 +172,22 @@ def logout():
 def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("student"))
+    
+    teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
 
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
-        for teacher_id in starred_id:
-            if not db.StarredTeachers.starred_relationship_exists(
-                session["google_id"], teacher_id
-            ):
-                db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
+        if len(starred_id) > len(teachers_hex):
+            for teacher_id in starred_id:
+                if not db.StarredTeachers.starred_relationship_exists(
+                    session["google_id"], teacher_id
+                ):
+                    db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
 
-        removed_id = request.form.get("remove_star")
-        db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
+        else:
+            for teacher_hex in teachers_hex:
+                if teacher_hex not in starred_id and db.StarredTeachers.starred_relationship_exists(session["google_id"], teacher_hex):
+                    db.StarredTeachers.unstar_teacher(session["google_id"], teacher_hex)
 
     teachers = db.Teacher.get_teacher_list()
     starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
@@ -344,16 +349,21 @@ def student():
     if db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("teacher"))
 
+    teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
+
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
-        for teacher_id in starred_id:
-            if not db.StarredTeachers.starred_relationship_exists(
-                session["google_id"], teacher_id
-            ):
-                db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
+        if len(starred_id) > len(teachers_hex):
+            for teacher_id in starred_id:
+                if not db.StarredTeachers.starred_relationship_exists(
+                    session["google_id"], teacher_id
+                ):
+                    db.StarredTeachers.star_teacher(session["google_id"], teacher_id)
 
-        removed_id = request.form.get("remove_star")
-        db.StarredTeachers.unstar_teacher(session["google_id"], removed_id)
+        else:
+            for teacher_hex in teachers_hex:
+                if teacher_hex not in starred_id and db.StarredTeachers.starred_relationship_exists(session["google_id"], teacher_hex):
+                    db.StarredTeachers.unstar_teacher(session["google_id"], teacher_hex)
 
     teachers = db.Teacher.get_teacher_list()
     starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])

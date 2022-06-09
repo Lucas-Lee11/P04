@@ -186,7 +186,7 @@ class Teacher:
             if teachers is not None:
                 return teachers
             return None
-
+    
     @staticmethod
     def get_schedule_periods(teacher_id: str) -> tuple:
         with sqlite3.connect(DB_FILE) as db:
