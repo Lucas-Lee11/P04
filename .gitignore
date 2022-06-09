@@ -1,7 +1,8 @@
 .vscode
 loop
-client_secret.json
-secret.py
+app/keys/*.txt
+app/keys/*.json
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

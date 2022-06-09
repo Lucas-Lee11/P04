@@ -25,7 +25,7 @@ app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10MB
 UPLOAD_FOLDER = os.path.join(pathlib.Path(__file__).parent, "uploads")
 
 GOOGLE_CLIENT_ID = secret.setup()
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "keys/client_secret.json")
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=[
