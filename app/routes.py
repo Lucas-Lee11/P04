@@ -394,7 +394,6 @@ def starred_teachers():
 def search():
     teacher_searched = request.form.get("teacher")
     info = []
-    # the following assumes there will be one hit exactly
     if db.Teacher.get_teacher_id_name(teacher_searched):
         teacher_ids = db.Teacher.get_teacher_id_name(teacher_searched)
 
@@ -414,8 +413,9 @@ def search():
 @app.route("/schedule/<hex>", methods=["GET", "POST"])
 @login_required
 def view_teacher(hex):
-
     teacher_id = db.Teacher.hex_to_teacher_id(hex)
+    if not teacher_id:
+        return redirect(url_for("index"))
     name, email, pronouns, title = db.Teacher.get_teacher_info(teacher_id)
 
     schedule = []
