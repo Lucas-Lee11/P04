@@ -25,7 +25,9 @@ app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10MB
 UPLOAD_FOLDER = os.path.join(pathlib.Path(__file__).parent, "uploads")
 
 GOOGLE_CLIENT_ID = secret.setup()
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "keys/client_secret.json")
+client_secrets_file = os.path.join(
+    pathlib.Path(__file__).parent, "keys/client_secret.json"
+)
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=[
@@ -332,6 +334,7 @@ def view_teacherprofile():
         pronouns=pronouns,
         files=files,
         is_teacher=is_teacher,
+        is_own_profile=True,
     )
 
 
@@ -432,7 +435,8 @@ def view_teacher(hex):
 
     files = db.Files.get_teacher_files(teacher_id)
 
-    is_teacher = db.Teacher.hex_to_teacher_id(hex) == session["google_id"]
+    is_teacher = db.Teacher.verify_teacher(session["google_id"])
+    is_own_profile = db.Teacher.hex_to_teacher_id(hex) == session["google_id"]
 
     teachers = db.Teacher.get_teacher_list()
     starred_teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
@@ -452,6 +456,7 @@ def view_teacher(hex):
         pronouns=pronouns,
         files=files,
         is_teacher=is_teacher,
+        is_own_profile=is_own_profile,
         starred_teachers=starred_teachers,
     )
 
