@@ -9,12 +9,7 @@
 <div class="container-xxl my-4 bd-layout">
   <h1>Teacher Profile
     <form action="{{ url_for('view_teacher', hex=hex) }}" method="POST">
-      {% if isStarred %}
-      <input type="checkbox" name="starred_hex" value="{{ hex }}" class="star" checked>
-      {% else %}
-      <input type="checkbox" name="starred_hex" value="{{ hex }}" class="star">
-      {% endif %}
-      <button type="submit" class="btn btn-warning">Save</button>
+      <input onchange="this.form.submit()" type="checkbox" name="starred_hex" value="{{ hex }}" class="star" {{"checked" if is_starred == True}}>
     </form>
   </h1>
   {% if is_own_profile %}

@@ -173,7 +173,7 @@ def teacher():
     if not db.Teacher.verify_teacher(session["google_id"]):
         return redirect(url_for("student"))
     teachers_hex = db.StarredTeachers.get_student_stars(session["google_id"])
-    
+
     if request.method == "POST":
         starred_id = request.form.getlist("starred_id")
         if len(starred_id) > len(teachers_hex):
@@ -381,7 +381,7 @@ def student():
     )
 
 
-@app.route("/starred_teachers", methods=["GET", "POST"])
+@app.route("/starred", methods=["GET", "POST"])
 @login_required
 def starred_teachers():
     # Remove teacher star
@@ -435,7 +435,7 @@ def view_teacher(hex):
                 session["google_id"], starred_hex
             ):
                 db.StarredTeachers.star_teacher(session["google_id"], starred_hex)
-                    
+
     teacher_id = db.Teacher.hex_to_teacher_id(hex)
     if not teacher_id:
         return redirect(url_for("index"))
@@ -467,7 +467,7 @@ def view_teacher(hex):
         teacher_id = db.Teacher.hex_to_teacher_id(teacher_hex)
         starred_teachers.append((teacher_hex, db.Teacher.get_teacher_name(teacher_id)))
 
-    isStarred = db.StarredTeachers.starred_relationship_exists(session["google_id"], hex)
+    is_starred = db.StarredTeachers.starred_relationship_exists(session["google_id"], hex)
 
     return render_template(
         "view_teacherprofile.html",
@@ -481,7 +481,7 @@ def view_teacher(hex):
         is_own_profile=is_own_profile,
         starred_teachers=starred_teachers,
         hex=hex,
-        isStarred=isStarred
+        is_starred=is_starred
     )
 
 
