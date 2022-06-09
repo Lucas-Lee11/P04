@@ -124,6 +124,16 @@ def callback():
     session["email"] = id_info.get("email")
     session["token"] = credentials.token
 
+    if not session["email"].endswith("stuy.edu"):
+        requests.post(
+            "https://oauth2.googleapis.com/revoke",
+            params={"token": session["token"]},
+            headers={"content-type": "application/x-www-form-urlencoded"},
+        )
+        session.clear()
+        flash("Non-Stuy email detected--please use your stuy.edu login!")
+        return redirect(url_for("index"))
+
     # check if email is whitelisted as a teacher, otherwise create student
     if session["email"] in TEACHERS:
         if not db.Teacher.get_teacher_id(session["email"]):
