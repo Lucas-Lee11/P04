@@ -26,6 +26,13 @@
 We will be making a site with the primary function of allowing students to see important information about their teachers —- most importantly, emails, course syllabi, and free periods/office hours. There will be a student login (using Google) where students will be able to see all this information and a teacher login (also using Google) where teachers can update their information.
 
 ## API Stuff
+Google OAuth 2.0
+API KB: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_GoogleAuth.md
+How to use in your projects: https://github.com/stuy-softdev/notes-and-code/blob/main/how-to/howto_use_OAuth2-w-googs.md
+
+TLDR: Google OAuth allows the flask app to use "sign in with google" for a secure, authenticated login.
+
+How we used it: To ensure that only members of the stuyvesant community have access to the teacher profiles/schdules, you have to login with a stuyvesant email, which is made possible by google oauth. Further, this way you don't need a separate email and password to use this site!
 
 ## Launch Codes
 1. Clone repository

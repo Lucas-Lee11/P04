@@ -295,3 +295,7 @@ andrewJ -- 2022-06-09 14:40
 - teachers can remove starred teachers bug fix 
 - unstarring on find teachers page
 - star teachers on their profile page (needs to look nicer)
+
+elizaK -- 2022-06-09 23:46
+- edited design doc with updated figma
+- readme with the required google oauth info
