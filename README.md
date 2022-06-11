@@ -27,8 +27,8 @@ We will be making a site with the primary function of allowing students to see i
 
 ## API Stuff
 Google OAuth 2.0
-API KB: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_GoogleAuth.md < br/>
-How to use in your projects: https://github.com/stuy-softdev/notes-and-code/blob/main/how-to/howto_use_OAuth2-w-googs.md
+- API KB: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_GoogleAuth.md 
+- How to use in your projects: https://github.com/stuy-softdev/notes-and-code/blob/main/how-to/howto_use_OAuth2-w-googs.md
 
 TLDR: Google OAuth allows the flask app to use "sign in with google" for a secure, authenticated login.
 
