@@ -22,7 +22,7 @@
       {{ data[0] }} ({{ data[1] }})
       <form action="{{ url_for('view_teacher', hex=hex) }}" method="POST">
         <input type="hidden" value="{{ data[1] }}" name="email">
-        <button class="btn btn-secondary btn-sm" type="submit">View Full Profile</button>
+        <button class="btn btn-secondary btn-sm" type="submit" style="border: none; background-color:blue;">View Full Profile</button>
       </form>
     </li>
     {% endfor %}
